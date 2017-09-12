@@ -1,31 +1,8 @@
 const fs = require('mz/fs');
 const {assert} = require('chai');
 const puppeteer = require('puppeteer');
-const Capture = require('./capture');
 const Resemble = require('./resemble');
-const r = new Resemble();
-
-const debug = false;
 let browser, page;
-
-async function runCompare(selector) {
-    await new Capture(page).screenshot({path: '../file2.jpg', selector: '#dropzone2 img'});
-
-    const file1 = await fs.readFile('../file1.jpg');
-    const file2 = await fs.readFile('../file2.jpg');
-    let isSame = await r.compare(file1, file2);
-
-    if (!debug) {
-        try {
-            await fs.unlink('../file2.jpg');
-            await fs.unlink('../diff.jpg');
-        } catch(e) {
-
-        }
-    }
-
-    return isSame;
-}
 
 describe('Visual test', async function() {
     before(async() => {
@@ -40,9 +17,8 @@ describe('Visual test', async function() {
 
     it('Look at image', async function() {
         const selector = '#dropzone2 img';
-        let res = await runCompare(selector);
+        let res = await new Resemble(page).visualCompare(selector);
         assert.equal(res, true, `Visuals should be equal for selector ${selector}`);
-
     });
 
     after(async () => {

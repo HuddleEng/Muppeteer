@@ -18,6 +18,8 @@
   "homepage": "https://github.com/gidztech/ResembleVRT#readme",
   "devDependencies": {
     "canvas": "^1.6.7",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
     "mz": "^2.6.0",
     "puppeteer": "^0.10.2",
     "resemblejs": "^2.2.6"

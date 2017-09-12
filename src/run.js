@@ -4,6 +4,8 @@ const puppeteer = require('puppeteer');
 const Resemble = require('./resemble');
 let browser, page;
 
+let visualTestName = 'bob';
+
 describe('Visual test', async function() {
     before(async() => {
         browser = await puppeteer.launch();
@@ -17,7 +19,12 @@ describe('Visual test', async function() {
 
     it('Look at image', async function() {
         const selector = '#dropzone2 img';
-        let res = await new Resemble(page).visualCompare(selector);
+        let res = await new Resemble({
+            page: page,
+            path: '..',
+            name: visualTestName,
+            debug: true,
+        }).visualCompare(selector);
         assert.equal(res, true, `Visuals should be equal for selector ${selector}`);
     });
 

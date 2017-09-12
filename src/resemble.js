@@ -2,11 +2,11 @@ const resemble = require('resemblejs');
 const Capture = require('./capture');
 const fs = require('mz/fs');
 
-async function compare(file1, file2) {
+async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
         const diff = resemble(file1).compareTo(file2).onComplete(data => {
             if (Number(data.misMatchPercentage) > 0.05) {
-                fs.writeFile('../diff.jpg', data.getBuffer(), err => {
+                fs.writeFile(output, data.getBuffer(), err => {
                     if (err) {
                         reject(err);
                     }
@@ -22,24 +22,37 @@ async function compare(file1, file2) {
 }
 
 module.exports = class Resemble {
-    constructor(page, { debug = false } = {}) {
+    constructor({ page, path = '.', name, debug = false } = {}) {
         this.page = page;
+        this.path = path;
+        this.name = name;
         this.debug = debug;
     }
 
     async visualCompare(selector) {
-        await new Capture(this.page).screenshot({ path: '../file2.jpg', selector: selector });
+        let base, suffix = '';
+        if (await fs.exists(`${this.path}/${this.name}-base.jpg`)) {
+            base = await fs.readFile(`${this.path}/${this.name}-base.jpg`);
+            suffix = 'test';
 
-        const file1 = await fs.readFile('../file1.jpg');
-        const file2 = await fs.readFile('../file2.jpg');
-        let isSame = await compare(file1, file2);
+        } else {
+            suffix = 'base';
+        }
 
-        if (!this.debug) {
-            try {
-                await fs.unlink('../file2.jpg');
-                await fs.unlink('../diff.jpg');
-            } catch(e) {
+        await new Capture(this.page).screenshot({ path: `${this.path}/${this.name}-${suffix}.jpg`, selector: selector });
+        let isSame = true;
 
+        if (base) {
+            const test = await fs.readFile(`${this.path}/${this.name}-test.jpg`);
+            isSame = await compare(base, test,`${this.path}/${this.name}-diff.jpg`);
+
+            if (!this.debug) {
+                try {
+                    await fs.unlink(`${this.path}/${this.name}-test.jpg`);
+                    await fs.unlink(`${this.path}/${this.name}-diff.jpg`);
+                } catch(e) {
+
+                }
             }
         }
 

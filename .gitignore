@@ -1,4 +1,5 @@
-node_modules
-build
 .idea/
-*.jpg
+node_modules/
+build/
+baselines/
+results/

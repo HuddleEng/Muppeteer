@@ -31,25 +31,40 @@ module.exports = class Resemble {
 
     async visualCompare(selector) {
         let base, suffix = '';
-        if (await fs.exists(`${this.path}/${this.name}-base.jpg`)) {
-            base = await fs.readFile(`${this.path}/${this.name}-base.jpg`);
+        const baselinePath = `${this.path}/baselines`;
+        const resultsPath = `${this.path}/results`;
+
+        const testImage = `${resultsPath}/${this.name}-test.jpg`;
+        const diffImage = `${resultsPath}/${this.name}-diff.jpg`;
+        const baselineImage = `${baselinePath}/${this.name}-base.jpg`;
+
+        if (!await fs.exists(baselinePath)){
+            await fs.mkdir(baselinePath);
+        }
+
+        if (await fs.exists(baselineImage)) {
+            base = await fs.readFile(baselineImage);
             suffix = 'test';
+
+            if (!await fs.exists(resultsPath)){
+                await fs.mkdir(resultsPath);
+            }
 
         } else {
             suffix = 'base';
         }
 
-        await new Capture(this.page).screenshot({ path: `${this.path}/${this.name}-${suffix}.jpg`, selector: selector });
+        await new Capture(this.page).screenshot({ path: suffix === 'base' ? baselineImage : testImage, selector: selector });
         let isSame = true;
 
         if (base) {
-            const test = await fs.readFile(`${this.path}/${this.name}-test.jpg`);
-            isSame = await compare(base, test,`${this.path}/${this.name}-diff.jpg`);
+            const test = await fs.readFile(testImage);
+            isSame = await compare(base, test, diffImage);
 
             if (!this.debug) {
                 try {
-                    await fs.unlink(`${this.path}/${this.name}-test.jpg`);
-                    await fs.unlink(`${this.path}/${this.name}-diff.jpg`);
+                    await fs.unlink(testImage);
+                    await fs.unlink(diffImage);
                 } catch(e) {
 
                 }

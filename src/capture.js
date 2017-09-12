@@ -18,12 +18,11 @@ module.exports = class Capture {
             }
 
             const {x, y, width, height} = element.getBoundingClientRect();
-
             return {left: x, top: y, width, height, id: element.id};
         }, selector);
 
         if (!boundingRect)
-            throw Error(`Could not find element that matches selector: ${selector}.`);
+            throw Error(`Unable find element that matches selector: ${selector}.`);
 
         return await this.page.screenshot({
             path,

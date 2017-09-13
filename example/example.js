@@ -1,8 +1,11 @@
 const fs = require('mz/fs');
-const {assert} = require('chai');
 const puppeteer = require('puppeteer');
 const Resemble = require('../src/resemble');
-let browser, page;
+let browser, page, resemble;
+
+function testName() {
+    return this.test.fullTitle().replace(/\s/g, '_').toLowerCase();
+}
 
 describe('My visual test wooo', async function() {
     before(async() => {
@@ -10,21 +13,16 @@ describe('My visual test wooo', async function() {
         page = await browser.newPage();
         page.setViewport({ width: 1000, height: 1000, deviceScaleFactor: 1 });
 
-        await page.goto('http://huddle.github.io/Resemble.js/', { waitUntil: 'networkidle' });
+        await page.goto('http://huddle.github.io/Resemble.js/');
         await page.click('#example-images');
         await page.waitForSelector('#dropzone2 img');
+
+        resemble = new Resemble({page: page, path: '.'});
+
     });
 
     it('Look at image', async function() {
-        const visualTestName = this.test.fullTitle().replace(/\s/g, '_').toLowerCase();
-        const selector = '#dropzone2 img';
-        let res = await new Resemble({
-            page: page,
-            path: '.',
-            name: visualTestName,
-            debug: false,
-        }).visualCompare(selector);
-        assert.equal(res, true, `Visuals should be equal for selector ${selector}`);
+        await resemble.visualCompare('#dropzone2 img', testName.call(this));
     });
 
     after(async () => {

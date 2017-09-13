@@ -1,6 +1,7 @@
 const resemble = require('resemblejs');
 const Capture = require('./capture');
 const fs = require('mz/fs');
+const {assert} = require('chai');
 
 async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
@@ -22,21 +23,23 @@ async function compare(file1, file2, output) {
 }
 
 module.exports = class Resemble {
-    constructor({ page, path = '.', name, debug = false } = {}) {
+    constructor({ page, path = '.', debug = false } = {}) {
         this.page = page;
         this.path = path;
-        this.name = name;
         this.debug = debug;
     }
 
-    async visualCompare(selector) {
+    async visualCompare(selector, testName) {
+        if (!testName) {
+            throw new Error('Test name is required otherwise visual cannot be named');
+        }
         let base, suffix = '';
         const baselinePath = `${this.path}/baselines`;
         const resultsPath = `${this.path}/results`;
 
-        const testImage = `${resultsPath}/${this.name}-test.jpg`;
-        const diffImage = `${resultsPath}/${this.name}-diff.jpg`;
-        const baselineImage = `${baselinePath}/${this.name}-base.jpg`;
+        const testImage = `${resultsPath}/${testName}-test.jpg`;
+        const diffImage = `${resultsPath}/${testName}-diff.jpg`;
+        const baselineImage = `${baselinePath}/${testName}-base.jpg`;
 
         if (!await fs.exists(baselinePath)){
             await fs.mkdir(baselinePath);
@@ -71,7 +74,8 @@ module.exports = class Resemble {
             }
         }
 
-        return isSame;
+        assert.equal(isSame, true, `Visuals should be equal for selector ${selector}`);
+        return true;
     }
 };
 

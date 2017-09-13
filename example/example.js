@@ -1,11 +1,12 @@
 const puppeteer = require('puppeteer');
-const Resemble = require('../src/resemble');
+const ResembleVRT = require('../src/resemble');
 const {assert} = require('chai');
 let browser, page, resemble;
 
 // selectors
 const containerSelector = '.container .hero-text';
 const headingSelector = containerSelector + ' h2';
+const betterResultsSection = '.section--better-results';
 
 let currentTestName = '';
 
@@ -15,13 +16,13 @@ async function compareVisual(containerSelector) {
     assert.equal(r.result, 'pass', `Visuals should be equal for selector ${containerSelector}`);
 }
 
-describe('Huddle home page test ', async function() {
+describe('Huddle home page test ', async() => {
     before(async() => {
         browser = await puppeteer.launch();
         page = await browser.newPage();
         page.setViewport({ width: 1000, height: 1000, deviceScaleFactor: 1 });
         await page.goto('https://www.huddle.com');
-        resemble = new Resemble({page: page, path: '.'});
+        resemble = new ResembleVRT({page: page, path: '.'});
     });
 
     // get the current test name for the visual file
@@ -29,7 +30,7 @@ describe('Huddle home page test ', async function() {
         currentTestName = this.currentTest.fullTitle().replace(/\s/g, '_').toLowerCase();
     });
 
-    it('Check header text', async function() {
+    it('Check header text', async() => {
         await page.waitForSelector(headingSelector);
 
         const text = await page.evaluate((headingSelector) => {
@@ -39,8 +40,12 @@ describe('Huddle home page test ', async function() {
         assert.equal(text, 'Secure document collaboration for government and enterprise.', 'Header text is correct');
     });
 
-    it('Look heading', async function() {
+    it('Look at heading', async() => {
         await compareVisual(containerSelector)
+    });
+
+    it('Look at better results section', async() => {
+        await compareVisual(betterResultsSection)
     });
 
     after(async () => {

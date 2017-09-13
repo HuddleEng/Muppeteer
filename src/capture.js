@@ -3,12 +3,10 @@ module.exports = class Capture {
         this.page = page;
     }
 
-    async screenshot(options = {}) {
-        const path = 'path' in options ? options.path : null;
-        const selector = options.selector;
-
-        if (!selector)
-            throw Error('Selector is required for screenshot.');
+    async screenshot({selector = null, path = null } = {}) {
+        if (!selector) {
+            throw new Error('Selector is required for screenshot.');
+        }
 
         const boundingRect = await this.page.evaluate(selector => {
             const element = document.querySelector(selector);
@@ -21,8 +19,9 @@ module.exports = class Capture {
             return {left: x, top: y, width, height, id: element.id};
         }, selector);
 
-        if (!boundingRect)
-            throw Error(`Unable find element that matches selector: ${selector}.`);
+        if (!boundingRect) {
+            throw new Error(`Unable find element that matches selector: ${selector}.`);
+        }
 
         return await this.page.screenshot({
             path,

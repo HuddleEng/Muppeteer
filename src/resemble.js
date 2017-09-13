@@ -1,7 +1,6 @@
 const resemble = require('resemblejs');
 const Capture = require('./capture');
 const fs = require('mz/fs');
-const {assert} = require('chai');
 
 async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
@@ -9,7 +8,10 @@ async function compare(file1, file2, output) {
             if (Number(data.misMatchPercentage) > 0.05) {
                 fs.writeFile(output, data.getBuffer(), err => {
                     if (err) {
-                        reject(err);
+                        reject({
+                            result: 'fail',
+                            error: err
+                        });
                     }
 
                     resolve({
@@ -64,11 +66,11 @@ module.exports = class Resemble {
         }
 
         await new Capture(this.page).screenshot({ path: suffix === 'base' ? baselineImage : testImage, selector: selector });
-        let result;
+        let r = { result: 'pass' };
 
         if (base) {
             const test = await fs.readFile(testImage);
-            result = await compare(base, test, diffImage);
+            r = await compare(base, test, diffImage);
 
             if (!this.debug) {
                 try {
@@ -80,7 +82,7 @@ module.exports = class Resemble {
             }
         }
 
-        return result;
+        return r;
     }
 };
 

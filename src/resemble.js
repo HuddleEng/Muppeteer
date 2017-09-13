@@ -12,10 +12,16 @@ async function compare(file1, file2, output) {
                         reject(err);
                     }
 
-                    resolve(false);
+                    resolve({
+                        result: 'fail',
+                        misMatchPercentage: data.misMatchPercentage
+                    });
                 });
             } else {
-                resolve(true);
+                resolve({
+                    result: 'pass',
+                    misMatchPercentage: data.misMatchPercentage
+                });
             }
         });
         diff.ignoreAntialiasing();
@@ -29,7 +35,7 @@ module.exports = class Resemble {
         this.debug = debug;
     }
 
-    async visualCompare(selector, testName) {
+    async compareVisual(selector, testName) {
         if (!testName) {
             throw new Error('Test name is required otherwise visual cannot be named');
         }
@@ -58,11 +64,11 @@ module.exports = class Resemble {
         }
 
         await new Capture(this.page).screenshot({ path: suffix === 'base' ? baselineImage : testImage, selector: selector });
-        let isSame = true;
+        let result;
 
         if (base) {
             const test = await fs.readFile(testImage);
-            isSame = await compare(base, test, diffImage);
+            result = await compare(base, test, diffImage);
 
             if (!this.debug) {
                 try {
@@ -74,8 +80,7 @@ module.exports = class Resemble {
             }
         }
 
-        assert.equal(isSame, true, `Visuals should be equal for selector ${selector}`);
-        return true;
+        return result;
     }
 };
 

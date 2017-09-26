@@ -1,12 +1,20 @@
 const resemble = require('resemblejs');
 const Capture = require('./capture');
-const fs = require('mz/fs');
+const {promisify} = require('util');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+
+const writeFile = promisify(fs.writeFile);
+const exists = promisify(fs.exists);
+const readFile = promisify(fs.readFile);
+const unlink = promisify(fs.unlink);
+const mkdir = promisify(fs.mkdir);
 
 async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
         const diff = resemble(file1).compareTo(file2).onComplete(data => {
             if (Number(data.misMatchPercentage) > 0.05) {
-                fs.writeFile(output, data.getBuffer(), err => {
+                writeFile(output, data.getBuffer(), err => {
                     if (err) {
                         reject({
                             result: 'fail',
@@ -31,59 +39,62 @@ async function compare(file1, file2, output) {
 }
 
 module.exports = class Resemble {
-    constructor({ page, path = '.', debug = false } = {}) {
+    constructor({page, path = '.', debug = false} = {}) {
         this.page = page;
         this.path = path;
         this.debug = debug;
     }
 
-    async compareVisual(selector, testName) {
-        if (!testName) {
-            throw new Error('Test name is required otherwise visual cannot be named');
-        }
-        let base, suffix = '';
-        const baselinePath = `${this.path}/baselines`;
-        const resultsPath = `${this.path}/results`;
+    compareVisual(selector, testName) {
+        return new Promise(async (resolve, reject) => {
+            if (!testName) {
+                throw new Error('Test name is required otherwise visual cannot be named');
+            }
+            let base, suffix = '';
+            const baselinePath = `${this.path}/baselines`;
+            const resultsPath = `${this.path}/results`;
 
-        const testImage = `${resultsPath}/${testName}-test.jpg`;
-        const diffImage = `${resultsPath}/${testName}-diff.jpg`;
-        const baselineImage = `${baselinePath}/${testName}-base.jpg`;
+            const testImage = `${resultsPath}/${testName}-test.png`;
+            const diffImage = `${resultsPath}/${testName}-diff.png`;
+            const baselineImage = `${baselinePath}/${testName}-base.png`;
 
-        if (!await fs.exists(baselinePath)){
-            await fs.mkdir(baselinePath);
-        }
-
-        if (await fs.exists(baselineImage)) {
-            base = await fs.readFile(baselineImage);
-            suffix = 'test';
-
-            if (!await fs.exists(resultsPath)){
-                await fs.mkdir(resultsPath);
+            if (!await exists(baselinePath)) {
+                await mkdirp(baselinePath);
             }
 
-        } else {
-            suffix = 'base';
-        }
+            if (await exists(baselineImage)) {
+                base = await readFile(baselineImage);
+                suffix = 'test';
 
-        await new Capture(this.page).screenshot({ path: suffix === 'base' ? baselineImage : testImage, selector: selector });
-        let r = { result: 'pass' };
+                if (!await exists(resultsPath)) {
+                    await mkdirp(resultsPath);
+                }
 
-        if (base) {
-            const test = await fs.readFile(testImage);
-            r = await compare(base, test, diffImage);
+            } else {
+                suffix = 'base';
+            }
 
-            if (!this.debug) {
-                try {
-                    await fs.unlink(testImage);
-                    await fs.unlink(diffImage);
-                } catch(e) {
+            await new Capture(this.page).screenshot({
+                path: suffix === 'base' ? baselineImage : testImage,
+                selector: selector
+            });
+            let r = {result: 'pass'};
 
+            if (base) {
+                const test = await readFile(testImage);
+                r = await compare(base, test, diffImage);
+
+                if (!this.debug) {
+                    try {
+                        await unlink(testImage);
+                        await unlink(diffImage);
+                    } catch (e) {
+                        reject(e);
+                    }
                 }
             }
-        }
 
-        return r;
+            resolve(r);
+        })
     }
-};
-
-
+}

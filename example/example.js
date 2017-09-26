@@ -13,7 +13,7 @@ let currentTestName = '';
 // wrapper function for asserting visuals
 async function compareVisual(containerSelector) {
     let r = await resemble.compareVisual(containerSelector, currentTestName);
-    assert.equal(r.result, 'pass', `Visuals should be equal for selector ${containerSelector}`);
+    assert.equal(r.result, 'pass', `Visual fail: { selector: ${containerSelector}, misMatchPercentage: ${r.misMatchPercentage} }`);
 }
 
 describe('Huddle home page test ', async() => {
@@ -45,7 +45,12 @@ describe('Huddle home page test ', async() => {
     });
 
     it('Look at better results section', async() => {
-        await compareVisual(betterResultsSection)
+        try {
+            await compareVisual(betterResultsSection);
+        } catch(e) {
+            console.log(e.message);
+            throw e;
+        }
     });
 
     after(async () => {

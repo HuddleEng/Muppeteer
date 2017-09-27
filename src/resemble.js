@@ -12,21 +12,20 @@ const mkdir = promisify(fs.mkdir);
 
 async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
-        const diff = resemble(file1).compareTo(file2).onComplete(data => {
+        const diff = resemble(file1).compareTo(file2).onComplete(async (data) => {
             if (Number(data.misMatchPercentage) > 0.05) {
-                writeFile(output, data.getBuffer(), err => {
-                    if (err) {
-                        reject({
-                            result: 'fail',
-                            error: err
-                        });
-                    }
-
+                let err = await writeFile(output, data.getBuffer());
+                if (err) {
+                    reject({
+                        result: 'fail',
+                        error: err
+                    });
+                } else {
                     resolve({
                         result: 'fail',
                         misMatchPercentage: data.misMatchPercentage
                     });
-                });
+                }
             } else {
                 resolve({
                     result: 'pass',

@@ -1,20 +1,12 @@
 const resemble = require('resemblejs');
 const Capture = require('./capture');
-const {promisify} = require('util');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-
-const writeFile = promisify(fs.writeFile);
-const exists = promisify(fs.exists);
-const readFile = promisify(fs.readFile);
-const unlink = promisify(fs.unlink);
-const mkdir = promisify(fs.mkdir);
+const fsutils = require('./fsutils');
 
 async function compare(file1, file2, output) {
     return new Promise(async(resolve, reject) => {
         const diff = resemble(file1).compareTo(file2).onComplete(async (data) => {
             if (Number(data.misMatchPercentage) > 0.05) {
-                let err = await writeFile(output, data.getBuffer());
+                let err = await fsutils.writeFile(output, data.getBuffer());
                 if (err) {
                     reject({
                         result: 'fail',
@@ -57,17 +49,13 @@ module.exports = class Resemble {
             const diffImage = `${resultsPath}/${testName}-diff.png`;
             const baselineImage = `${baselinePath}/${testName}-base.png`;
 
-            if (!await exists(baselinePath)) {
-                await mkdirp(baselinePath);
-            }
+            await fsutils.mkdirIfRequired(baselinePath);
 
-            if (await exists(baselineImage)) {
-                base = await readFile(baselineImage);
+            if (await fsutils.exists(baselineImage)) {
+                base = await fsutils.readFileIfExists(baselineImage);
                 suffix = 'test';
 
-                if (!await exists(resultsPath)) {
-                    await mkdirp(resultsPath);
-                }
+                await fsutils.mkdirIfRequired(resultsPath);
 
             } else {
                 suffix = 'base';
@@ -80,20 +68,19 @@ module.exports = class Resemble {
             let r = {result: 'pass'};
 
             if (base) {
-                const test = await readFile(testImage);
+                const test = await fsutils.readFileIfExists(testImage);
                 r = await compare(base, test, diffImage);
 
                 if (!this.debug) {
                     try {
-                        await unlink(testImage);
-                        await unlink(diffImage);
+                        await fsutils.unlinkIfExists(testImage);
+                        await fsutils.unlinkIfExists(diffImage);
                     } catch (e) {
                         reject(e);
                     }
                 }
             }
-
             resolve(r);
-        })
+        });
     }
 }

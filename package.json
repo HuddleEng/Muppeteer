@@ -16,12 +16,14 @@
     "url": "https://github.com/gidztech/ResembleVRT/issues"
   },
   "homepage": "https://github.com/gidztech/ResembleVRT#readme",
-  "devDependencies": {
+  "dependencies": {
     "canvas": "^1.6.7",
-    "chai": "^4.1.2",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.5.3",
-    "puppeteer": "^0.10.2",
     "resemblejs": "^2.2.6"
+  },
+  "devDependencies": {
+    "puppeteer": "^0.10.2",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3"
   }
 }

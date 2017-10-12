@@ -1,11 +1,11 @@
-module.exports = class Capture {
+module.exports = class PuppeteerCapture {
     constructor(page) {
         this.page = page;
     }
 
-    async screenshot({selector = null, path = null } = {}) {
+    async screenshot({selector, path} = {}) {
         if (!selector) {
-            throw new Error('Selector is required for screenshot.');
+            throw new Error('Selector is required for a screenshot.');
         }
 
         const boundingRect = await this.page.evaluate(selector => {

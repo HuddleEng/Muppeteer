@@ -17,10 +17,9 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 if (!await existsp(path)) {
-                    resolve(await mkdirp(path));
-                } else {
-                    resolve();
+                    await mkdirp(path);
                 }
+                resolve(path);
             } catch (e) {
                 reject(e);
             }
@@ -32,7 +31,7 @@ module.exports = {
                 if (await existsp(buffer)) {
                     resolve(await promisify(fs.readFile)(buffer));
                 } else {
-                    resolve();
+                    resolve(false);
                 }
             } catch (e) {
                 reject(e);
@@ -45,7 +44,7 @@ module.exports = {
                 if (await existsp(buffer)) {
                     resolve(await promisify(fs.unlink)(buffer));
                 } else {
-                    resolve();
+                    resolve(false);
                 }
             } catch (e) {
                 reject(e);
@@ -61,4 +60,4 @@ module.exports = {
             }
         });
     }
-}
+};

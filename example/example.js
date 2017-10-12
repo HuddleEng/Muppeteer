@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const PuppeteerCapture = require('./puppeteerCapture');
 const ResembleVRT = require('../src/resemble');
 const {assert} = require('chai');
 let browser, page, resemble;
@@ -22,7 +23,12 @@ describe('Huddle home page test ', async() => {
         page = await browser.newPage();
         page.setViewport({ width: 1000, height: 1000, deviceScaleFactor: 1 });
         await page.goto('https://www.huddle.com');
-        resemble = new ResembleVRT({page: page, path: '.'});
+        resemble = new ResembleVRT({
+            capturer: new PuppeteerCapture(page),
+            path: '.',
+            visualThresholdPercentage: 0.05,
+            debug: false
+        });
     });
 
     // get the current test name for the visual file

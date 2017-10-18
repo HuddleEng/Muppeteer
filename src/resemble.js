@@ -1,12 +1,13 @@
 const resemble = require('resemblejs');
 const fsutils = require('./fsutils');
+const Capture = require('./capture');
 
 const cleanupVisuals = Symbol('cleanupVisuals');
 const compare = Symbol('compare');
 
 module.exports = class Resemble {
-    constructor({capturer, path = '.', visualThresholdPercentage = 0.05, debug = false} = {}) {
-        this.capturer = capturer;
+    constructor({page, path = '.', visualThresholdPercentage = 0.05, debug = false} = {}) {
+        this.capture = new Capture(page);
         this.path = path;
         this.visualThresholdPercentage = visualThresholdPercentage;
         this.debug = debug;
@@ -39,9 +40,9 @@ module.exports = class Resemble {
             }
         });
     }
-    async [cleanupVisuals](testImagePath, diffImagePath) {
+    async [cleanupVisuals](currentImage, diffImagePath) {
         try {
-            await fsutils.unlinkIfExists(testImagePath);
+            await fsutils.unlinkIfExists(currentImage);
             await fsutils.unlinkIfExists(diffImagePath);
         } catch (e) {
             throw new Error('Removing visuals failed', e);
@@ -55,46 +56,40 @@ module.exports = class Resemble {
 
             try {
                 const path = await fsutils.mkdirIfRequired(this.path);
-                const testImage = `${path}/${testName}-test.png`;
+                const currentImage = `${path}/${testName}-current.png`;
                 const diffImage = `${path}/${testName}-diff.png`;
                 const baselineImage = `${path}/${testName}-base.png`;
 
-                // cleanup old test/diff visuals first if they
+                // cleanup old test/diff visuals first if they exist
                 try {
-                    await this[cleanupVisuals](testImage, diffImage);
+                    await this[cleanupVisuals](currentImage, diffImage);
                 } catch (e) {
                     reject(e);
                 }
 
-                if (this.capturer && this.capturer.screenshot) {
-                    await this.capturer.screenshot({
-                        path: await fsutils.exists(baselineImage) ? testImage : baselineImage,
-                        selector: selector
-                    });
+                const buffer = await this.capture.screenshot(selector);
+                const pathToSaveTo = await fsutils.exists(baselineImage) ? currentImage : baselineImage;
+                fsutils.writeFile(pathToSaveTo, buffer);
 
-                    const base = await fsutils.readFileIfExists(baselineImage);
-                    const test = await fsutils.readFileIfExists(testImage);
+                const base = await fsutils.readFileIfExists(baselineImage);
+                const test = await fsutils.readFileIfExists(currentImage);
 
-                    let r = { result: 'pass' };
+                let r = { result: 'pass' };
 
-                    // if test image exists, then a baseline already existed so do comparison
-                    if (test) {
-                        r = await this[compare](base, test, diffImage);
+                // if test image exists, then a baseline already existed so do comparison
+                if (test) {
+                    r = await this[compare](base, test, diffImage);
 
-                        if (!this.debug) {
-                            // cleanup test/diff visuals in non-debug mode
-                            try {
-                                await this[cleanupVisuals](testImage, diffImage);
-                            } catch (e) {
-                                reject(e);
-                            }
+                    if (!this.debug && r.result === 'pass') {
+                        // cleanup test/diff visuals if passed and not in debug mode
+                        try {
+                            await this[cleanupVisuals](currentImage, diffImage);
+                        } catch (e) {
+                            reject(e);
                         }
                     }
-                    resolve(r);
-                } else {
-                    reject ('Capturer does not conform to contract.')
                 }
-
+                resolve(r);
             } catch (e) {
                 reject(`There was a error comparing visuals, ${e}`);
             }

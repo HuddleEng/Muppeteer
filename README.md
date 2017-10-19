@@ -1,89 +1,11 @@
-# Resemble VRT
-Resemble VRT is a Node Visual Regression Testing library, which uses [Resemble JS](https://github.com/Huddle/Resemble.js/) to compare 
-differences between two screenshot visuals. Screenshots are created using Google Chrome in Headless mode via the 
-[Puppeteer](https://github.com/GoogleChrome/puppeteer) interaction library. This library is loosely based on 
-[PhantomCSS](https://github.com/Huddle/PhantomCSS).
+# Mochateer
+Mochateer is a test framework for running UI tests in Chrome. It is composed of:
 
-## How it works
-The first time a screenshot is taken of a selector, a baseline image is stored in your chosen path. The next time the same test runs,
-a second screenshot is taken. A visual comparison is made, and a pass/fail state is returned along with the mismatch percentage.
+- [Mocha](https://mochajs.org/) - a test runner
+- [Chai](http://chaijs.com/) - assertion library
+- [Puppeteer](https://github.com/GoogleChrome/puppeteer)  - a Node library for interacting with Chrome via RDP
+- [Resemble.js](https://github.com/Huddle/Resemble.js/) - a Node library for running visual comparisons of images
 
-## Example usage
-This library doesn't rely on a particular test runner or assertion library. In this example, I'm using Mocha and Chai with a couple of
-helper functions. If your visual has changed on purpose, you can delete the baseline image and run the test again to generate a new one. 
-You should version the baseline images in GIT or similar.
+Mochateer doesn't try to do too much itself, but it provides a convenient test API which abstracts away boilerplate setup code. It's loosely based on [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated) [PhantomJS](http://phantomjs.org/) world.
 
-```javascript
-const puppeteer = require('puppeteer');
-const PuppeteerCapture = require('./puppeteerCapture');
-const ResembleVRT = require('../src/resemble');
-const {assert} = require('chai');
-let browser, page, resemble;
-
-// selectors
-const containerSelector = '.container .hero-text';
-const headingSelector = containerSelector + ' h2';
-const betterResultsSection = '.section--better-results';
-
-let currentTestName = '';
-
-// wrapper function for asserting visuals
-async function compareVisual(containerSelector) {
-    let r = await resemble.compareVisual(containerSelector, currentTestName);
-    assert.equal(r.result, 'pass', `Visual fail: { selector: ${containerSelector}, misMatchPercentage: ${r.misMatchPercentage} }`);
-}
-
-describe('Huddle home page test ', async() => {
-    before(async() => {
-        browser = await puppeteer.launch();
-        page = await browser.newPage();
-        page.setViewport({ width: 1000, height: 1000, deviceScaleFactor: 1 });
-        await page.goto('https://www.huddle.com');
-        resemble = new ResembleVRT({
-            capturer: new PuppeteerCapture(page),
-            path: '.',
-            visualThresholdPercentage: 0.05,
-            debug: false
-        });
-    });
-
-    // get the current test name for the visual file
-    beforeEach(function() {
-        currentTestName = this.currentTest.fullTitle().replace(/\s/g, '_').toLowerCase();
-    });
-
-    it('Check header text', async() => {
-        await page.waitForSelector(headingSelector);
-
-        const text = await page.evaluate((headingSelector) => {
-            return document.querySelector(headingSelector).textContent
-        }, headingSelector);
-
-        assert.equal(text, 'Secure document collaboration for government and enterprise.', 'Header text is correct');
-    });
-
-    it('Look at heading', async() => {
-        await compareVisual(containerSelector)
-    });
-
-    it('Look at better results section', async() => {
-        try {
-            await compareVisual(betterResultsSection);
-        } catch(e) {
-            console.log(e.message);
-            throw e;
-        }
-    });
-
-    after(async () => {
-        browser.close();
-    })
-});
-```
-
-### Running the tests
-```
-mocha example --timeout=10000
-````
-
-![Example of test](https://i.imgur.com/6CWtGT2.png)
+This currently work in progress.

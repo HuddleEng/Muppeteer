@@ -19,7 +19,7 @@ module.exports = puppeteerPage => ({
             throw new Error(`Unable find element that matches selector: ${selector}.`);
         }
 
-        return await puppeteerPage.screenshot({
+        return puppeteerPage.screenshot({
             undefined,
             clip: {
                 x: boundingRect.left,

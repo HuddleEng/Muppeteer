@@ -32,11 +32,8 @@ Mocha.interfaces['mochateer'] = mochateerInterface(component => {
         mocha.addFile(fullPath);
     });
 
-    mocha.run(function(failures) {
+    mocha.run(() => {
         browserInstance.closeBrowser();
-        if (failures) {
-            console.err(failures);
-        }
     });
 })();
 

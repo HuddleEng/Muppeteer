@@ -1,17 +1,17 @@
 module.exports = puppeteerPage => ({
     async getValue(selector) {
-        return await puppeteerPage.evaluate(selector => {
+        return puppeteerPage.evaluate(selector => {
             return document.querySelector(selector).value;
         }, selector);
     },
     async getText(selector) {
-        return await puppeteerPage.evaluate(selector => {
+        return puppeteerPage.evaluate(selector => {
             return document.querySelector(selector).textContent;
         }, selector);
     },
     async getPropertyValue(selector, property) {
         try {
-            return await puppeteerPage.evaluate((selector, property) => {
+            return puppeteerPage.evaluate((selector, property) => {
                 const element = document.querySelector(selector);
                 return element[property];
             }, selector, property);

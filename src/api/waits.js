@@ -27,38 +27,38 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     },
     async waitForFunction(fn, options, ...args) {
         const fnStr = serialization.serializeFunctionWithArgs(fn, ...args);
-        return await puppeteerPage.waitForFunction(fnStr, options);
+        return puppeteerPage.waitForFunction(fnStr, options);
     },
     async waitForSelector(selector, timeout) {
-        return await puppeteerPage.waitForSelector(selector, { timeout: timeout || defaultTimeout});
+        return puppeteerPage.waitForSelector(selector, { timeout: timeout || defaultTimeout});
     },
     async waitUntilExistsAndVisible(selector) {
-        return await puppeteerPage.waitForSelector(selector, { visible: true });
+        return puppeteerPage.waitForSelector(selector, { visible: true });
     },
     async waitWhileExistsAndVisible(selector) {
-        return await puppeteerPage.waitForSelector(selector, { hidden: true });
+        return puppeteerPage.waitForSelector(selector, { hidden: true });
     },
     async waitWhileSelectorHasVisibleContent(selector) {
-        return await puppeteerPage.waitForFunction(selector => {
+        return puppeteerPage.waitForFunction(selector => {
             const elem = document.querySelector(selector);
             const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
             return !isVisible;
         }, {timeout: defaultTimeout}, selector);
     },
     async waitUntilSelectorHasVisibleContent(selector) {
-        return await self._puppeteerPage.waitForFunction(selector => {
+        return self._puppeteerPage.waitForFunction(selector => {
             const elem = document.querySelector(selector);
             const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
             return !!isVisible;
         }, {timeout: defaultTimeout}, selector);
     },
     async waitForElementCount(selector, expectedCount) {
-        return await puppeteerPage.waitForFunction((selector, expectedCount) => {
+        return puppeteerPage.waitForFunction((selector, expectedCount) => {
             return document.querySelectorAll(selector).length === expectedCount;
         }, { timeout: defaultTimeout}, selector, expectedCount);
     },
     async waitForUrl(regex) {
-        return await this.waitForFunction(regex => {
+        return this.waitForFunction(regex => {
             return regex.test(window.location.href);
         }, { timeout: defaultTimeout}, regex);
     },

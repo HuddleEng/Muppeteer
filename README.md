@@ -1,4 +1,7 @@
 # Mochateer
+
+**Warning:** This is not production ready. 
+
 Mochateer is a test framework for running UI tests in Chrome. It is composed of:
 
 - [Mocha](https://mochajs.org/) - a test runner

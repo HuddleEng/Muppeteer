@@ -1,14 +1,10 @@
-module.exports = class PuppeteerCapture {
-    constructor(page) {
-        this.page = page;
-    }
-
-    async screenshot({selector, path} = {}) {
+module.exports = puppeteerPage => ({
+    async screenshot(selector) {
         if (!selector) {
             throw new Error('Selector is required for a screenshot.');
         }
 
-        const boundingRect = await this.page.evaluate(selector => {
+        const boundingRect = await puppeteerPage.evaluate(selector => {
             const element = document.querySelector(selector);
 
             if (!element) {
@@ -23,8 +19,8 @@ module.exports = class PuppeteerCapture {
             throw new Error(`Unable find element that matches selector: ${selector}.`);
         }
 
-        return await this.page.screenshot({
-            path,
+        return await puppeteerPage.screenshot({
+            undefined,
             clip: {
                 x: boundingRect.left,
                 y: boundingRect.top,
@@ -32,5 +28,6 @@ module.exports = class PuppeteerCapture {
                 height: boundingRect.height
             }
         });
-    }
-};
+    },
+});
+

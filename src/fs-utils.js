@@ -1,6 +1,6 @@
 const {promisify} = require('util');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
+const mkdirp = promisify(require('mkdirp'));
 const existsp = promisify(fs.exists);
 
 module.exports = {

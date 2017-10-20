@@ -1,13 +1,11 @@
 const resemble = require('resemblejs');
-const fsutils = require('./fsutils');
-const Capture = require('./capture');
+const fsutils = require('./fs-utils');
 
 const cleanupVisuals = Symbol('cleanupVisuals');
 const compare = Symbol('compare');
 
-module.exports = class Resemble {
-    constructor({page, path = '.', visualThresholdPercentage = 0.05, debug = false} = {}) {
-        this.capture = new Capture(page);
+module.exports = class ResembleVRT {
+    constructor({path = '.', visualThresholdPercentage = 0.05, debug = false} = {}) {
         this.path = path;
         this.visualThresholdPercentage = visualThresholdPercentage;
         this.debug = debug;
@@ -48,7 +46,7 @@ module.exports = class Resemble {
             throw new Error('Removing visuals failed', e);
         }
     }
-    compareVisual(selector, testName) {
+    compareVisual(buffer, testName) {
         return new Promise(async (resolve, reject) => {
             if (!testName) {
                 reject('Test name is required otherwise visual cannot be named.');
@@ -56,6 +54,7 @@ module.exports = class Resemble {
 
             try {
                 const path = await fsutils.mkdirIfRequired(this.path);
+
                 const currentImage = `${path}/${testName}-current.png`;
                 const diffImage = `${path}/${testName}-diff.png`;
                 const baselineImage = `${path}/${testName}-base.png`;
@@ -67,9 +66,8 @@ module.exports = class Resemble {
                     reject(e);
                 }
 
-                const buffer = await this.capture.screenshot(selector);
                 const pathToSaveTo = await fsutils.exists(baselineImage) ? currentImage : baselineImage;
-                fsutils.writeFile(pathToSaveTo, buffer);
+                await fsutils.writeFile(pathToSaveTo, buffer);
 
                 const base = await fsutils.readFileIfExists(baselineImage);
                 const test = await fsutils.readFileIfExists(currentImage);
@@ -91,7 +89,7 @@ module.exports = class Resemble {
                 }
                 resolve(r);
             } catch (e) {
-                reject(`There was a error comparing visuals, ${e}`);
+                reject(`There was an error comparing visuals, ${e}`);
             }
         });
     }

@@ -46,11 +46,29 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         }, {timeout: defaultTimeout}, selector);
     },
     async waitUntilSelectorHasVisibleContent(selector) {
-        return self._puppeteerPage.waitForFunction(selector => {
+        return puppeteerPage.waitForFunction(selector => {
             const elem = document.querySelector(selector);
             const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
             return !!isVisible;
         }, {timeout: defaultTimeout}, selector);
+    },
+    async waitForNthSelectorAttribute(selector, nth, attributeName) {
+        return puppeteerPage.waitForFunction((selector, nth, attributeName) => {
+            const element = document.querySelectorAll(selector)[nth - 1];
+            return typeof element.attributes[attributeName] !== 'undefined';
+        }, {timeout: defaultTimeout}, selector, nth, attributeName);
+    },
+    async waitForSelectorAttribute (selector, attributeName) {
+        return waitForNthSelectorAttribute(selector, 1, attributeName);
+    },
+    async waitForNthSelectorAttributeValue (selector, nth, attributeName, attributeValue) {
+        return puppeteerPage.waitForFunction((selector, nth, attributeName, attributeValue) => {
+            const element = document.querySelectorAll(selector)[nth - 1];
+            return element.attributes[attributeName] && element.attributes[attributeName].value === attributeValue;
+        }, {timeout: defaultTimeout}, selector, nth, attributeName, attributeValue);
+    },
+    async waitForSelectorAttributeValue (selector, attributeName, attributeValue) {
+        return this.waitForNthSelectorAttributeValue(selector, 1, attributeName, attributeValue);
     },
     async waitForElementCount(selector, expectedCount) {
         return puppeteerPage.waitForFunction((selector, expectedCount) => {

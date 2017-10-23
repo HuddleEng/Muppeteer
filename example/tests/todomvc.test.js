@@ -20,6 +20,10 @@ describeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'}
         it('clicking checkbox marks item as complete', async function() {
             await Mochateer.page.waitForSelector(firstItemToggle);
             await Mochateer.page.click(firstItemToggle);
+            
+            // something to break the tests
+            //await Mochateer.page.addStyleTag({ content: '.header { background: black; }'});
+
             await Mochateer.page.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
             await Mochateer.assert.visual(container);
         });

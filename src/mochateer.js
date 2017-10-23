@@ -75,8 +75,8 @@ module.exports = class Mochateer {
                 async setViewport(viewport) {
                     return self._puppeteerPage.setViewport(viewport);
                 },
-                async addStyleTag(selector) {
-                    return self._puppeteerPage.addStyleTag(selector);
+                async addStyleTag(options) {
+                    return self._puppeteerPage.addStyleTag(options);
                 }
             },
             waits(self._puppeteerPage, self._resourceRequests, TIMEOUT_MS),

@@ -1,7 +1,7 @@
 const Mocha = require('mocha');
 const path = require('path');
-const mochateerInterface = require('./test-interface');
-const {browserInstance} = require('./test-controller');
+const mochateerInterface = require('../lib/test-interface');
+const {browserInstance} = require('../lib/test-controller');
 const recursiveReadSync = require('recursive-readdir-sync');
 
 module.exports = class Launcher {

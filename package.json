@@ -5,8 +5,7 @@
   "main": "lib/mochateer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "example-test": "node example/launcher.js",
-    "example-test2": "node lib/test-launcher-cli --t example/tests --f test.js --r example/tests/report"
+    "example-test": "node lib/test-launcher-cli --t example/tests --f test.js --r example/tests/report"
   },
   "repository": {
     "type": "git",

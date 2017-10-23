@@ -59,7 +59,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         }, {timeout: defaultTimeout}, selector, nth, attributeName);
     },
     async waitForSelectorAttribute (selector, attributeName) {
-        return waitForNthSelectorAttribute(selector, 1, attributeName);
+        return this.waitForNthSelectorAttribute(selector, 1, attributeName);
     },
     async waitForNthSelectorAttributeValue (selector, nth, attributeName, attributeValue) {
         return puppeteerPage.waitForFunction((selector, nth, attributeName, attributeValue) => {

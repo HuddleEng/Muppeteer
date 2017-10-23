@@ -39,7 +39,7 @@ module.exports = class Launcher {
                 files = recursiveReadSync(testDir);
             } catch (err) {
                 if (err.errno === 34) {
-                    console.log('Path does not exist');
+                    throw Error('Path does not exist');
                 } else {
                     throw err;
                 }

@@ -18,9 +18,14 @@ module.exports = class ResembleVRT {
                     if (Number(data.misMatchPercentage) > this.visualThresholdPercentage) {
                         let err = await fsutils.writeFile(output, data.getBuffer());
                         if (!err) {
+
+                            const b64encoded = Buffer.from(data.getBuffer()).toString('base64');
+                            const dataUrl = `data:image/jpg;base64,${b64encoded}`;
+
                             resolve({
                                 result: 'fail',
-                                misMatchPercentage: data.misMatchPercentage
+                                misMatchPercentage: data.misMatchPercentage,
+                                diffScreenshot: dataUrl
                             });
                         } else {
                             reject(err);

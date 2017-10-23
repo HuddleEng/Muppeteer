@@ -5,7 +5,8 @@
   "main": "lib/mochateer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "example-test": "node example/launcher.js"
+    "example-test": "node example/launcher.js",
+    "example-test2": "node lib/test-launcher-cli --t example/tests --f test.js --r example/tests/report"
   },
   "repository": {
     "type": "git",
@@ -19,13 +20,13 @@
   "homepage": "https://github.com/gidztech/Mochateer#readme",
   "dependencies": {
     "canvas": "^1.6.7",
-    "mkdirp": "^0.5.1",
-    "resemblejs": "^2.2.6",
-    "puppeteer": "^0.12.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
-  },
-  "devDependencies": {
-    "recursive-readdir-sync": "^1.0.6"
+    "mkdirp": "^0.5.1",
+    "mocha": "^4.0.1",
+    "mochawesome": "^2.3.1",
+    "puppeteer": "^0.12.0",
+    "recursive-readdir-sync": "^1.0.6",
+    "resemblejs": "^2.2.6",
+    "yargs": "^9.0.1"
   }
 }

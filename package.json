@@ -22,6 +22,8 @@
     "image-size": "^0.6.1",
     "mkdirp": "^0.5.1",
     "mocha": "^4.0.1",
+    "mocha-junit-reporter": "^1.15.0",
+    "mocha-multi-reporters": "^1.1.6",
     "mochawesome": "^2.3.1",
     "pixelmatch": "^4.0.2",
     "puppeteer": "^0.12.0",

@@ -25,11 +25,16 @@ module.exports = class Launcher {
         Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold);
 
         const mocha = new Mocha({
-            timeout: 10000, ui: 'mochateer', reporter: 'mochawesome', reporterOptions: {
-                reportDir: reportDir,
-                reportFilename: 'test-report',
-                reportTitle: 'Test Report',
-                reportPageTitle: 'Test Report'
+            timeout: 10000, ui: 'mochateer', reporter: 'mocha-multi-reporters',  reporterOptions: {
+                'reporterEnabled': 'mocha-junit-reporter, mochawesome',
+                'mochaJunitReporterReporterOptions': {
+                    'mochaFile': reportDir + '/junit-custom.xml'
+                }, 'mochawesomeReporterOptions': {
+                    'reportDir': reportDir,
+                    'reportFilename': 'test-report',
+                    'reportTitle': 'Test Report',
+                    'reportPageTitle': 'Test Report'
+                }
             }
         });
 
@@ -47,7 +52,7 @@ module.exports = class Launcher {
 
         if (testFilter) {
             files.filter(file => {
-                return path.basename(file).substr(-(testFilter.length)) === testFilter;
+                return file.indexOf(testFilter) !== -1 && path.basename(file).substr(-7) === 'test.js';
             }).forEach(file => {
                 mocha.addFile(file);
             });
@@ -56,7 +61,7 @@ module.exports = class Launcher {
                 mocha.addFile(file);
             });
         }
-        
+
         (async function() {
             await browserInstance.launch();
 

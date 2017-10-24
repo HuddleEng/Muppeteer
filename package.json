@@ -20,12 +20,13 @@
   "dependencies": {
     "canvas-prebuilt": "^1.6.5-prerelease.1",
     "chai": "^4.1.2",
+    "image-size": "^0.6.1",
     "mkdirp": "^0.5.1",
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
+    "pixelmatch": "^4.0.2",
     "puppeteer": "^0.12.0",
     "recursive-readdir-sync": "^1.0.6",
-    "resemblejs": "git+https://github.com/gidztech/Resemble.js.git",
     "yargs": "^9.0.1"
   },
   "devDependencies": {}

@@ -25,6 +25,12 @@ module.exports = {
             }
         });
     },
+    createReadStream(path, options) {
+        return fs.createReadStream(path, options);
+    },
+    createWriteStream(path, options) {
+        return fs.createWriteStream(path, options);
+    },
     readFileIfExists(buffer) {
         return new Promise(async (resolve, reject) => {
             try {

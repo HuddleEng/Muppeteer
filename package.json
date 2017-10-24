@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/gidztech/Mochateer#readme",
   "dependencies": {
-    "canvas-prebuilt": "^1.6.5-prerelease.1",
     "chai": "^4.1.2",
     "image-size": "^0.6.1",
     "mkdirp": "^0.5.1",

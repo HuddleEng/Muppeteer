@@ -6,7 +6,7 @@ const retrieval = require('./api/retrieval');
 const visual = require('./api/visual');
 const serialization = require('./api/serialization');
 const {browserInstance, debugMode} = require('../lib/test-controller');
-const ResembleVRT = require('./resemble');
+const VisualRegression = require('./visual-regression');
 const {assert} = require('chai');
 const createPageAPI = Symbol('createPageAPI');
 const TIMEOUT_MS = 10000;
@@ -16,12 +16,14 @@ module.exports = class Mochateer {
             componentName = 'unnamed-component',
             testId,
             url,
+            visualThreshold = 0.05,
             visualPath,
             onLoad} = {}) {
         this._testId = testId || componentName;
         this._testContext = null;
         this._url = url;
         this._onLoad = onLoad;
+        this._visualThreshold = visualThreshold;
         this._visualPath = visualPath;
         this._resourceRequests = [];
     }
@@ -88,13 +90,13 @@ module.exports = class Mochateer {
         // convenience function to wrap around assert.equal
         assert.visual = async function(selector) {
             const buffer = await api.screenshot(selector);
-            let r = await self.resemble.compareVisual(buffer, self._testId);
+            let r = await self.visualRegression.compareVisual(buffer, self._testId);
 
             if (r.result === 'fail' && r.diffScreenshot) {
                 addContext(self._testContext, r.diffScreenshot);
             }
 
-            assert.equal(r.result, 'pass', `Visual failure for selector '${selector}' with a ${r.misMatchPercentage}% mismatch.`);
+            assert.equal(r.result, 'pass', `Visual failure for selector '${selector}' with an approximate ${r.misMatchPercentage}% mismatch.`);
         };
 
         return api;
@@ -120,11 +122,10 @@ module.exports = class Mochateer {
             await this._page.evaluate(this._onLoad.fn, ...args);
         }
 
-        this.resemble = new ResembleVRT({
+        this.visualRegression = new VisualRegression({
             page: this._puppeteerPage,
             path: this._visualPath,
-            visualThresholdPercentage: 0.05,
-            debug: debugMode()
+            visualThreshold: this._visualThreshold
         });
     }
     set testId(testId) {

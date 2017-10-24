@@ -7,26 +7,27 @@ const {PNG} = require('pngjs');
 const cleanupVisuals = Symbol('cleanupVisuals');
 const compare = Symbol('compare');
 
-module.exports = class ResembleVRT {
-    constructor({path = '.', visualThresholdPercentage = 0.1, debug = false} = {}) {
+module.exports = class VisualRegression {
+    constructor({path = '.', visualThreshold = 0.05, debug = false} = {}) {
         this.path = path;
-        this.visualThresholdPercentage = visualThresholdPercentage;
+        this.visualThreshold = visualThreshold;
         this.debug = debug;
     }
 
     [compare](file1, file2, output) {
         return new Promise((resolve, reject) => {
             try {
+                let self = this;
                 let filesRead = 0;
                 const img1 = fsutils.createReadStream(file1).pipe(new PNG()).on('parsed', doneReading);
                 const img2 = fsutils.createReadStream(file2).pipe(new PNG()).on('parsed', doneReading);
 
                 function doneReading() {
                     if (++filesRead < 2) return;
-                    let diff = new PNG({width: img1.width, height: img1.height});
-                    let pixelmatchResult = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, { threshold: this.visualThresholdPercentage });
+                    let diff = new PNG({ width: img1.width, height: img1.height });
+                    let noOfDiffPixels = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, { threshold: self.visualThreshold });
 
-                    if (pixelmatchResult > 0) {
+                    if (noOfDiffPixels > 0) {
                         diff.pack();
 
                         let chunks = [];
@@ -37,15 +38,13 @@ module.exports = class ResembleVRT {
 
                         diff.on('end', async function () {
                             let result = Buffer.concat(chunks);
-                            fsutils.writeFile(output, result);
-                            const b64encoded = result.toString('base64');
-                            const dataUrl = `data:image/jpg;base64, ${b64encoded}`;
+                            await fsutils.writeFile(output, result);
+                            const dataUrl = `data:image/jpg;base64, ${result.toString('base64')}`;
 
                             const img1Size = await sizeOf(file1);
                             const img2Size = await sizeOf(file2);
-                            const largestWidth =  Math.max(img1Size.width, img2Size.width);
-                            const largestHeight = Math.max(img1Size.height, img2Size.height);
-                            const misMatchPercentage =  (pixelmatchResult / (largestHeight * largestWidth) * 100).toFixed(2);
+                            const misMatchPercentage = (noOfDiffPixels /
+                                (Math.max(img1Size.height, img2Size.height) * Math.max(img1Size.width, img2Size.width)) * 100).toFixed(2);
 
                             resolve({
                                 result: 'fail',

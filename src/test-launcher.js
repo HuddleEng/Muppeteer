@@ -11,6 +11,7 @@ module.exports = class Launcher {
                     reportDir,
                     componentTestUrlFactory,
                     componentTestVisualPathFactory,
+                    visualThreshold,
                     afterHook
                 }) {
         componentTestUrlFactory = componentTestUrlFactory || (component => {
@@ -21,7 +22,7 @@ module.exports = class Launcher {
             return path.join(testDir, `/screenshots/${component.name}`);
         });
 
-        Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory);
+        Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold);
 
         const mocha = new Mocha({
             timeout: 10000, ui: 'mochateer', reporter: 'mochawesome', reporterOptions: {

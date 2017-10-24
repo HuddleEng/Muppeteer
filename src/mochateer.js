@@ -100,7 +100,7 @@ module.exports = class Mochateer {
         return api;
     }
     async init () {
-        let browser = await browserInstance.getBrowser(puppeteer);
+        let browser = await browserInstance.get();
         this._puppeteerPage = await browser.newPage();
         this._page = this[createPageAPI]();
 

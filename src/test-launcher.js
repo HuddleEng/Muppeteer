@@ -23,42 +23,44 @@ module.exports = class Launcher {
 
         Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory);
 
-        (async function () {
-            const mocha = new Mocha({
-                timeout: 10000, ui: 'mochateer', reporter: 'mochawesome', reporterOptions: {
-                    reportDir: reportDir,
-                    reportFilename: 'test-report',
-                    reportTitle: 'Test Report',
-                    reportPageTitle: 'Test Report'
-                }
-            });
-
-            let files = null;
-
-            try {
-                files = recursiveReadSync(testDir);
-            } catch (err) {
-                if (err.errno === 34) {
-                    throw Error('Path does not exist');
-                } else {
-                    throw err;
-                }
+        const mocha = new Mocha({
+            timeout: 10000, ui: 'mochateer', reporter: 'mochawesome', reporterOptions: {
+                reportDir: reportDir,
+                reportFilename: 'test-report',
+                reportTitle: 'Test Report',
+                reportPageTitle: 'Test Report'
             }
+        });
 
-            if (testFilter) {
-                files.filter(file => {
-                    return path.basename(file).substr(-(testFilter.length)) === testFilter;
-                }).forEach(file => {
-                    mocha.addFile(file);
-                });
+        let files = null;
+
+        try {
+            files = recursiveReadSync(testDir);
+        } catch (err) {
+            if (err.errno === 34) {
+                throw Error('Path does not exist');
             } else {
-                files.forEach(file => {
-                    mocha.addFile(file);
-                });
+                throw err;
             }
+        }
 
-            mocha.run(() => {
-                browserInstance.closeBrowser();
+        if (testFilter) {
+            files.filter(file => {
+                return path.basename(file).substr(-(testFilter.length)) === testFilter;
+            }).forEach(file => {
+                mocha.addFile(file);
+            });
+        } else {
+            files.forEach(file => {
+                mocha.addFile(file);
+            });
+        }
+        
+        (async function() {
+            await browserInstance.launch();
+
+            mocha.run(async () => {
+                await browserInstance.close();
                 afterHook && afterHook();
             });
         })();

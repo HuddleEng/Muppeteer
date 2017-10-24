@@ -1,5 +1,5 @@
 const resemble = require('resemblejs');
-const Buffer = require('buffer');
+const {Buffer} = require('buffer');
 const fsutils = require('./fs-utils');
 
 const cleanupVisuals = Symbol('cleanupVisuals');

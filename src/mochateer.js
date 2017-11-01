@@ -18,6 +18,7 @@ module.exports = class Mochateer {
             url,
             visualThreshold = 0.05,
             visualPath,
+            shouldRebaseVisuals,
             onLoad} = {}) {
         this._testId = testId || componentName;
         this._testContext = null;
@@ -25,6 +26,7 @@ module.exports = class Mochateer {
         this._onLoad = onLoad;
         this._visualThreshold = visualThreshold;
         this._visualPath = visualPath;
+        this._shouldRebaseVisuals = shouldRebaseVisuals;
         this._resourceRequests = [];
     }
     [createPageAPI]() {
@@ -88,7 +90,11 @@ module.exports = class Mochateer {
         );
 
         // convenience function to wrap around assert.equal
-        assert.visual = async function(selector) {
+        assert.visual = async function(selector, options) {
+            if (options && options.evalBeforeFn) {
+                await self._puppeteerPage.evaluate(options.evalBeforeFn)
+            }
+
             const buffer = await api.screenshot(selector);
             let r = await self.visualRegression.compareVisual(buffer, self._testId);
 
@@ -125,7 +131,8 @@ module.exports = class Mochateer {
         this.visualRegression = new VisualRegression({
             page: this._puppeteerPage,
             path: this._visualPath,
-            visualThreshold: this._visualThreshold
+            visualThreshold: this._visualThreshold,
+            shouldRebaseVisuals: this._shouldRebaseVisuals
         });
     }
     set testId(testId) {
@@ -142,6 +149,9 @@ module.exports = class Mochateer {
     }
     get assert() {
         return assert;
+    }
+    resetRequests() {
+        this._resourceRequests = [];
     }
     async finish() {
         return this._puppeteerPage.close();

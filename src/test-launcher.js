@@ -8,6 +8,7 @@ module.exports = class Launcher {
     constructor({
                     testDir,
                     testFilter,
+                    shouldRebaseVisuals,
                     reportDir,
                     componentTestUrlFactory,
                     componentTestVisualPathFactory,
@@ -22,7 +23,7 @@ module.exports = class Launcher {
             return path.join(testDir, `/screenshots/${component.name}`);
         });
 
-        Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold);
+        Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold, shouldRebaseVisuals);
 
         const mocha = new Mocha({
             timeout: 10000, ui: 'mochateer', reporter: 'mocha-multi-reporters',  reporterOptions: {

@@ -25,6 +25,49 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
             }, 100);
         });
     },
+    async waitForLoadedWebFontCountToBe(count) {
+        return new Promise(async (resolve, reject) => {
+            let fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
+            let hasInjectedWebFontsAllLoadedFunction = false;
+
+            async function checkWebFontIsLoaded(cb) {
+                if (fontResponses.length === count) {
+                    if (hasInjectedWebFontsAllLoadedFunction) {
+                        let allLoaded = await puppeteerPage.evaluate(() => {
+                            return !!window.__webFontsAllLoaded;
+                        });
+
+                        if (allLoaded) {
+                            cb && cb();
+                            resolve();
+                        }
+                    } else {
+                        await puppeteerPage.evaluate(() => {
+                            (async function() {
+                                window.__webFontsAllLoaded = await document.fonts.ready;
+                            })();
+                        });
+
+                        hasInjectedWebFontsAllLoadedFunction = true;
+                    }
+                }
+            }
+            await checkWebFontIsLoaded();
+
+            const startTime = new Date().getTime();
+            const timer = setInterval(async () => {
+                if ((new Date().getTime() - startTime) < defaultTimeout) {
+                    fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
+                    await checkWebFontIsLoaded(() => {
+                        clearInterval(timer);
+                    });
+                } else {
+                    clearInterval(timer);
+                    reject(`Timeout waiting for ${count} web font responses`);
+                }
+            }, 100);
+        });
+    },
     async waitForFunction(fn, options, ...args) {
         const fnStr = serialization.serializeFunctionWithArgs(fn, ...args);
         return puppeteerPage.waitForFunction(fnStr, options);

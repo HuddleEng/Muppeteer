@@ -8,9 +8,10 @@ const cleanupVisuals = Symbol('cleanupVisuals');
 const compare = Symbol('compare');
 
 module.exports = class VisualRegression {
-    constructor({path = '.', visualThreshold = 0.05, debug = false} = {}) {
+    constructor({path = '.', visualThreshold = 0.05, shouldRebaseVisuals = false, debug = false} = {}) {
         this.path = path;
         this.visualThreshold = visualThreshold;
+        this.shouldRebaseVisuals = shouldRebaseVisuals;
         this.debug = debug;
     }
 
@@ -92,19 +93,19 @@ module.exports = class VisualRegression {
                     reject(e);
                 }
 
-                const pathToSaveTo = await fsutils.exists(baselineImage) ? currentImage : baselineImage;
+                const pathToSaveTo =  !await fsutils.exists(baselineImage) || this.shouldRebaseVisuals ? baselineImage: currentImage;
                 await fsutils.writeFile(pathToSaveTo, buffer);
 
-                const test = await fsutils.readFileIfExists(currentImage);
+                const current = await fsutils.readFileIfExists(currentImage);
 
                 let r = { result: 'pass' };
 
-                // if test image exists, then a baseline already existed so do comparison
-                if (test) {
+                // if a current image exists, then a baseline already existed so do comparison
+                if (current) {
                     r = await this[compare](baselineImage, currentImage, diffImage);
 
                     if (!this.debug && r.result === 'pass') {
-                        // cleanup test/diff visuals if passed and not in debug mode
+                        // cleanup current/diff visuals if passed and not in debug mode
                         try {
                             await this[cleanupVisuals](currentImage, diffImage);
                         } catch (e) {

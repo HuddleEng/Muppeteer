@@ -1,75 +1,85 @@
-const serialization = require('./serialization');
+const serializeFunctionWithArgs = require('../external/serialization-utils');
+
+const pollFor = ({checkFn, interval, timeout, timeoutMsg}) => {
+    return new Promise((resolve, reject) => {
+        const startTime = new Date().getTime();
+        const timer = setInterval(async () => {
+            if ((new Date().getTime() - startTime) < timeout) {
+                if (await checkFn()) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            } else {
+                clearInterval(timer);
+                reject(timeoutMsg);
+            }
+        }, interval);
+    });
+};
 
 module.exports = (puppeteerPage, requests, defaultTimeout) => ({
-    waitForResource (resource) {
+    waitForResource (resource, timeout = defaultTimeout) {
         return new Promise((resolve, reject) => {
             let request = requests.find(r => r.url.indexOf(resource) !== -1);
 
             if (request && request.response()) {
                 resolve();
+            } else {
+                pollFor({
+                    checkFn: () => {
+                        request = requests.find(r => r.url.indexOf(resource) !== -1);
+                        return request && request.response();
+                    },
+                    internal: 100,
+                    timeout: timeout,
+                    timeoutMsg: 'Timeout waiting for resource match.'
+                }).then(resolve).catch(reject)
             }
-
-            const startTime = new Date().getTime();
-            const timer = setInterval(() => {
-                if ((new Date().getTime() - startTime) < defaultTimeout) {
-                    request = requests.find(r => r.url.indexOf(resource) !== -1);
-
-                    if (request && request.response()) {
-                        clearInterval(timer);
-                        resolve();
-                    }
-                } else {
-                    clearInterval(timer);
-                    reject('Timeout waiting for resource match.');
-                }
-            }, 100);
         });
     },
-    async waitForLoadedWebFontCountToBe(count) {
+    waitForLoadedWebFontCountToBe(count, timeout = defaultTimeout) {
         return new Promise(async (resolve, reject) => {
-            let fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
             let hasInjectedWebFontsAllLoadedFunction = false;
 
             async function checkWebFontIsLoaded(cb) {
-                if (fontResponses.length === count) {
-                    if (hasInjectedWebFontsAllLoadedFunction) {
-                        let allLoaded = await puppeteerPage.evaluate(() => {
-                            return !!window.__webFontsAllLoaded;
-                        });
+                return new Promise(async (resolve, reject) => {
+                    const fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
 
-                        if (allLoaded) {
-                            cb && cb();
-                            resolve();
+                    if (fontResponses.length === count) {
+                        if (hasInjectedWebFontsAllLoadedFunction) {
+                            const allLoaded = await puppeteerPage.evaluate(() => {
+                                return !!window.__webFontsAllLoaded;
+                            });
+
+                            if (allLoaded) {
+                                cb && cb();
+                                resolve(true);
+                            }
+                        } else {
+                            await puppeteerPage.evaluate(() => {
+                                (async function() {
+                                    window.__webFontsAllLoaded = await document.fonts.ready;
+                                })();
+                            });
+
+                            hasInjectedWebFontsAllLoadedFunction = true;
                         }
-                    } else {
-                        await puppeteerPage.evaluate(() => {
-                            (async function() {
-                                window.__webFontsAllLoaded = await document.fonts.ready;
-                            })();
-                        });
-
-                        hasInjectedWebFontsAllLoadedFunction = true;
                     }
-                }
+                });
             }
-            await checkWebFontIsLoaded();
 
-            const startTime = new Date().getTime();
-            const timer = setInterval(async () => {
-                if ((new Date().getTime() - startTime) < defaultTimeout) {
-                    fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
-                    await checkWebFontIsLoaded(() => {
-                        clearInterval(timer);
-                    });
-                } else {
-                    clearInterval(timer);
-                    reject(`Timeout waiting for ${count} web font responses`);
-                }
-            }, 100);
+            pollFor({
+                checkFn: async() => {
+                    return checkWebFontIsLoaded();
+                },
+                internal: 100,
+                timeout: timeout,
+                timeoutMsg: `Timeout waiting for ${count} web font responses`
+            }).then(resolve).catch(reject);
         });
     },
     async waitForFunction(fn, options, ...args) {
-        const fnStr = serialization.serializeFunctionWithArgs(fn, ...args);
+        const fnStr = serializeFunctionWithArgs(fn, ...args);
         return puppeteerPage.waitForFunction(fnStr, options);
     },
     async waitForSelector(selector, timeout) {

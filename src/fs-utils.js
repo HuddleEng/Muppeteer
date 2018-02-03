@@ -4,26 +4,14 @@ const mkdirp = promisify(require('mkdirp'));
 const existsp = promisify(fs.exists);
 
 module.exports = {
-    writeFile(path, buffer) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                resolve(await promisify(fs.writeFile)(path, buffer));
-            } catch(e) {
-                reject(e);
-            }
-        });
+    async writeFile(path, buffer) {
+        return promisify(fs.writeFile)(path, buffer);
     },
-    mkdirIfRequired(path) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (!await existsp(path)) {
-                    await mkdirp(path);
-                }
-                resolve(path);
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async mkdirIfRequired(path) {
+        if (!await existsp(path)) {
+            await mkdirp(path);
+        }
+        return path;
     },
     createReadStream(path, options) {
         return fs.createReadStream(path, options);
@@ -31,39 +19,19 @@ module.exports = {
     createWriteStream(path, options) {
         return fs.createWriteStream(path, options);
     },
-    readFileIfExists(buffer) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (await existsp(buffer)) {
-                    resolve(await promisify(fs.readFile)(buffer));
-                } else {
-                    resolve(false);
-                }
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async readFileIfExists(buffer) {
+        if (await existsp(buffer)) {
+            return promisify(fs.readFile)(buffer);
+        }
+        return false;
     },
-    unlinkIfExists(buffer) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (await existsp(buffer)) {
-                    resolve(await promisify(fs.unlink)(buffer));
-                } else {
-                    resolve(false);
-                }
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async unlinkIfExists(buffer) {
+        if (await existsp(buffer)) {
+            return promisify(fs.unlink)(buffer);
+        }
+        return false;
     },
-    exists(buffer) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                resolve(await existsp(buffer));
-            } catch (e) {
-                reject(e);
-            }
-        });
+    async exists(buffer) {
+        return existsp(buffer);
     }
 };

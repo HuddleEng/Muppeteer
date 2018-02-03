@@ -4,12 +4,12 @@ const waits = require('./api/waits');
 const keyboard = require('./api/keyboard');
 const retrieval = require('./api/retrieval');
 const visual = require('./api/visual');
-const serialization = require('./api/serialization');
-const {browserInstance, debugMode} = require('../lib/test-controller');
+const serializeFunctionWithArgs = require('./external/serialization-utils');
+const {browserInstance} = require('../lib/test-controller');
 const VisualRegression = require('./visual-regression');
 const {assert} = require('chai');
 const createPageAPI = Symbol('createPageAPI');
-const TIMEOUT_MS = 10000;
+const TIMEOUT_MS = 5000;
 
 module.exports = class Mochateer {
     constructor({
@@ -55,7 +55,7 @@ module.exports = class Mochateer {
                     })
                 },
                 async evaluate(fn, ...args) {
-                    const fnStr = serialization.serializeFunctionWithArgs(fn, ...args);
+                    const fnStr = serializeFunctionWithArgs(fn, ...args);
                     return self._puppeteerPage.evaluate(fnStr);
                 },
                 async focus(selector) {
@@ -108,7 +108,7 @@ module.exports = class Mochateer {
         return api;
     }
     async init () {
-        let browser = await browserInstance.get();
+        let browser = browserInstance.get();
         this._puppeteerPage = await browser.newPage();
         this._page = this[createPageAPI]();
 

@@ -16,7 +16,7 @@ module.exports = puppeteerPage => ({
                 return element[property];
             }, selector, property);
         } catch(e) {
-            throw new Error(`Unable able to get ${property} from ${selector}.`, e);
+            throw Error(`Unable able to get ${property} from ${selector}.`, e);
         }
     },
 });

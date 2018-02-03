@@ -37,45 +37,36 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
             }
         });
     },
-    waitForLoadedWebFontCountToBe(count, timeout = defaultTimeout) {
-        return new Promise(async (resolve, reject) => {
-            let hasInjectedWebFontsAllLoadedFunction = false;
+    async waitForLoadedWebFontCountToBe(count, timeout = defaultTimeout) {
+        let hasInjectedWebFontsAllLoadedFunction = false;
 
-            async function checkWebFontIsLoaded(cb) {
-                return new Promise(async (resolve, reject) => {
-                    const fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
+        async function checkWebFontIsLoaded() {
+            const fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
 
-                    if (fontResponses.length === count) {
-                        if (hasInjectedWebFontsAllLoadedFunction) {
-                            const allLoaded = await puppeteerPage.evaluate(() => {
-                                return !!window.__webFontsAllLoaded;
-                            });
+            if (fontResponses.length === count) {
+                if (hasInjectedWebFontsAllLoadedFunction) {
+                    return puppeteerPage.evaluate(() => {
+                        return !!window.__webFontsAllLoaded;
+                    });
+                } else {
+                    await puppeteerPage.evaluate(() => {
+                        (async function() {
+                            window.__webFontsAllLoaded = await document.fonts.ready;
+                        })();
+                    });
 
-                            if (allLoaded) {
-                                cb && cb();
-                                resolve(true);
-                            }
-                        } else {
-                            await puppeteerPage.evaluate(() => {
-                                (async function() {
-                                    window.__webFontsAllLoaded = await document.fonts.ready;
-                                })();
-                            });
-
-                            hasInjectedWebFontsAllLoadedFunction = true;
-                        }
-                    }
-                });
+                    hasInjectedWebFontsAllLoadedFunction = true;
+                    return false;
+                }
             }
+            return false;
+        }
 
-            pollFor({
-                checkFn: async() => {
-                    return checkWebFontIsLoaded();
-                },
-                internal: 100,
-                timeout: timeout,
-                timeoutMsg: `Timeout waiting for ${count} web font responses`
-            }).then(resolve).catch(reject);
+        return pollFor({
+            checkFn: checkWebFontIsLoaded,
+            internal: 100,
+            timeout: timeout,
+            timeoutMsg: `Timeout waiting for ${count} web font responses`
         });
     },
     async waitForFunction(fn, options, ...args) {

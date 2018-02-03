@@ -98,11 +98,11 @@ module.exports = class Mochateer {
             const buffer = await api.screenshot(selector);
             let r = await self.visualRegression.compareVisual(buffer, self._testId);
 
-            if (r.result === 'fail' && r.diffScreenshot) {
+            if (r.passOrFail === 'fail' && r.diffScreenshot) {
                 addContext(self._testContext, r.diffScreenshot);
             }
 
-            assert.equal(r.result, 'pass', `Visual failure for selector '${selector}' with an approximate ${r.misMatchPercentage}% mismatch.`);
+            assert.equal(r.passOrFail, 'pass', `Visual failure for selector '${selector}' with an approximate ${r.misMatchPercentage}% mismatch.`);
         };
 
         return api;
@@ -128,7 +128,7 @@ module.exports = class Mochateer {
             await this._page.evaluate(this._onLoad.fn, ...args);
         }
 
-        this.visualRegression = new VisualRegression({
+        this.visualRegression = VisualRegression({
             page: this._puppeteerPage,
             path: this._visualPath,
             visualThreshold: this._visualThreshold,

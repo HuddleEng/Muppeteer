@@ -1,3 +1,9 @@
+/**
+ *
+ * This file represents the keyboard API for Mochateer. It exposes standard Puppeteer functions and custom convenience ones.
+ *
+ **/
+
 const {keyCodeForKey} = require('../external/keyboard-utils');
 
 module.exports = puppeteerPage => ({

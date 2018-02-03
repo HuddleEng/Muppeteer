@@ -1,3 +1,9 @@
+/**
+ *
+ * This file represents the retrieval API for Mochateer. It exposes custom convenience functions.
+ *
+ **/
+
 module.exports = puppeteerPage => ({
     async getValue(selector) {
         return puppeteerPage.evaluate(selector => {

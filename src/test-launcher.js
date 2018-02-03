@@ -1,3 +1,34 @@
+/**
+ *
+ * This file represents the test launcher. It hooks up Mochateer to Mocha and the reporting library. You can configure
+ * the path for the report files to go in and how the components are loaded for the tests
+ *
+ *
+ * Example usage:
+ *
+ * Launcher({
+ *   testDir,
+ *   testFilter,
+ *   shouldRebaseVisuals,
+ *   reportDir,
+ *   componentTestUrlFactory,
+ *   componentTestVisualPathFactory,
+ *   visualThreshold,
+ *   afterHook
+ * });
+ *
+ * testDir is the directory for Mocha to look for the test files
+ * testFilter allows you to pass in some text to filter the test file name, it's just a substring match, nothing fancy
+ * shouldRebaseVisuals is a flag to tell the visual regression engine to replace the existing baseline visuals
+ * reportDir is the directory for the Mocha reporter to dump the report files
+ * componentTestUrlFactory is a function that returns the url for the component test to run
+ * componentTestVisualPathFactory is a function that returns the path for visual tests to run in
+ * visualThreshold is a value between 0 and 1 to present the threshold at which a visual test may pass or fail
+ * afterHook is a function that can be used to do some extra work after Mochateer is teared down
+ *
+ *
+ **/
+
 const Mocha = require('mocha');
 const path = require('path');
 const mochateerInterface = require('../lib/test-interface');

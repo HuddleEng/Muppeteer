@@ -19,16 +19,16 @@
   "homepage": "https://github.com/gidztech/Mochateer#readme",
   "dependencies": {
     "chai": "^4.1.2",
-    "image-size": "^0.6.1",
+    "image-size": "^0.6.2",
     "mkdirp": "^0.5.1",
-    "mocha": "^4.0.1",
-    "mocha-junit-reporter": "^1.15.0",
-    "mocha-multi-reporters": "^1.1.6",
-    "mochawesome": "^2.3.1",
+    "mocha": "^5.0.0",
+    "mocha-junit-reporter": "^1.17.0",
+    "mocha-multi-reporters": "^1.1.7",
+    "mochawesome": "^3.0.2",
     "pixelmatch": "^4.0.2",
-    "puppeteer": "^0.12.0",
+    "puppeteer": "^1.0.0",
     "recursive-readdir-sync": "^1.0.6",
-    "yargs": "^9.0.1"
+    "yargs": "^11.0.0"
   },
   "devDependencies": {}
 }

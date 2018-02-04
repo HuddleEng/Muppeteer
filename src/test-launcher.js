@@ -25,7 +25,9 @@
  * componentTestVisualPathFactory is a function that returns the path for visual tests to run in
  * visualThreshold is a value between 0 and 1 to present the threshold at which a visual test may pass or fail
  * afterHook is a function that can be used to do some extra work after Mochateer is teared down
- *
+ * headless determines whether Chrome will be launched in a headless mode (without GUI) or with a head
+ * disableSandbox is used to disable the sandbox checks if not using SUID sandbox:
+ *      https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md
  *
  **/
 
@@ -43,7 +45,9 @@ module.exports = function Launcher({
     componentTestUrlFactory,
     componentTestVisualPathFactory,
     visualThreshold,
-    afterHook
+    afterHook,
+    headless,
+    disableSandbox
 }) {
     componentTestUrlFactory = componentTestUrlFactory || (component => component.url);
     componentTestVisualPathFactory = componentTestVisualPathFactory || (component => path.join(testDir, `/screenshots/${component.name}`));
@@ -89,7 +93,7 @@ module.exports = function Launcher({
     }
 
     (async() => {
-        await browserInstance.launch();
+        await browserInstance.launch({headless, disableSandbox});
 
         mocha.run(async() => {
             await browserInstance.close();

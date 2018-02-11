@@ -17,6 +17,14 @@ module.exports = puppeteerPage => ({
             return puppeteerPage.keyboard.down(key);
         },
         /**
+         * Fire up event on a particular keyboard key
+         * @param {string} key - The key to fire the up event on
+         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardupkey
+         */
+        async up(key) {
+            return puppeteerPage.keyboard.up(key);
+        },
+        /**
          * Fire press event on a particular keyboard key
          * @param {string} key - The key to fire the press event on
          * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardpresskey-options
@@ -45,14 +53,6 @@ module.exports = puppeteerPage => ({
             }, selector, keyCode);
         },
         /**
-         * Fire up event on a particular keyboard key
-         * @param {string} key - The key to fire the up event on
-         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardupkey
-         */
-        async up(key) {
-            return puppeteerPage.keyboard.up(key);
-        },
-        /**
          * Type some text into an input field
          * @param {string} text - The text to type
          * @param {object} options - Keyboard options
@@ -63,7 +63,7 @@ module.exports = puppeteerPage => ({
         },
         /**
          * Send a particular character to an input field
-         * @param {string} key - The key to fire the up event on
+         * @param {char} char - The key to fire the up event on
          * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardsendcharacterchar
          */
         async sendCharacter(char) {

@@ -3,11 +3,15 @@
 Mochateer is a test framework for running UI tests in Chrome. It is composed of:
 
 - [Mocha](https://mochajs.org/) - a test runner
-- [Chai](http://chaijs.com/) - assertion library
+- [Chai](http://chaijs.com/) - an assertion library
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a Node library for interacting with Chrome via RDP
 - [Pixelmatch](https://github.com/mapbox/pixelmatch) - a pixel-level image comparison library
 
-Mochateer provides a convenient test API which abstracts away boilerplate setup code. It's loosely based on [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated) [PhantomJS](http://phantomjs.org/) world.
+Mochateer provides a convenient test API which abstracts away boilerplate setup code. It's loosely based on
+[PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
+[PhantomJS](http://phantomjs.org/) world.
+
+## [API](https://github.com/gidztech/Mochateer/blob/master/API.md)
 
 ## Example Usage
 

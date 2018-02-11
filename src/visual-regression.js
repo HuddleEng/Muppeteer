@@ -1,3 +1,12 @@
+/**
+ *
+ * This file represents the visual comparison engine. A screenshot buffer is passed in and compared to a baseline image,
+ * using PixelMatch image comparison library. If the image exceeds the threshold for differences, a fail result is
+ * returned to the consumer, otherwise a pass result is returned. If there is no baseline already, one is created
+ * from the buffer and the result returned is an automatic pass.
+ *
+ **/
+
 const {Buffer} = require('buffer');
 const stream = require('stream');
 const fsutils = require('./fs-utils');

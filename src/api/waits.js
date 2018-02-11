@@ -1,3 +1,9 @@
+/**
+ *
+ * This file represents the waits API for Mochateer. It exposes standard Puppeteer functions and custom convenience ones
+ *
+ **/
+
 const serializeFunctionWithArgs = require('../external/serialization-utils');
 
 const pollFor = ({checkFn, interval, timeout, timeoutMsg}) => {
@@ -16,11 +22,6 @@ const pollFor = ({checkFn, interval, timeout, timeoutMsg}) => {
         }, interval);
     });
 };
-/**
- *
- * This file represents the waits API for Mochateer. It exposes standard Puppeteer functions and custom convenience ones
- *
- **/
 
 module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     waitForResource (resource, timeout = defaultTimeout) {

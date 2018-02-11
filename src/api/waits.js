@@ -27,6 +27,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     /**
      * Wait for a resource request to be responded to
      * @param {string} resource - The URL of the resource (or a substring of it)
+     * @param {number] [timeout=defaultTimeout] - Timeout for the check
      */
     waitForResource (resource, timeout = defaultTimeout) {
         return new Promise((resolve, reject) => {
@@ -50,7 +51,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     /**
      * Wait for a specific number of web fonts to be loaded and ready on the page
      * @param {number} count - The number of web fonts to expect
-     * @param {number] [timeout=defaultTimeout] - Timeout for the function
+     * @param {number] [timeout=defaultTimeout] - Timeout for the check
      */
     async waitForLoadedWebFontCountToBe(count, timeout = defaultTimeout) {
         let hasInjectedWebFontsAllLoadedFunction = false;
@@ -121,17 +122,6 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         return puppeteerPage.waitForSelector(selector, { hidden: true });
     },
     /**
-     * Wait while the selector has visible content (i.e. the element takes up some width and height on the page)
-     * @param {string} selector - The selector for the element on the page
-     */
-    async waitWhileSelectorHasVisibleContent(selector) {
-        return puppeteerPage.waitForFunction(selector => {
-            const elem = document.querySelector(selector);
-            const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
-            return !isVisible;
-        }, {timeout: defaultTimeout}, selector);
-    },
-    /**
      * Wait until the selector has visible content (i.e. the element takes up some width and height on the page)
      * @param {string} selector - The selector for the element on the page
      */
@@ -140,6 +130,17 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
             const elem = document.querySelector(selector);
             const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
             return !!isVisible;
+        }, {timeout: defaultTimeout}, selector);
+    },
+    /**
+     * Wait while the selector has visible content (i.e. the element takes up some width and height on the page)
+     * @param {string} selector - The selector for the element on the page
+     */
+    async waitWhileSelectorHasVisibleContent(selector) {
+        return puppeteerPage.waitForFunction(selector => {
+            const elem = document.querySelector(selector);
+            const isVisible = elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length;
+            return !isVisible;
         }, {timeout: defaultTimeout}, selector);
     },
     /**
@@ -187,7 +188,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     /**
      * Wait for the element count to be a particular value
      * @param {string} selector - The selector for the element on the page
-     * @param {number} attributeName - The number of elements to expect
+     * @param {number} expectedCount - The number of elements to expect
      */
     async waitForElementCount(selector, expectedCount) {
         return puppeteerPage.waitForFunction((selector, expectedCount) => {
@@ -196,7 +197,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     },
     /**
      * Wait for the current window location to match a particular regular expression
-     * @param {regex} regex - The regular expression to match the URL on
+     * @param {RegExp} regex - The regular expression to match the URL on
      */
     async waitForUrl(regex) {
         return this.waitForFunction(regex => {

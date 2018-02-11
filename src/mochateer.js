@@ -71,6 +71,9 @@ module.exports = function Mochateer({
 
             const createPageAPI = () => {
                 const api = Object.assign({}, {
+                        /**
+                         * Turn off CSS animations on the page to help avoid flaky visual comparisons
+                         */
                         async turnOffAnimations () {
                             return state.puppeteerPage.evaluate(() => {
                                 function disableAnimations() {
@@ -92,31 +95,72 @@ module.exports = function Mochateer({
                                 }
                             })
                         },
+                        /**
+                         * Run a function on the page
+                         * @param {function} fn - The function to execute on the page
+                         * @param {...args} args - Arguments to be passed into the function
+                         */
                         async evaluate(fn, ...args) {
                             const fnStr = serializeFunctionWithArgs(fn, ...args);
                             return state.puppeteerPage.evaluate(fnStr);
                         },
+                        /**
+                         * Focus an element on the page
+                         * @param {string} selector - The selector of the element to focus
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagefocusselector
+                         */
                         async focus(selector) {
                             return state.puppeteerPage.focus(selector);
                         },
+                        /**
+                         * Hover an element on the page
+                         * @param {string} selector - The selector of the element to hover
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagehoverselector
+                         */
                         async hover(selector) {
                             return state.puppeteerPage.hover(selector);
                         },
+                        /**
+                         * Check if element is focused
+                         * @param {string} selector - The selector of the element to check for focus state
+                         * @returns {boolean} Whether the element is focused or not
+                         */
                         async isElementFocused (selector) {
                             return state.puppeteerPage.evaluate(selector => {
                                 const element = document.querySelector(selector);
                                 return element === document.activeElement;
                             }, selector);
                         },
+                        /**
+                         * Type into a field on the page
+                         * @param {string} selector - The selector of the element to type into
+                         * @param {string} text - The text to enter into the field
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagetypeselector-text-options
+                         */
                         async type(selector, text) {
                             return state.puppeteerPage.type(selector, text);
                         },
+                        /**
+                         * Click on an element on the page
+                         * @param {string} selector - The selector of the element to click on
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageclickselector-options
+                         */
                         async click(selector) {
                             return state.puppeteerPage.click(selector);
                         },
+                        /**
+                         * Set the view port of the page
+                         * @param {object} viewport - The viewport config object
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport
+                         */
                         async setViewport(viewport) {
                             return state.puppeteerPage.setViewport(viewport);
                         },
+                        /**
+                         * Add style tag to the page
+                         * @param {object} options - The config options
+                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageaddstyletagoptions
+                         */
                         async addStyleTag(options) {
                             return state.puppeteerPage.addStyleTag(options);
                         }
@@ -127,12 +171,12 @@ module.exports = function Mochateer({
                     visual(state.puppeteerPage)
                 );
 
-                // convenience function to wrap around assert.equal
-                assert.visual = async function(selector, options) {
-                    if (options && options.evalBeforeFn) {
-                        await state.puppeteerPage.evaluate(options.evalBeforeFn)
-                    }
 
+                /**
+                 * Compare the current state of an element to the baseline
+                 * @param {string} selector - Selector of the element to compare
+                 */
+                assert.visual = async function(selector) {
                     const buffer = await api.screenshot(selector);
                     let r = await state.visualRegression.compareVisual(buffer, state.testId);
 

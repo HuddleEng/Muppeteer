@@ -5,6 +5,10 @@
  **/
 
 module.exports = puppeteerPage => ({
+    /**
+     * Take a screenshot of a particular element on the page
+     * @param {string} selector - The selector for the element to take a screenshot of
+     */
     async screenshot(selector) {
         if (!selector) {
             throw Error('Selector is required for a screenshot.');

@@ -4,8 +4,8 @@
   "description": "Test framework for running UI tests in Chrome with visual regression testing options",
   "main": "lib/mochateer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "example-test": "node lib/test-launcher-cli --t example/tests --f test.js --r example/tests/report"
+    "test": "jest /tests/",
+    "example-tests": "node lib/test-launcher-cli --t example/example-tests --f test.js --r example/example-tests/report"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,7 @@
     "recursive-readdir-sync": "^1.0.6",
     "yargs": "^11.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^22.2.2"
+  }
 }

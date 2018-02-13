@@ -47,7 +47,8 @@ module.exports = function ConfigureLauncher({
     visualThreshold,
     afterHook,
     headless,
-    disableSandbox
+    disableSandbox,
+    executablePath
 }) {
     componentTestUrlFactory = componentTestUrlFactory || (component => component.url);
     componentTestVisualPathFactory = componentTestVisualPathFactory || (component => path.join(testDir, `/screenshots/${component.name}`));
@@ -94,12 +95,15 @@ module.exports = function ConfigureLauncher({
 
     return {
         launch: async () => {
-            await browserInstance.launch({headless, disableSandbox});
+            await browserInstance.launch({headless, disableSandbox, executablePath});
 
             mocha.run(async() => {
                 await browserInstance.close();
                 afterHook && afterHook();
             });
+        },
+        config: {
+            mocha,
         }
     };
 };

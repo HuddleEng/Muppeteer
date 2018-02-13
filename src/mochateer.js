@@ -77,7 +77,7 @@ module.exports = function Mochateer({
                         async turnOffAnimations () {
                             return state.puppeteerPage.evaluate(() => {
                                 function disableAnimations() {
-                                    const jQuery = window.jQuery;
+                                    const {jQuery} = window;
                                     if (jQuery) {
                                         jQuery.fx.off = true;
                                     }
@@ -193,14 +193,11 @@ module.exports = function Mochateer({
             state.puppeteerPage = await browser.newPage();
             state.page = createPageAPI();
 
-            state.puppeteerPage.on('load', () => {
-                state.page.turnOffAnimations();
-            });
-
             state.puppeteerPage.on('request', request => {
                 state.resourceRequests.push(request);
             });
 
+            // default viewport
             await state.puppeteerPage.setViewport({width: 900, height: 900, deviceScaleFactor: 1});
             await state.puppeteerPage.goto(state.url);
 

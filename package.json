@@ -1,5 +1,5 @@
 {
-  "name": "Muppeteer",
+  "name": "muppeteer",
   "version": "1.0.0",
   "description": "Test framework for running UI tests in Chrome with visual regression testing options",
   "main": "lib/muppeteer.js",

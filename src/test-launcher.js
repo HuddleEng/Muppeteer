@@ -6,7 +6,7 @@
  *
  * Example usage:
  *
- * Launcher({
+ * ConfigureLauncher({
  *   testDir,
  *   testFilter,
  *   shouldRebaseVisuals,
@@ -37,7 +37,7 @@ const mochateerInterface = require('../lib/test-interface');
 const {browserInstance} = require('../lib/test-controller');
 const recursiveReadSync = require('recursive-readdir-sync');
 
-module.exports = function Launcher({
+module.exports = function ConfigureLauncher({
     testDir,
     testFilter,
     shouldRebaseVisuals,
@@ -92,14 +92,16 @@ module.exports = function Launcher({
         });
     }
 
-    (async() => {
-        await browserInstance.launch({headless, disableSandbox});
+    return {
+        launch: async () => {
+            await browserInstance.launch({headless, disableSandbox});
 
-        mocha.run(async() => {
-            await browserInstance.close();
-            afterHook && afterHook();
-        });
-    })();
+            mocha.run(async() => {
+                await browserInstance.close();
+                afterHook && afterHook();
+            });
+        }
+    };
 };
 
 

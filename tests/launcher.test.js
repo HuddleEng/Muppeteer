@@ -15,7 +15,7 @@ test('Substring filtering works', () => {
 });
 
 test('Test interface is set', () => {
-    expect(config.mocha.options.ui).toBe('mochateer');
+    expect(config.mocha.options.ui).toBe('muppeteer');
 });
 
 test('Report directory is set', () => {

@@ -1,6 +1,6 @@
 /**
  *
- * This file represents the waits API for Mochateer. It exposes standard Puppeteer functions and custom convenience ones
+ * This file represents the waits API for Muppeteer. It exposes standard Puppeteer functions and custom convenience ones
  *
  **/
 

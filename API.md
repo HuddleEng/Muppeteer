@@ -2,11 +2,11 @@
 
 ## Assert
 
-Mochateer exposes the `assert` module of Chai onto the `Mochateer` object. This means
+Muppeteer exposes the `assert` module of Chai onto the `Muppeteer` object. This means
 you can use all the standard Chai assertions, such as equal, notEqual, isBelow, etc. See 
 [Assert](http://chaijs.com/api/assert/#method_assert) for the full API.
 
-In addition, Mochateer adds a `visual` function is patched onto the module. 
+In addition, Muppeteer adds a `visual` function is patched onto the module. 
 
 **assert.visual(selector)**
 - `selector` \<string> Selector of the element to compare
@@ -15,7 +15,7 @@ Compares the baseline visual of the element to a newly taken screenshot
 
 
 ## Page
-You can access all the native Puppeteer page functions on the `puppeteerPage` object. However, Mochateer adds 
+You can access all the native Puppeteer page functions on the `puppeteerPage` object. However, Muppeteer adds 
 convenience functions onto `page` object, which is recommended for the majority of use cases.
 
 - [Keyboard](#keyboard)

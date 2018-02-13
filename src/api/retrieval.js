@@ -1,6 +1,6 @@
 /**
  *
- * This file represents the retrieval API for Mochateer. It exposes custom convenience functions.
+ * This file represents the retrieval API for Muppeteer. It exposes custom convenience functions.
  *
  **/
 

@@ -1,6 +1,6 @@
 /**
  *
- * This file represents the visual API for Mochateer. This currently only exports the screenshot function.
+ * This file represents the visual API for Muppeteer. This currently only exports the screenshot function.
  *
  **/
 

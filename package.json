@@ -1,22 +1,22 @@
 {
-  "name": "Mochateer",
+  "name": "Muppeteer",
   "version": "1.0.0",
   "description": "Test framework for running UI tests in Chrome with visual regression testing options",
-  "main": "lib/mochateer.js",
+  "main": "lib/muppeteer.js",
   "scripts": {
     "test": "jest /tests/",
     "example-tests": "node lib/test-launcher-cli --t example/example-tests --f test.js --r example/example-tests/report"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gidztech/Mochateer.git"
+    "url": "git+https://github.com/HuddleEng/Muppeteer.git"
   },
-  "author": "",
+  "author": "Gideon Pyzer / Huddle",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gidztech/Mochateer/issues"
+    "url": "https://github.com/HuddleEng/Muppeteer/issues"
   },
-  "homepage": "https://github.com/gidztech/Mochateer#readme",
+  "homepage": "https://github.com/HuddleEng/Muppeteer#readme",
   "dependencies": {
     "chai": "^4.1.2",
     "mkdirp": "^0.5.1",

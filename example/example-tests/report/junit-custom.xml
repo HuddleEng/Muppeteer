@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="1.506" tests="5" failures="0">
-  <testsuite name="Root Suite" timestamp="2018-02-13T11:26:05" tests="0" failures="0" time="0">
+<testsuites name="Mocha Tests" time="1.463" tests="5" failures="0">
+  <testsuite name="Root Suite" timestamp="2018-02-13T14:46:15" tests="0" failures="0" time="0">
   </testsuite>
-  <testsuite name="todomvc" timestamp="2018-02-13T11:26:05" tests="0" file="D:\dev\projects\Mochateer\example\example-tests\todomvc.test.js" failures="0" time="0">
+  <testsuite name="todomvc" timestamp="2018-02-13T14:46:15" tests="0" file="D:\dev\projects\Muppeteer\example\example-tests\todomvc.test.js" failures="0" time="0">
   </testsuite>
-  <testsuite name="Add a todo item" timestamp="2018-02-13T11:26:05" tests="5" file="D:\dev\projects\Mochateer\example\example-tests\todomvc.test.js" failures="0" time="1.506">
-    <testcase name="todomvc Add a todo item typing text and hitting enter key adds new item" time="0.499" classname="typing text and hitting enter key adds new item">
+  <testsuite name="Add a todo item" timestamp="2018-02-13T14:46:15" tests="5" file="D:\dev\projects\Muppeteer\example\example-tests\todomvc.test.js" failures="0" time="1.463">
+    <testcase name="todomvc Add a todo item typing text and hitting enter key adds new item" time="0.498" classname="typing text and hitting enter key adds new item">
     </testcase>
-    <testcase name="todomvc Add a todo item clicking checkbox marks item as complete" time="0.245" classname="clicking checkbox marks item as complete">
+    <testcase name="todomvc Add a todo item clicking checkbox marks item as complete" time="0.219" classname="clicking checkbox marks item as complete">
     </testcase>
-    <testcase name="todomvc Add a todo item typing more text and hitting enter adds a second item" time="0.293" classname="typing more text and hitting enter adds a second item">
+    <testcase name="todomvc Add a todo item typing more text and hitting enter adds a second item" time="0.27" classname="typing more text and hitting enter adds a second item">
     </testcase>
-    <testcase name="todomvc Add a todo item hovering over first item shows x button" time="0.233" classname="hovering over first item shows x button">
+    <testcase name="todomvc Add a todo item hovering over first item shows x button" time="0.241" classname="hovering over first item shows x button">
     </testcase>
-    <testcase name="todomvc Add a todo item clicking on first item x button removes it from the list" time="0.236" classname="clicking on first item x button removes it from the list">
+    <testcase name="todomvc Add a todo item clicking on first item x button removes it from the list" time="0.235" classname="clicking on first item x button removes it from the list">
     </testcase>
   </testsuite>
 </testsuites>

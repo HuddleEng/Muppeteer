@@ -1,6 +1,6 @@
 /**
  *
- * This file represents the test launcher. It hooks up Mochateer to Mocha and the reporting library. You can configure
+ * This file represents the test launcher. It hooks up Muppeteer to Mocha and the reporting library. You can configure
  * the path for the report files to go in and how the components are loaded for the tests
  *
  *
@@ -24,7 +24,7 @@
  * componentTestUrlFactory is a function that returns the url for the component test to run
  * componentTestVisualPathFactory is a function that returns the path for visual tests to run in
  * visualThreshold is a value between 0 and 1 to present the threshold at which a visual test may pass or fail
- * afterHook is a function that can be used to do some extra work after Mochateer is teared down
+ * afterHook is a function that can be used to do some extra work after Muppeteer is teared down
  * headless determines whether Chrome will be launched in a headless mode (without GUI) or with a head
  * disableSandbox is used to disable the sandbox checks if not using SUID sandbox:
  *      https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md
@@ -33,7 +33,7 @@
 
 const Mocha = require('mocha');
 const path = require('path');
-const mochateerInterface = require('../lib/test-interface');
+const muppeteerInterface = require('../lib/test-interface');
 const {browserInstance} = require('../lib/test-controller');
 const recursiveReadSync = require('recursive-readdir-sync');
 
@@ -53,10 +53,10 @@ module.exports = function ConfigureLauncher({
     componentTestUrlFactory = componentTestUrlFactory || (component => component.url);
     componentTestVisualPathFactory = componentTestVisualPathFactory || (component => path.join(testDir, `/screenshots/${component.name}`));
 
-    Mocha.interfaces['mochateer'] = mochateerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold, shouldRebaseVisuals);
+    Mocha.interfaces['muppeteer'] = muppeteerInterface(componentTestUrlFactory, componentTestVisualPathFactory, visualThreshold, shouldRebaseVisuals);
 
     const mocha = new Mocha({
-        timeout: 10000, ui: 'mochateer', reporter: 'mocha-multi-reporters', reporterOptions: {
+        timeout: 10000, ui: 'muppeteer', reporter: 'mocha-multi-reporters', reporterOptions: {
             'reporterEnabled': 'mocha-junit-reporter, mochawesome',
             'mochaJunitReporterReporterOptions': {
                 'mochaFile': reportDir + '/junit-custom.xml'

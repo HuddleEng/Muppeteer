@@ -57,7 +57,14 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         let hasInjectedWebFontsAllLoadedFunction = false;
 
         async function checkWebFontIsLoaded() {
-            const fontResponses = requests.filter(r => r.resourceType === 'font' && r.response && r.response());
+            const fontResponses = requests.filter(r => {
+                if (r.resourceType() === 'font') {
+                    const response = r.response && r.response();
+                    return response && (response.status() === 200 || response.status() === 304);
+                }
+
+                return false;
+            });
 
             if (fontResponses.length === count) {
                 if (hasInjectedWebFontsAllLoadedFunction) {

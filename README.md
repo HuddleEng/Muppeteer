@@ -12,6 +12,8 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
 [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
 [PhantomJS](http://phantomjs.org/) world.
 
+**This framework is in beta pre-release. While in beta, it is subject to breaking changes. There is also little test coverage as of yet. This is in progress. It is not recommended for use in production while in beta.**
+
 - ## [Configuration](#configuration-1)
     - ### [CLI](#cli-1)
     - ### [Configuration function](#configuration-function-1)
@@ -20,7 +22,6 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
     - ### [Passing test output](#passing-test-output-1)
     - ### [Failing test output](#failing-test-output-1)
     - ### [Understanding visual failures](#understanding-visual-failures-1)
-
 
 ## Configuration
 You can configure Muppeteer via the CLI or a configuration function

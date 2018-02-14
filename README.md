@@ -12,14 +12,14 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
 [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
 [PhantomJS](http://phantomjs.org/) world.
 
-- ## [Configuration](#configuration)
-    - ### [CLI](#cli)
-    - ### [Configuration function](#configuration-function)
+- ## [Configuration](#configuration-1)
+    - ### [CLI](#cli-1)
+    - ### [Configuration function](#configuration-function-1)
 - ## [API](https://github.com/HuddleEng/Muppeteer/blob/master/API.md)
-- ## [Example test case](#example-test-case)
-    - ### [Passing test output](#passing-test-output)
-    - ### [Failing test output](#failing-test-output)
-    - ### [Understanding visual failures](#understanding-visual-failures)
+- ## [Example test case](#example-test-case-1)
+    - ### [Passing test output](#passing-test-output-1)
+    - ### [Failing test output](#failing-test-output-1)
+    - ### [Understanding visual failures](#understanding-visual-failures-1)
 
 
 ## Configuration
@@ -138,15 +138,18 @@ ddescribeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'
 
 #### Baseline image ####
 This is the visual that is versioned in your app repo. It is the source of truth.
+
 ![Baseline image](https://i.imgur.com/8dlSqyT.png "Baseline")
 
 #### Current image ####
 This is the screenshot taken during the test. In this example, we can see that some padding has 
 pushed the text input field down.
+
 ![Current image](https://i.imgur.com/DVV3jvZ.png "Current")
 
 #### Difference image ####
 This is an image showing where the differences are. Each difference is layered on top of one another. Here we can see 
 that the "What needs to be done?" placeholder has moved down, and so it's sitting on top of where "My first item" 
 previously was. 
+
 ![Difference image](https://i.imgur.com/C1wpxc5.png "Difference")

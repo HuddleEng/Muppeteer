@@ -12,7 +12,7 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
 [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
 [PhantomJS](http://phantomjs.org/) world.
 
-## [API](https://github.com/gidztech/Muppeteer/blob/master/API.md)
+## [API](https://github.com/HuddleEng/Muppeteer/blob/master/API.md)
 
 ## Example Usage
 

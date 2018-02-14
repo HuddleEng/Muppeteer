@@ -23,6 +23,11 @@ const pollFor = ({checkFn, interval, timeout, timeoutMsg}) => {
     });
 };
 
+const isSuccessfulResponse = request => {
+    const response = request.response && request.response();
+    return response && (response.status() === 200 || response.status() === 304);
+};
+
 module.exports = (puppeteerPage, requests, defaultTimeout) => ({
     /**
      * Wait for a resource request to be responded to
@@ -31,15 +36,18 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
      */
     waitForResource (resource, timeout = defaultTimeout) {
         return new Promise((resolve, reject) => {
-            let request = requests.find(r => r.url.indexOf(resource) !== -1);
 
-            if (request && request.response()) {
+            const resourceRequestHasResponded = () => {
+                const resourceRequest = requests && requests.find(r => r.url && r.url().indexOf(resource) !== -1);
+                return isSuccessfulResponse(resourceRequest);
+            };
+
+            if (resourceRequestHasResponded()) {
                 resolve();
             } else {
                 pollFor({
                     checkFn: () => {
-                        request = requests.find(r => r.url.indexOf(resource) !== -1);
-                        return request && request.response();
+                        return resourceRequestHasResponded();
                     },
                     internal: 100,
                     timeout: timeout,
@@ -59,8 +67,7 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         async function checkWebFontIsLoaded() {
             const fontResponses = requests.filter(r => {
                 if (r.resourceType() === 'font') {
-                    const response = r.response && r.response();
-                    return response && (response.status() === 200 || response.status() === 304);
+                    return isSuccessfulResponse(r);
                 }
 
                 return false;
@@ -223,5 +230,3 @@ module.exports = (puppeteerPage, requests, defaultTimeout) => ({
         });
     },
 });
-
-

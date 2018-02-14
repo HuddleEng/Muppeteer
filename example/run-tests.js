@@ -1,0 +1,21 @@
+const server = require('./server.js');
+const path = require('path');
+const ConfigureLauncher = require('../src/test-launcher');
+
+const serverInstance = server.start(() => {
+    const exampleTestsPath = path.join(__dirname, 'example-tests');
+
+    ConfigureLauncher({
+            testDir: exampleTestsPath,
+            testFilter: 'test.js',
+            reportDir: `${exampleTestsPath}/report`,
+            visualThreshold: 0.05,
+            headless: true,
+            disableSandbox: false,
+            afterHook: () => {
+                server.stop(serverInstance);
+            }
+        }
+    ).launch();
+});
+

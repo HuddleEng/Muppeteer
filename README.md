@@ -12,9 +12,73 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
 [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
 [PhantomJS](http://phantomjs.org/) world.
 
-## [API](https://github.com/HuddleEng/Muppeteer/blob/master/API.md)
+- ## [Configuration](#configuration-1)
+    - ### [CLI](#cli-1)
+    - ### [Configuration function](#configuration-function-1)
+- ## [API](https://github.com/HuddleEng/Muppeteer/blob/master/API.md)
+- ## [Example test case](#example-test-case-1)
+    - ### [Passing test output](#passing-test-output-1)
+    - ### [Failing test output](#failing-test-output-1)
+    - ### [Understanding visual failures](#understanding-visual-failures-1)
 
-## Example Usage
+
+## Configuration
+You can configure Muppeteer via the CLI or a configuration function
+
+### CLI
+The CLI script can be referenced at
+ [`lib/test-launcher-cli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/test-launcher-cli.js).
+ 
+ It is run like `node <<path-to-muppeteer>>/lib/test-launcher-cli <<args>>`
+ 
+ #### Example
+```javascript
+ "scripts": {
+    "test": "node node_modules/muppeteer/lib/test-launcher-cli --t tests --f test.js --r tests/report"
+  }
+```
+
+See [Options](#options)
+  
+## Configuration function
+The configuration can be referenced at 
+ [`src/test-launcher`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/src/test-launcher.js).
+ 
+ ### Example
+```javascript
+const ConfigureLauncher = require('../src/test-launcher');
+const path = require('path');
+const testsPath = path.join(__dirname, 'tests');
+
+ConfigureLauncher({
+        testDir: testsPath,
+        testFilter: 'test.js',
+        reportDir: `${testsPath}/report`,
+        visualThreshold: 0.05,
+        headless: true,
+        disableSandbox: false,
+        afterHook: () => {
+            // do something after the tests have complete
+        }
+    }
+).launch();
+```
+## Options
+**Note:** Only options with `--` can be run with the proceeding flag in the CLI interface.
+
+- `testDir (--t)`: The directory for Mocha to look for the test files
+- `testFilter (--f)`: Allows you to pass in some text to filter the test file name, it's just a substring match, nothing fancy
+- `shouldRebaseVisuals`: A flag to tell the visual regression engine to replace the existing baseline visuals
+- `reportDir (--r)`: The directory for the Mocha reporter to dump the report files
+- `componentTestUrlFactory`: A function that returns the url for the component test to run
+- `componentTestVisualPathFactory`: A function that returns the path for visual tests to run in
+- `visualThreshold (--v)`: A value between 0 and 1 to present the threshold at which a visual test may pass or fail
+- `afterHook`: A function that can be used to do some extra work after Muppeteer is teared down
+- `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head
+- `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md)
+- `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version
+
+## Example test case
 
 ```javascript
 const container = '.todoapp';
@@ -64,14 +128,28 @@ ddescribeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'
 
 ```
 
-### Test Output
-![Passed tests](https://i.imgur.com/TvNGwmU.png "Passed tests")
+### Passing test output
+![Passing tests](https://i.imgur.com/EOA3rJ6.png "Passing tests")
 
-**Baseline images:**
-![Baseline images](https://i.imgur.com/ohp58e5.png "Baseline images")
+### Failing test output
+![Failing tests tests](https://i.imgur.com/rPY6Bjq.png "Failing tests")
 
-### Failed Visual
-![Failed tests](https://i.imgur.com/WTWi80H.png "Failed tests")
+### Understanding visual failures
 
-![Failed visuals](https://i.imgur.com/7D8C5rf.gif "Failed Visuals")
+#### Baseline image ####
+This is the visual that is versioned in your app repo. It is the source of truth.
 
+![Baseline image](https://i.imgur.com/8dlSqyT.png "Baseline")
+
+#### Current image ####
+This is the screenshot taken during the test. In this example, we can see that some padding has 
+pushed the text input field down.
+
+![Current image](https://i.imgur.com/DVV3jvZ.png "Current")
+
+#### Difference image ####
+This is an image showing where the differences are. Each difference is layered on top of one another. Here we can see 
+that the "What needs to be done?" placeholder has moved down, and so it's sitting on top of where "My first item" 
+previously was. 
+
+![Difference image](https://i.imgur.com/C1wpxc5.png "Difference")

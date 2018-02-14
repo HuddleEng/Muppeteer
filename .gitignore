@@ -1,3 +1,4 @@
 .idea/
 node_modules/
-example/tests/report/*
+example/example-tests/report/
+example/todomvc-react/

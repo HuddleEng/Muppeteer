@@ -7,7 +7,7 @@ const firstItemRemoveButton = firstItem + ' button';
 const secondItem = listItem + ':nth-of-type(2)';
 const todoCount = '.todo-count';
 
-describeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'}, function() {
+describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, function() {
     describe('Add a todo item', async function() {
         it('typing text and hitting enter key adds new item', async function() {
             await Muppeteer.page.waitForSelector(input);
@@ -22,7 +22,7 @@ describeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'}
             await Muppeteer.page.click(firstItemToggle);
 
             // something to break the tests
-            //await Muppeteer.page.addStyleTag({ content: '.header { background: black; }'});
+            // await Muppeteer.page.addStyleTag({ content: '.header { padding-top: 50px; }'});
 
             await Muppeteer.page.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
             await Muppeteer.assert.visual(container);

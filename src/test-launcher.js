@@ -15,6 +15,9 @@
  *   componentTestVisualPathFactory,
  *   visualThreshold,
  *   afterHook
+ *   headless
+ *   disableSandbox
+ *   executablePath
  * });
  *
  * testDir is the directory for Mocha to look for the test files
@@ -28,6 +31,7 @@
  * headless determines whether Chrome will be launched in a headless mode (without GUI) or with a head
  * disableSandbox is used to disable the sandbox checks if not using SUID sandbox:
  *      https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md
+ * executablePath is the option to set the version of Chrome to use duning the tests. By default, it uses the bundled version
  *
  **/
 

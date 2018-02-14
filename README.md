@@ -1,4 +1,5 @@
 # Muppeteer
+[![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
 Muppeteer is a test framework for running UI tests in Chrome. It is composed of:
 

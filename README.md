@@ -91,38 +91,42 @@ const firstItemRemoveButton = firstItem + ' button';
 const secondItem = listItem + ':nth-of-type(2)';
 const todoCount = '.todo-count';
 
-ddescribeComponent({name: 'todomvc', url: 'http://todomvc.com/examples/react/#/'}, function() {
-    describe('Add a todo item', async function() {
-        it('typing text and hitting enter key adds new item', async function() {
-            await Muppeteer.page.waitForSelector(input);
-            await Muppeteer.page.type(input, 'My first item');
-            await Muppeteer.page.keyboard.press('Enter');
-            await Muppeteer.page.waitForSelector(firstItem);
-            Muppeteer.assert.equal(await Muppeteer.page.getText(firstItem), 'My first item');
-            await Muppeteer.assert.visual(container);
+describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
+    describe('Add a todo item', async () => {
+        it('typing text and hitting enter key adds new item', async () => {
+            await page.waitForSelector(input);
+            await page.type(input, 'My first item');
+            await page.keyboard.press('Enter');
+            await page.waitForSelector(firstItem);
+            assert.equal(await page.getText(firstItem), 'My first item');
+            await assert.visual(container);
         });
-        it('clicking checkbox marks item as complete', async function() {
-            await Muppeteer.page.waitForSelector(firstItemToggle);
-            await Muppeteer.page.click(firstItemToggle);
-            await Muppeteer.page.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
-            await Muppeteer.assert.visual(container);
+        it('clicking checkbox marks item as complete', async () => {
+            await page.waitForSelector(firstItemToggle);
+            await page.click(firstItemToggle);
+
+            // something to break the tests
+            // await page.addStyleTag({ content: '.header { padding-top: 50px; }'});
+
+            await page.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
+            await assert.visual(container);
         });
-        it('typing more text and hitting enter adds a second item', async function() {
-            await Muppeteer.page.type(input, 'My second item');
-            await Muppeteer.page.keyboard.press('Enter');
-            await Muppeteer.page.waitForSelector(secondItem);
-            Muppeteer.assert.equal(await Muppeteer.page.getText(secondItem), 'My second item');
-            await Muppeteer.assert.visual(container);
+        it('typing more text and hitting enter adds a second item', async () => {
+            await page.type(input, 'My second item');
+            await page.keyboard.press('Enter');
+            await page.waitForSelector(secondItem);
+            assert.equal(await page.getText(secondItem), 'My second item');
+            await assert.visual(container);
         });
-        it('hovering over first item shows x button', async function() {
-            await Muppeteer.page.hover(firstItem);
-            await Muppeteer.assert.visual(container);
+        it('hovering over first item shows x button', async () => {
+            await page.hover(firstItem);
+            await assert.visual(container);
         });
-        it('clicking on first item x button removes it from the list', async function() {
-            await Muppeteer.page.click(firstItemRemoveButton);
-            await Muppeteer.page.waitForElementCount(listItem, 1);
-            Muppeteer.assert.equal(await Muppeteer.page.getText(todoCount), '1 item left');
-            await Muppeteer.assert.visual(container);
+        it('clicking on first item x button removes it from the list', async () => {
+            await page.click(firstItemRemoveButton);
+            await page.waitForElementCount(listItem, 1);
+            assert.equal(await page.getText(todoCount), '1 item left');
+            await assert.visual(container);
         });
     });
 });

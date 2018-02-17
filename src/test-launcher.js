@@ -14,7 +14,7 @@
  *   componentTestUrlFactory,
  *   componentTestVisualPathFactory,
  *   visualThreshold,
- *   afterHook
+ *   onFinish
  *   headless
  *   disableSandbox
  *   executablePath
@@ -27,7 +27,7 @@
  * componentTestUrlFactory is a function that returns the url for the component test to run
  * componentTestVisualPathFactory is a function that returns the path for visual tests to run in
  * visualThreshold is a value between 0 and 1 to present the threshold at which a visual test may pass or fail
- * afterHook is a function that can be used to do some extra work after Muppeteer is teared down
+ * onFinish is a function that can be used to do some extra work after Muppeteer is teared down
  * headless determines whether Chrome will be launched in a headless mode (without GUI) or with a head
  * disableSandbox is used to disable the sandbox checks if not using SUID sandbox:
  *      https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md
@@ -49,7 +49,7 @@ module.exports = function ConfigureLauncher({
     componentTestUrlFactory,
     componentTestVisualPathFactory,
     visualThreshold,
-    afterHook,
+    onFinish,
     headless,
     disableSandbox,
     executablePath
@@ -98,12 +98,15 @@ module.exports = function ConfigureLauncher({
     }
 
     return {
-        launch: async () => {
-            await browserInstance.launch({headless, disableSandbox, executablePath});
+        launch: () => {
+            return new Promise(async(resolve) => {
+                await browserInstance.launch({headless, disableSandbox, executablePath});
 
-            mocha.run(async() => {
-                await browserInstance.close();
-                afterHook && afterHook();
+                mocha.run(async() => {
+                    await browserInstance.close();
+                    onFinish && await onFinish();
+                    resolve();
+                });
             });
         },
         config: {

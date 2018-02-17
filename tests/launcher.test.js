@@ -1,10 +1,37 @@
-const ConfigureLauncher = require('../src/test-launcher');
+const server = require('../example/server.js');
+const { fork } = require('child_process');
+const {launcher} = require('./config');
+const {config} = launcher;
 const isWindows = process.platform === 'win32';
 
-const {config} = ConfigureLauncher({
-    testDir: './example/example-tests',
-    testFilter: 'test.js',
-    reportDir: 'example/example-tests/report'
+let serverInstance;
+let hasExecutedOnFinishHandler = false;
+
+// running the example tests in a worker process so that a failed test (exit 1) doesn't exit this process
+const launchTestsInWorker = () => {
+    const child = fork('tests/worker');
+
+    return new Promise(resolve => {
+        // tell worker to run the launch function
+        child.send('LAUNCH');
+
+        // receive complete response from worker
+        child.on('message', message => {
+            if (message.title.toUpperCase() === 'COMPLETE') {
+                hasExecutedOnFinishHandler = message.data.hasExecutedOnFinishHandler;
+                resolve();
+            }
+        });
+    });
+};
+
+beforeAll(async () => {
+    serverInstance = await server.start();
+});
+
+afterAll(() => {
+    server.stop(serverInstance);
+    process.exit(0);
 });
 
 test('Substring filtering works', () => {
@@ -21,4 +48,9 @@ test('Test interface is set', () => {
 test('Report directory is set', () => {
     expect(config.mocha.options.reporterOptions.mochawesomeReporterOptions.reportDir).toBe('example/example-tests/report');
     expect(config.mocha.options.reporterOptions.mochaJunitReporterReporterOptions.mochaFile).toBe('example/example-tests/report/junit-custom.xml');
+});
+
+test('Test onFinish hook executes after running tests', async() => {
+    await launchTestsInWorker();
+    expect(hasExecutedOnFinishHandler).toBe(true);
 });

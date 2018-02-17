@@ -2,7 +2,8 @@ const server = require('./server.js');
 const path = require('path');
 const ConfigureLauncher = require('../src/test-launcher');
 
-const serverInstance = server.start(() => {
+(async() => {
+    const serverInstance = await server.start();
     const exampleTestsPath = path.join(__dirname, 'example-tests');
 
     ConfigureLauncher({
@@ -12,10 +13,11 @@ const serverInstance = server.start(() => {
             visualThreshold: 0.05,
             headless: true,
             disableSandbox: false,
-            afterHook: () => {
+            onFinish: () => {
                 server.stop(serverInstance);
+                process.exit(0);
             }
         }
     ).launch();
-});
+})();
 

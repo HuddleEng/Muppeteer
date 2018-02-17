@@ -58,7 +58,7 @@ ConfigureLauncher({
         visualThreshold: 0.05,
         headless: true,
         disableSandbox: false,
-        afterHook: () => {
+        onFinish: () => {
             // do something after the tests have complete
         }
     }
@@ -74,7 +74,7 @@ ConfigureLauncher({
 - `componentTestUrlFactory`: A function that returns the url for the component test to run
 - `componentTestVisualPathFactory`: A function that returns the path for visual tests to run in
 - `visualThreshold (--v)`: A value between 0 and 1 to present the threshold at which a visual test may pass or fail
-- `afterHook`: A function that can be used to do some extra work after Muppeteer is teared down
+- `onFinish`: A function that can be used to do some extra work after Muppeteer is teared down
 - `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head
 - `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md)
 - `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version

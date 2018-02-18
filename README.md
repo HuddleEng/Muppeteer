@@ -69,7 +69,7 @@ ConfigureLauncher({
 
 - `testDir (--t)`: The directory for Mocha to look for the test files
 - `testFilter (--f)`: Allows you to pass in some text to filter the test file name, it's just a substring match, nothing fancy
-- `shouldRebaseVisuals`: A flag to tell the visual regression engine to replace the existing baseline visuals
+- `shouldRebaseVisuals (--b)`: A flag to tell the visual regression engine to replace the existing baseline visuals
 - `reportDir (--r)`: The directory for the Mocha reporter to dump the report files
 - `componentTestUrlFactory`: A function that returns the url for the component test to run
 - `componentTestVisualPathFactory`: A function that returns the path for visual tests to run in

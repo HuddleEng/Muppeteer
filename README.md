@@ -1,7 +1,7 @@
 # Muppeteer
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
-Muppeteer is a test framework for running UI tests in Chrome. It is composed of:
+Muppeteer is a UI visual regression testing framework for Chrome. It is composed of:
 
 - [Mocha](https://mochajs.org/) - a test runner
 - [Chai](http://chaijs.com/) - an assertion library

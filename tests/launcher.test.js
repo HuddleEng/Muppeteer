@@ -1,4 +1,4 @@
-const server = require('../example/server.js');
+const server = require('../example/server');
 const { fork } = require('child_process');
 const {launcher} = require('./config');
 const {config} = launcher;

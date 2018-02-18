@@ -69,5 +69,14 @@ module.exports = puppeteerPage => ({
         async sendCharacter(char) {
             return puppeteerPage.keyboard.sendCharacter(char);
         },
-    }
+    },
+    /**
+     * Type into a field on the page
+     * @param {string} selector - The selector of the element to type into
+     * @param {string} text - The text to enter into the field
+     * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagetypeselector-text-options
+     */
+    async type(selector, text) {
+        return puppeteerPage.type(selector, text);
+    },
 });

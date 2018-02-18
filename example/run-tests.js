@@ -1,6 +1,6 @@
 const server = require('./server.js');
 const path = require('path');
-const ConfigureLauncher = require('../src/test-launcher');
+const ConfigureLauncher = require('../lib/test-launcher');
 
 (async() => {
     const serverInstance = await server.start();

@@ -29,9 +29,10 @@ const {assert} = require('chai');
 const {browserInstance} = require('../lib/test-controller');
 const waits = require('./api/waits');
 const keyboard = require('./api/keyboard');
+const mouse = require('./api/mouse');
 const retrieval = require('./api/retrieval');
 const visual = require('./api/visual');
-const serializeFunctionWithArgs = require('./external/serialization-utils');
+const miscellaneous = require('./api/miscellaneous');
 const VisualRegression = require('./visual-regression');
 
 const TIMEOUT_MS = 5000;
@@ -70,107 +71,14 @@ module.exports = function Muppeteer({
             const browser = browserInstance.get();
 
             const createPageAPI = () => {
-                const api = Object.assign({}, {
-                        /**
-                         * Turn off CSS animations on the page to help avoid flaky visual comparisons
-                         */
-                        async turnOffAnimations () {
-                            return state.puppeteerPage.evaluate(() => {
-                                function disableAnimations() {
-                                    const {jQuery} = window;
-                                    if (jQuery) {
-                                        jQuery.fx.off = true;
-                                    }
-
-                                    const css = document.createElement('style');
-                                    css.type = 'text/css';
-                                    css.innerHTML = '* { -webkit-transition: none !important; transition: none !important; -webkit-animation: none !important; animation: none !important; }';
-                                    document.body.appendChild( css );
-                                }
-
-                                if (document.readyState !== 'loading') {
-                                    disableAnimations();
-                                } else {
-                                    window.addEventListener('load', disableAnimations, false);
-                                }
-                            })
-                        },
-                        /**
-                         * Run a function on the page
-                         * @param {function} fn - The function to execute on the page
-                         * @param {...args} args - Arguments to be passed into the function
-                         */
-                        async evaluate(fn, ...args) {
-                            const fnStr = serializeFunctionWithArgs(fn, ...args);
-                            return state.puppeteerPage.evaluate(fnStr);
-                        },
-                        /**
-                         * Focus an element on the page
-                         * @param {string} selector - The selector of the element to focus
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagefocusselector
-                         */
-                        async focus(selector) {
-                            return state.puppeteerPage.focus(selector);
-                        },
-                        /**
-                         * Hover an element on the page
-                         * @param {string} selector - The selector of the element to hover
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagehoverselector
-                         */
-                        async hover(selector) {
-                            return state.puppeteerPage.hover(selector);
-                        },
-                        /**
-                         * Check if element is focused
-                         * @param {string} selector - The selector of the element to check for focus state
-                         * @returns {boolean} Whether the element is focused or not
-                         */
-                        async isElementFocused (selector) {
-                            return state.puppeteerPage.evaluate(selector => {
-                                const element = document.querySelector(selector);
-                                return element === document.activeElement;
-                            }, selector);
-                        },
-                        /**
-                         * Type into a field on the page
-                         * @param {string} selector - The selector of the element to type into
-                         * @param {string} text - The text to enter into the field
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagetypeselector-text-options
-                         */
-                        async type(selector, text) {
-                            return state.puppeteerPage.type(selector, text);
-                        },
-                        /**
-                         * Click on an element on the page
-                         * @param {string} selector - The selector of the element to click on
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageclickselector-options
-                         */
-                        async click(selector) {
-                            return state.puppeteerPage.click(selector);
-                        },
-                        /**
-                         * Set the view port of the page
-                         * @param {object} viewport - The viewport config object
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport
-                         */
-                        async setViewport(viewport) {
-                            return state.puppeteerPage.setViewport(viewport);
-                        },
-                        /**
-                         * Add style tag to the page
-                         * @param {object} options - The config options
-                         * @see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageaddstyletagoptions
-                         */
-                        async addStyleTag(options) {
-                            return state.puppeteerPage.addStyleTag(options);
-                        }
-                    },
+                const api = Object.assign({},
                     waits(state.puppeteerPage, state.resourceRequests, TIMEOUT_MS),
                     retrieval(state.puppeteerPage),
+                    mouse(state.puppeteerPage),
                     keyboard(state.puppeteerPage),
-                    visual(state.puppeteerPage)
+                    visual(state.puppeteerPage),
+                    miscellaneous(state.puppeteerPage)
                 );
-
 
                 /**
                  * Compare the current state of an element to the baseline

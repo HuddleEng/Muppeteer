@@ -1,4 +1,4 @@
-const ConfigureLauncher = require('../src/test-launcher');
+const ConfigureLauncher = require('../lib/test-launcher');
 
 let result = {
     hasExecutedOnFinishHandler: false

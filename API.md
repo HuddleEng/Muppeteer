@@ -58,11 +58,43 @@ This can be used for legacy code using keypress handlers (deprecated)
 
 Type some text into an input field (see: [type](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardtypetext-options))
 
+**type(selector, text)**
+- `selector` \<string> The selector of the element to type into
+- `text` \<string> The text to enter into the field
+
+Type into a field on the page (see: [type](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagetypeselector-text-options))
+
 
 **sendCharacter(char)**
 - `char` \<char> The key to fire the up event on
 
 Send a particular character to an input field (see: [sendCharacter](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardsendcharacterchar))
+
+### Mouse
+
+**focus(selector)**
+- `selector` \<string> The selector of the element to focus
+
+Focus an element on the page (see: [focus](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagefocusselector))
+
+
+**hover(selector)**
+- `selector` \<string> The selector of the element to hover
+
+Hover an element on the page (see: [hover](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagehoverselector))
+
+
+**isElementFocused(selector)**
+- `selector` \<string> The selector of the element to check for focus state
+- **returns** \<boolean> Whether the element is focused or not
+
+Check if element is focused
+
+
+**click(selector)**
+- `selector` \<string> The selector of the element to click
+
+Click on an element on the page (see: [click](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageclickselector-options))
 
 
 ### Waits
@@ -212,38 +244,6 @@ Turn off CSS animations on the page to help avoid flaky visual comparisons
 - `args` \<...args> Arguments to be passed into the function
 
 Runs a function on the page
-
-
-**focus(selector)**
-- `selector` \<string> The selector of the element to focus
-
-Focus an element on the page (see: [focus](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagefocusselector))
-
-
-**hover(selector)**
-- `selector` \<string> The selector of the element to hover
-
-Hover an element on the page (see: [hover](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagehoverselector))
-
-
-**isElementFocused(selector)**
-- `selector` \<string> The selector of the element to check for focus state
-- **returns** \<boolean> Whether the element is focused or not
-
-Check if element is focused
-
-
-**type(selector, text)**
-- `selector` \<string> The selector of the element to type into
-- `text` \<string> The text to enter into the field
-
-Type into a field on the page (see: [type](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagetypeselector-text-options))
-
-
-**click(selector)**
-- `selector` \<string> The selector of the element to click
-
-Click on an element on the page (see: [click](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pageclickselector-options))
 
 
 **setViewport(viewport)**

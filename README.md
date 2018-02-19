@@ -1,16 +1,20 @@
 # Muppeteer
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
-Muppeteer is a UI visual regression testing framework for Chrome. It is composed of:
+Muppeteer is a visual regression testing framework for running UI tests in Chrome. It's composed of a number of existing Node modules:
 
-- [Mocha](https://mochajs.org/) - a test runner
+- [Mocha](https://mochajs.org/) - a test runner framework
 - [Chai](http://chaijs.com/) - an assertion library
-- [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a Node library for interacting with Chrome via RDP
+- [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a library for interacting with Chrome and web pages
 - [Pixelmatch](https://github.com/mapbox/pixelmatch) - a pixel-level image comparison library
 
-Muppeteer provides a convenient test API which abstracts away boilerplate setup code. It's loosely based on
-[PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
-[PhantomJS](http://phantomjs.org/) world.
+In addition, it provides the following core features:
+- **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API. Read on for more discussion on this.
+- **Test Interface** - a modification of Mocha's BDD interface with built-in browser setup steps and other user configurable hooks
+- **Test Launcher** - a CLI and configuration function for launching test suites
+- **Page API** - the API for Muppeteer's page interactions
+
+Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code needed to write tests with Puppeteer, and provide a convenient API for testing UI functionality. It was inspired by the [PhantomCSS](https://github.com/HuddleEng/PhantomCSS) and [CasperJS](http://casperjs.org/) libraries.
 
 **This framework is in beta pre-release. While in beta, it is subject to breaking changes. There is also little test coverage as of yet. This is in progress. It is not recommended for use in production while in beta.**
 

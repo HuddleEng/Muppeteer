@@ -1,0 +1,2 @@
+* text=auto
+/chrome/entrypoint.sh text eol=lf

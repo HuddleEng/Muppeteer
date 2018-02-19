@@ -3,14 +3,14 @@ const { fork } = require('child_process');
 const {launcher} = require('./config');
 const {config} = launcher;
 const isWindows = process.platform === 'win32';
+const child = fork('tests/worker');
+const {PORT} = require('./network');
 
 let serverInstance;
 let hasExecutedOnFinishHandler = false;
 
 // running the example tests in a worker process so that a failed test (exit 1) doesn't exit this process
 const launchTestsInWorker = () => {
-    const child = fork('tests/worker');
-
     return new Promise(resolve => {
         // tell worker to run the launch function
         child.send('LAUNCH');
@@ -26,12 +26,12 @@ const launchTestsInWorker = () => {
 };
 
 beforeAll(async () => {
-    serverInstance = await server.start();
+    serverInstance = await server.start(PORT);
 });
 
 afterAll(() => {
     server.stop(serverInstance);
-    process.exit(0);
+    child.kill('SIGKILL');
 });
 
 test('Substring filtering works', () => {
@@ -51,6 +51,9 @@ test('Report directory is set', () => {
 });
 
 test('Test onFinish hook executes after running tests', async() => {
+    // takes longer to run because its running a suite of tests
+    jest.setTimeout(10000);
+
     await launchTestsInWorker();
     expect(hasExecutedOnFinishHandler).toBe(true);
 });

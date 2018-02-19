@@ -56,8 +56,7 @@ ConfigureLauncher({
         testFilter: 'test.js',
         reportDir: `${testsPath}/report`,
         visualThreshold: 0.05,
-        headless: true,
-        disableSandbox: false,
+        useDocker: true,
         onFinish: () => {
             // do something after the tests have complete
         }
@@ -75,9 +74,10 @@ ConfigureLauncher({
 - `componentTestVisualPathFactory`: A function that returns the path for visual tests to run in
 - `visualThreshold (--v)`: A value between 0 and 1 to present the threshold at which a visual test may pass or fail
 - `onFinish`: A function that can be used to do some extra work after Muppeteer is teared down
-- `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head
-- `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md)
-- `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version
+- `useDocker (--d)`: The option for telling Muppeteer to run Chrome in Docker to better deal with environmental inconsistencies (default)
+- `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head  (not applicable with `useDocker`)
+- `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md) (not applicable with `useDocker`)
+- `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version (not applicable with `useDocker`)
 
 ## Example test case
 
@@ -91,7 +91,7 @@ const firstItemRemoveButton = firstItem + ' button';
 const secondItem = listItem + ':nth-of-type(2)';
 const todoCount = '.todo-count';
 
-describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
+describeComponent({name: 'todomvc', url: 'http://somehost:3000'}, () => {
     describe('Add a todo item', async () => {
         it('typing text and hitting enter key adds new item', async () => {
             await page.waitForSelector(input);
@@ -131,6 +131,25 @@ describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
     });
 });
 
+```
+
+## Docker and test fixtures
+If you are hosting your test fixtures on a local web server, you'd typically set the URL in the test to
+something like http://localhost:3000. When using Docker, the `localhost` will refer to the container,
+not the host machine. The simplest solution would be to reference the local IP instead. For example,
+if your local host is 192.168.0.4, then you'd use http://192.168.0.4:3000 in the test.
+
+However, this breaks down when you are running on a device you don't know the host/IP of, e.g. a CI agent.
+To solve this problem, you can use the `componentTestUrlFactory` function in the Muppeteer launch configuration instead 
+to generate the URL. You can lookup the IP address of the current host and pass that through. This is used to run the
+example tests in this repo. See [run-tests](https://github.com/HuddleEng/Muppeteer/blob/master/example/run-tests.js).
+
+```javascript
+const ip = require('ip');
+const PORT = 3000;
+...
+
+componentTestUrlFactory: () => `http://${ip.address()}:${PORT}`
 ```
 
 ### Passing test output

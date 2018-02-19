@@ -10,16 +10,16 @@ app.get('/', (req, res) => {
 });
 
 module.exports = {
-    start: () => {
+    start: (port) => {
         return new Promise((resolve) => {
-           const server = app.listen(3000, () => {
-               console.log('>>> Started test server on port 3000 <<<');
+           const server = app.listen(port, () => {
+               console.log(`Test server started on port ${port}`);
                resolve(server);
            });
         });
     },
     stop: server => {
         server.close();
-        console.log('>>> Closed test server <<<');
+        console.log('Test server stopped');
     }
 };

@@ -7,7 +7,7 @@ const firstItemRemoveButton = firstItem + ' button';
 const secondItem = listItem + ':nth-of-type(2)';
 const todoCount = '.todo-count';
 
-describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
+describeComponent({name: 'todomvc'}, () => {
     describe('Add a todo item', async () => {
         it('typing text and hitting enter key adds new item', async () => {
             await page.waitForSelector(input);

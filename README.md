@@ -12,7 +12,7 @@ Muppeteer provides a convenient test API which abstracts away boilerplate setup 
 [PhantomCSS](https://github.com/Huddle/PhantomCSS), which runs visual comparisons of images in a (deprecated)
 [PhantomJS](http://phantomjs.org/) world.
 
-**This framework is in beta pre-release. While in beta, it is subject to breaking changes. There is also little test coverage as of yet. This is in progress. It is not recommended for use in production while in beta.**
+**This framework is in beta pre-release currently. It is subject to some breaking changes until the API is finalised. There is also little test coverage as of yet, but it is in the works. Use with caution.**
 
 - ## [Configuration](#configuration-1)
     - ### [CLI](#cli-1)
@@ -134,22 +134,23 @@ describeComponent({name: 'todomvc', url: 'http://somehost:3000'}, () => {
 ```
 
 ## Docker and test fixtures
+Muppeteer uses Docker by default to run tests. This helps to avoid environmental differences that could affect the 
+rendering of content on the page. You can opt out by configuring the `useDocker (--d)` option accordingly.
+
 If you are hosting your test fixtures on a local web server, you'd typically set the URL in the test to
 something like http://localhost:3000. When using Docker, the `localhost` will refer to the container,
-not the host machine. The simplest solution would be to reference the local IP instead. For example,
-if your local host is 192.168.0.4, then you'd use http://192.168.0.4:3000 in the test.
+not the host machine. The simplest solution would be to reference the local IP in the test instead. For example,
+http://192.168.0.4:3000.
 
-However, this breaks down when you are running on a device you don't know the host/IP of, e.g. a CI agent.
-To solve this problem, you can use the `componentTestUrlFactory` function in the Muppeteer launch configuration instead 
-to generate the URL. You can lookup the IP address of the current host and pass that through. This is used to run the
-example tests in this repo. See [run-tests](https://github.com/HuddleEng/Muppeteer/blob/master/example/run-tests.js).
+However, this breaks down when you are running on a device you don't know how to address, e.g. a cloud CI agent.
+To solve this problem, you can use the `componentTestUrlFactory` function in launch configuration to generate the URL. 
+You can lookup the IP address of the current host and pass that through. This is used to run the example tests in this repo. 
+See [run-tests](https://github.com/HuddleEng/Muppeteer/blob/master/example/run-tests.js) for an example.
 
 ```javascript
-const ip = require('ip');
-const PORT = 3000;
 ...
-
-componentTestUrlFactory: () => `http://${ip.address()}:${PORT}`
+componentTestUrlFactory: () => `http://${IP}:${PORT}`
+...
 ```
 
 ### Passing test output

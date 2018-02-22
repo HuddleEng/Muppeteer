@@ -36,6 +36,7 @@
   "devDependencies": {
     "express": "^4.16.2",
     "extract-zip": "^1.6.6",
-    "jest": "^22.2.2"
+    "jest": "^22.2.2",
+    "shelljs": "^0.8.1"
   }
 }

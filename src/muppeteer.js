@@ -107,7 +107,7 @@ module.exports = function Muppeteer({
 
             // default viewport
             await state.puppeteerPage.setViewport({width: 900, height: 900, deviceScaleFactor: 1});
-            await state.puppeteerPage.goto(state.url, { timeout: TIMEOUT_MS });
+            await state.puppeteerPage.goto(state.url);
 
             if (state.onLoad && state.onLoad.fn) {
                 const args = state.onLoad.args || [];

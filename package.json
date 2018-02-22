@@ -20,6 +20,7 @@
   "homepage": "https://github.com/HuddleEng/Muppeteer#readme",
   "dependencies": {
     "chai": "^4.1.2",
+    "colors": "^1.1.2",
     "mkdirp": "^0.5.1",
     "mocha": "^5.0.0",
     "mocha-junit-reporter": "^1.17.0",
@@ -28,11 +29,14 @@
     "pixelmatch": "^4.0.2",
     "puppeteer": "^1.0.0",
     "recursive-readdir-sync": "^1.0.6",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
     "express": "^4.16.2",
     "extract-zip": "^1.6.6",
-    "jest": "^22.2.2"
+    "jest": "^22.2.2",
+    "shelljs": "^0.8.1"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "muppeteer",
   "version": "1.0.3-beta",
-  "description": "Test framework for running UI tests in Chrome with visual regression testing options",
+  "description": "Visual regression testing framework for running UI tests in Chrome",
   "main": "lib/test-launcher.js",
   "scripts": {
     "test": "jest /tests/",
@@ -31,12 +31,12 @@
     "recursive-readdir-sync": "^1.0.6",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
+    "shelljs": "^0.8.1",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
     "express": "^4.16.2",
     "extract-zip": "^1.6.6",
-    "jest": "^22.2.2",
-    "shelljs": "^0.8.1"
+    "jest": "^22.2.2"
   }
 }

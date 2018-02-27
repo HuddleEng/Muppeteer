@@ -28,6 +28,7 @@
     "mochawesome": "^3.0.2",
     "pixelmatch": "^4.0.2",
     "puppeteer": "^1.0.0",
+    "puppeteer-extensions": "^1.0.0",
     "recursive-readdir-sync": "^1.0.6",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",

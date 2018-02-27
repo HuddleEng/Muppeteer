@@ -6,13 +6,13 @@ Muppeteer is a visual regression testing framework for running UI tests in Chrom
 - [Mocha](https://mochajs.org/) - a test runner framework
 - [Chai](http://chaijs.com/) - an assertion library
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a library for interacting with Chrome and web pages
+- [Puppeteer Extensions](https://github.com/HuddleEng/puppeteer-extensions) - an extension library for Puppeteer with convenience functions
 - [Pixelmatch](https://github.com/mapbox/pixelmatch) - a pixel-level image comparison library
 
 In addition, it provides the following core features:
 - **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API. Read on for more discussion on this.
 - **Test Interface** - a modification of Mocha's BDD interface with built-in browser setup steps and other user configurable hooks
 - **Test Launcher** - a CLI and configuration function for launching test suites
-- **Page API** - the API for Muppeteer's page interactions
 
 Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code needed to write tests with Puppeteer, and provide a convenient API for testing UI functionality. It was inspired by the [PhantomCSS](https://github.com/HuddleEng/PhantomCSS) and [CasperJS](http://casperjs.org/) libraries.
 
@@ -21,7 +21,8 @@ Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code 
 - ## [Configuration](#configuration-1)
     - ### [CLI](#cli-1)
     - ### [Configuration function](#configuration-function-1)
-- ## [API](https://github.com/HuddleEng/Muppeteer/blob/master/API.md)
+- ## [Puppeteer API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
+- ## [Puppeteer Extensions](#puppeteer-extensions)
 - ## [Example test case](#example-test-case-1)
     - ### [Passing test output](#passing-test-output-1)
     - ### [Failing test output](#failing-test-output-1)
@@ -83,6 +84,8 @@ ConfigureLauncher({
 - `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md) (not applicable with `useDocker`)
 - `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version (not applicable with `useDocker`)
 
+## Puppeteer Extensions
+You can access the [Puppeteer Extensions API](https://github.com/HuddleEng/puppeteer-extensions/blob/master/README.md) with `page.extensions` in your tests.
 ## Example test case
 
 ```javascript
@@ -95,14 +98,14 @@ const firstItemRemoveButton = firstItem + ' button';
 const secondItem = listItem + ':nth-of-type(2)';
 const todoCount = '.todo-count';
 
-describeComponent({name: 'todomvc', url: 'http://somehost:3000'}, () => {
+describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
     describe('Add a todo item', async () => {
         it('typing text and hitting enter key adds new item', async () => {
             await page.waitForSelector(input);
             await page.type(input, 'My first item');
             await page.keyboard.press('Enter');
             await page.waitForSelector(firstItem);
-            assert.equal(await page.getText(firstItem), 'My first item');
+            assert.equal(await page.extensions.getText(firstItem), 'My first item');
             await assert.visual(container);
         });
         it('clicking checkbox marks item as complete', async () => {
@@ -112,14 +115,14 @@ describeComponent({name: 'todomvc', url: 'http://somehost:3000'}, () => {
             // something to break the tests
             // await page.addStyleTag({ content: '.header { padding-top: 50px; }'});
 
-            await page.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
+            await page.extensions.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
             await assert.visual(container);
         });
         it('typing more text and hitting enter adds a second item', async () => {
             await page.type(input, 'My second item');
             await page.keyboard.press('Enter');
             await page.waitForSelector(secondItem);
-            assert.equal(await page.getText(secondItem), 'My second item');
+            assert.equal(await page.extensions.getText(secondItem), 'My second item');
             await assert.visual(container);
         });
         it('hovering over first item shows x button', async () => {
@@ -128,8 +131,8 @@ describeComponent({name: 'todomvc', url: 'http://somehost:3000'}, () => {
         });
         it('clicking on first item x button removes it from the list', async () => {
             await page.click(firstItemRemoveButton);
-            await page.waitForElementCount(listItem, 1);
-            assert.equal(await page.getText(todoCount), '1 item left');
+            await page.extensions.waitForElementCount(listItem, 1);
+            assert.equal(await page.extensions.getText(todoCount), '1 item left');
             await assert.visual(container);
         });
     });

@@ -27,12 +27,7 @@
 const addContext = require('mochawesome/addContext');
 const {assert} = require('chai');
 const {browserInstance} = require('../lib/test-controller');
-const waits = require('./api/waits');
-const keyboard = require('./api/keyboard');
-const mouse = require('./api/mouse');
-const retrieval = require('./api/retrieval');
-const visual = require('./api/visual');
-const miscellaneous = require('./api/miscellaneous');
+const puppeteerExtensions = require('puppeteer-extensions');
 const VisualRegression = require('./visual-regression');
 
 const TIMEOUT_MS = 5000;
@@ -54,15 +49,10 @@ module.exports = function Muppeteer({
         visualThreshold,
         visualPath,
         shouldRebaseVisuals,
-        resourceRequests: [],
-        puppeteerPage: null,
         page: null,
         assert,
-        resetRequests() {
-            state.resourceRequests = [];
-        },
         async finish() {
-            return state.puppeteerPage.close();
+            return state.page.close();
         }
     };
 
@@ -70,22 +60,15 @@ module.exports = function Muppeteer({
         async initialize () {
             const browser = browserInstance.get();
 
-            const createPageAPI = () => {
-                const api = Object.assign({},
-                    waits(state.puppeteerPage, state.resourceRequests, TIMEOUT_MS),
-                    retrieval(state.puppeteerPage),
-                    mouse(state.puppeteerPage),
-                    keyboard(state.puppeteerPage),
-                    visual(state.puppeteerPage),
-                    miscellaneous(state.puppeteerPage)
-                );
-
+            const generateAPI = () => {
                 /**
                  * Compare the current state of an element to the baseline
                  * @param {string} selector - Selector of the element to compare
                  */
                 assert.visual = async function(selector) {
-                    const buffer = await api.screenshot(selector);
+                    const element = await state.page.$(selector);
+                    const buffer = await element.screenshot();
+
                     let r = await state.visualRegression.compareVisual(buffer, state.testId);
 
                     if (r.passOrFail === 'fail' && r.diffScreenshot) {
@@ -95,19 +78,15 @@ module.exports = function Muppeteer({
                     assert.equal(r.passOrFail, 'pass', `Visual failure for selector '${selector}' with an approximate ${r.misMatchPercentage}% mismatch.`);
                 };
 
-                return api;
+                return puppeteerExtensions(state.page, TIMEOUT_MS);
             };
 
-            state.puppeteerPage = await browser.newPage();
-            state.page = createPageAPI();
-
-            state.puppeteerPage.on('request', request => {
-                state.resourceRequests.push(request);
-            });
+            state.page = await browser.newPage();
+            state.page.extensions = generateAPI();
 
             // default viewport
-            await state.puppeteerPage.setViewport({width: 900, height: 900, deviceScaleFactor: 1});
-            await state.puppeteerPage.goto(state.url);
+            await state.page.setViewport({width: 900, height: 900, deviceScaleFactor: 1});
+            await state.page.goto(state.url);
 
             if (state.onLoad && state.onLoad.fn) {
                 const args = state.onLoad.args || [];
@@ -115,7 +94,8 @@ module.exports = function Muppeteer({
             }
 
             state.visualRegression = VisualRegression({
-                page: state.puppeteerPage,
+                page: state.page,
+                extensions: state.page.extensions,
                 path: state.visualPath,
                 visualThreshold: state.visualThreshold,
                 shouldRebaseVisuals: state.shouldRebaseVisuals

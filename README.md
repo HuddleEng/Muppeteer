@@ -22,7 +22,7 @@ Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code 
     - ### [CLI](#cli-1)
     - ### [Configuration function](#configuration-function-1)
 - ## [Puppeteer API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
-- ## [Puppeteer Extensions](#puppeteer-extensions)
+- ## [Puppeteer Extensions](#puppeteer-extensions-1)
 - ## [Example test case](#example-test-case-1)
     - ### [Passing test output](#passing-test-output-1)
     - ### [Failing test output](#failing-test-output-1)

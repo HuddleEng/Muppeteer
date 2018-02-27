@@ -44,14 +44,6 @@ Fire up event on a particular keyboard key (see: [up](https://github.com/GoogleC
 Fire press event on a particular keyboard key (see: [press](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#keyboardpress-options))
 
 
-**naughtyPress(key)**
-- `key` \<string> The key to fire the press event on
-
-Fire press event on a particular keyboard key (alternative version).
-This can be used for legacy code using keypress handlers (deprecated)
-(see: [keypress](https://www.w3.org/TR/DOM-Level-3-Events/#event-type-keypress))
-
-
 **type(text, options)**
 - `text` \<string> The text to type
 - `options` \<object> Keyboard options

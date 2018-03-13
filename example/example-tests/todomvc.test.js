@@ -9,6 +9,10 @@ const todoCount = '.todo-count';
 
 describeComponent({name: 'todomvc'}, () => {
     describe('Add a todo item', async () => {
+        before(async function() {
+            await page.extensions.turnOffAnimations();
+        });
+
         it('typing text and hitting enter key adds new item', async () => {
             await page.waitForSelector(input);
             await page.type(input, 'My first item');

@@ -90,7 +90,7 @@ module.exports = function Muppeteer({
 
             if (state.onLoad && state.onLoad.fn) {
                 const args = state.onLoad.args || [];
-                await state.page.evaluate(state.onLoad.fn, ...args);
+                await state.page.extensions.evaluate(state.onLoad.fn, ...args);
             }
 
             state.visualRegression = VisualRegression({

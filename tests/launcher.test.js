@@ -1,37 +1,47 @@
-const server = require('../example/server');
 const { fork } = require('child_process');
-const {launcher} = require('./config');
-const {config} = launcher;
 const isWindows = process.platform === 'win32';
-const child = fork('tests/worker');
-const {PORT} = require('./network');
 
-let serverInstance;
-let hasExecutedOnFinishHandler = false;
+let onFinishHookExecuted = false;
+let config = null;
 
-// running the example tests in a worker process so that a failed test (exit 1) doesn't exit this process
-const launchTestsInWorker = () => {
+const launchMochaTests = () => {
     return new Promise(resolve => {
-        // tell worker to run the launch function
-        child.send('LAUNCH');
+        const runTests = fork('tests/run.js', [`--webSocketUri=${process.env['WEBSOCKET_URI']}`, '--color'], { silent: true });
 
-        // receive complete response from worker
-        child.on('message', message => {
-            if (message.title.toUpperCase() === 'COMPLETE') {
-                hasExecutedOnFinishHandler = message.data.hasExecutedOnFinishHandler;
+        runTests.stdout.on('data', data => {
+            process.stdout.write(data.toString());
+        });
+
+        runTests.stderr.on('data', data => {
+            process.stdout.write(data.toString());
+        });
+
+        runTests.on('message', message => {
+            if (message.tag === 'STDOUT_HOOK_CONFIG') {
+                config = message.value;
+            }
+
+            if (message.tag === 'STDOUT_HOOK_ONFINISH') {
+                onFinishHookExecuted = true;
+            }
+
+            if (message.tag === 'STDOUT_HOOK_DONE') {
                 resolve();
+            }
+        });
+
+        runTests.on('exit', code => {
+            if (code > 0) {
+                process.exit(1);
             }
         });
     });
 };
 
 beforeAll(async () => {
-    serverInstance = await server.start(PORT);
-});
-
-afterAll(() => {
-    server.stop(serverInstance);
-    child.kill('SIGKILL');
+    // mocha tests may take a few seconds to execute, but at least docker is already running at this point
+    jest.setTimeout(20000);
+    await launchMochaTests();
 });
 
 test('Substring filtering works', () => {
@@ -51,9 +61,5 @@ test('Report directory is set', () => {
 });
 
 test('Test onFinish hook executes after running tests', async() => {
-    // takes longer to run because its running a suite of tests
-    jest.setTimeout(10000);
-
-    await launchTestsInWorker();
-    expect(hasExecutedOnFinishHandler).toBe(true);
+    expect(onFinishHookExecuted).toBe(true);
 });

@@ -4,7 +4,7 @@
   "description": "Visual regression testing framework for running UI tests in Chrome",
   "main": "lib/test-launcher.js",
   "scripts": {
-    "test": "jest /tests/",
+    "test": "node tests/index.js",
     "example-tests": "node example/run-tests.js",
     "postinstall": "node example/setup.js"
   },
@@ -38,6 +38,7 @@
   "devDependencies": {
     "express": "^4.16.2",
     "extract-zip": "^1.6.6",
-    "jest": "^22.2.2"
+    "jest": "^22.4.2",
+    "minimist": "^1.2.0"
   }
 }

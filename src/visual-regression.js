@@ -5,69 +5,98 @@
  * returned to the consumer, otherwise a pass result is returned. If there is no baseline already, one is created
  * from the buffer and the result returned is an automatic pass.
  *
- **/
+ * */
 
-const {Buffer} = require('buffer');
+const { Buffer } = require('buffer');
 const stream = require('stream');
 const fsutils = require('./fs-utils');
 const pixelmatch = require('pixelmatch');
-const {PNG} = require('pngjs');
+const { PNG } = require('pngjs');
 
-const compare = (file1, buffer, output, threshold) => {
-    return new Promise((resolve, reject) => {
+const compare = (file1, buffer, output, threshold) =>
+    new Promise((resolve, reject) => {
         try {
             // push buffer to a stream for comparison with the baseline image
             const bufferStream = new stream.PassThrough();
             bufferStream.end(buffer);
 
-            const img1 = fsutils.createReadStream(file1).pipe(new PNG()).on('parsed', doneReading);
-            const img2 = bufferStream.pipe(new PNG()).on('parsed', doneReading);
             let filesRead = 0;
+            let img1;
+            let img2;
 
-            function doneReading() {
-                if (++filesRead < 2) return;
-                const diff = new PNG({ width: img1.width, height: img1.height });
-                const noOfDiffPixels = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, { threshold });
+            const doneReading = () => {
+                filesRead += 1;
+                if (filesRead < 2) return;
+                const diff = new PNG({
+                    width: img1.width,
+                    height: img1.height
+                });
+                const noOfDiffPixels = pixelmatch(
+                    img1.data,
+                    img2.data,
+                    diff.data,
+                    img1.width,
+                    img1.height,
+                    { threshold }
+                );
 
                 if (noOfDiffPixels > 0) {
                     const chunks = [];
 
                     diff.pack();
 
-                    diff.on('data', function (chunk) {
+                    diff.on('data', chunk => {
                         chunks.push(chunk);
                     });
 
-                    diff.on('end', async function () {
+                    diff.on('end', async () => {
                         const result = Buffer.concat(chunks);
                         await fsutils.writeFile(output, result);
 
-                        const dataUrl = `data:image/jpg;base64, ${result.toString('base64')}`;
-                        const misMatchPercentage = (noOfDiffPixels / (Math.max(img1.height, img2.height) * Math.max(img1.width, img2.width)) * 100).toFixed(2);
+                        const dataUrl = `data:image/jpg;base64, ${result.toString(
+                            'base64'
+                        )}`;
+                        const misMatchPercentage = (
+                            noOfDiffPixels /
+                            (Math.max(img1.height, img2.height) *
+                                Math.max(img1.width, img2.width)) *
+                            100
+                        ).toFixed(2);
 
                         resolve({
                             passOrFail: 'fail',
-                            misMatchPercentage: misMatchPercentage,
+                            misMatchPercentage,
                             diffScreenshot: dataUrl
-                        })
+                        });
                     });
                 } else {
                     resolve({
                         passOrFail: 'pass'
-                    })
+                    });
                 }
-            }
+            };
+
+            img1 = fsutils
+                .createReadStream(file1)
+                .pipe(new PNG())
+                .on('parsed', doneReading);
+            img2 = bufferStream.pipe(new PNG()).on('parsed', doneReading);
         } catch (e) {
             reject(e);
         }
     });
-};
 
-module.exports = function VisualRegression({path = '.', visualThreshold = 0.05, shouldRebaseVisuals = false} = {}) {
+module.exports = function VisualRegression({
+    path = '.',
+    visualThreshold = 0.05,
+    shouldRebaseVisuals = false
+} = {}) {
     return {
         async compareVisual(buffer, testName) {
             if (!testName) {
-                throw Error('Test name is required otherwise visual cannot be named.');
+                throw Error(
+                    'Test name is required otherwise visual cannot be named.'
+                );
             }
 
             try {
@@ -83,13 +112,19 @@ module.exports = function VisualRegression({path = '.', visualThreshold = 0.05, 
                 await fsutils.unlinkIfExists(currentImage);
                 await fsutils.unlinkIfExists(diffImage);
 
-                const newBaseline = shouldRebaseVisuals || !await fsutils.exists(baselineImage);
+                const newBaseline =
+                    shouldRebaseVisuals || !await fsutils.exists(baselineImage);
 
                 if (newBaseline) {
                     await fsutils.writeFile(baselineImage, buffer);
                 } else {
                     // a baseline exists so do comparison with the buffered visual
-                    const result = await compare(baselineImage, buffer, diffImage, visualThreshold);
+                    const result = await compare(
+                        baselineImage,
+                        buffer,
+                        diffImage,
+                        visualThreshold
+                    );
 
                     // write the current sreenshot if failed so it's easy to view difference manually
                     if (result.passOrFail === 'fail') {
@@ -103,10 +138,9 @@ module.exports = function VisualRegression({path = '.', visualThreshold = 0.05, 
                 }
 
                 return defaultResult;
-
             } catch (e) {
                 throw Error(`There was an error comparing visuals, ${e}`);
             }
         }
-    }
+    };
 };

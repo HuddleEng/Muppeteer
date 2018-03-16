@@ -3,11 +3,12 @@
  * This file represents file system utilities required for visual tests. This wraps around native Node and custom functions,
  * and exposes a promisified API.
  *
- **/
+ * */
 
-const {promisify} = require('util');
+const { promisify } = require('util');
 const fs = require('fs');
 const mkdirp = promisify(require('mkdirp'));
+
 const existsp = promisify(fs.exists);
 
 module.exports = {

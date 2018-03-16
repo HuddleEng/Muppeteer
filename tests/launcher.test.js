@@ -1,12 +1,17 @@
 const { fork } = require('child_process');
+
 const isWindows = process.platform === 'win32';
 
 let onFinishHookExecuted = false;
 let config = null;
 
-const launchMochaTests = () => {
-    return new Promise(resolve => {
-        const runTests = fork('tests/run.js', [`--webSocketUri=${process.env['WEBSOCKET_URI']}`, '--color'], { silent: true });
+const launchMochaTests = () =>
+    new Promise(resolve => {
+        const runTests = fork(
+            'tests/run.js',
+            [`--webSocketUri=${process.env.WEBSOCKET_URI}`, '--color'],
+            { silent: true }
+        );
 
         runTests.stdout.on('data', data => {
             process.stdout.write(data.toString());
@@ -36,7 +41,6 @@ const launchMochaTests = () => {
             }
         });
     });
-};
 
 beforeAll(async () => {
     // mocha tests may take a few seconds to execute, but at least docker is already running at this point
@@ -47,7 +51,9 @@ beforeAll(async () => {
 test('Substring filtering works', () => {
     expect(config.mocha.files.length).toBe(1);
 
-    const path = isWindows ? config.mocha.files[0].replace(/\\/g, '/') : config.mocha.files[0];
+    const path = isWindows
+        ? config.mocha.files[0].replace(/\\/g, '/')
+        : config.mocha.files[0];
     expect(path).toBe('example/example-tests/todomvc.test.js');
 });
 
@@ -56,10 +62,16 @@ test('Test interface is set', () => {
 });
 
 test('Report directory is set', () => {
-    expect(config.mocha.options.reporterOptions.mochawesomeReporterOptions.reportDir).toBe('example/example-tests/report');
-    expect(config.mocha.options.reporterOptions.mochaJunitReporterReporterOptions.mochaFile).toBe('example/example-tests/report/junit-custom.xml');
+    expect(
+        config.mocha.options.reporterOptions.mochawesomeReporterOptions
+            .reportDir
+    ).toBe('example/example-tests/report');
+    expect(
+        config.mocha.options.reporterOptions.mochaJunitReporterReporterOptions
+            .mochaFile
+    ).toBe('example/example-tests/report/junit-custom.xml');
 });
 
-test('Test onFinish hook executes after running tests', async() => {
+test('Test onFinish hook executes after running tests', async () => {
     expect(onFinishHookExecuted).toBe(true);
 });

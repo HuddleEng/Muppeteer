@@ -22,11 +22,11 @@
  *  shouldRebaseVisuals is a flag to tell the visual regression engine to replace the existing baseline visuals
  *  onLoad is an optional object that can be passed in during a test to run a function on load. {fn, args}
  *
- **/
+ * */
 
 const addContext = require('mochawesome/addContext');
-const {assert} = require('chai');
-const {browserInstance} = require('../lib/test-controller');
+const { assert } = require('chai');
+const { browserInstance } = require('../lib/test-controller');
 const puppeteerExtensions = require('puppeteer-extensions');
 const VisualRegression = require('./visual-regression');
 
@@ -39,8 +39,8 @@ module.exports = function Muppeteer({
     visualThreshold = 0.05,
     visualPath,
     shouldRebaseVisuals,
-    onLoad} = {}) {
-
+    onLoad
+} = {}) {
     const state = {
         testId: testId || componentName,
         testContext: null,
@@ -57,7 +57,7 @@ module.exports = function Muppeteer({
     };
 
     return {
-        async initialize () {
+        async initialize() {
             const browser = browserInstance.get();
 
             const generateAPI = () => {
@@ -65,17 +65,26 @@ module.exports = function Muppeteer({
                  * Compare the current state of an element to the baseline
                  * @param {string} selector - Selector of the element to compare
                  */
-                assert.visual = async function(selector) {
+                assert.visual = async selector => {
                     const element = await state.page.$(selector);
                     const buffer = await element.screenshot();
 
-                    let r = await state.visualRegression.compareVisual(buffer, state.testId);
+                    const r = await state.visualRegression.compareVisual(
+                        buffer,
+                        state.testId
+                    );
 
                     if (r.passOrFail === 'fail' && r.diffScreenshot) {
                         addContext(state.testContext, r.diffScreenshot);
                     }
 
-                    assert.equal(r.passOrFail, 'pass', `Visual failure for selector '${selector}' with an approximate ${r.misMatchPercentage}% mismatch.`);
+                    assert.equal(
+                        r.passOrFail,
+                        'pass',
+                        `Visual failure for selector '${selector}' with an approximate ${
+                            r.misMatchPercentage
+                        }% mismatch.`
+                    );
                 };
 
                 return puppeteerExtensions(state.page, TIMEOUT_MS);
@@ -85,7 +94,11 @@ module.exports = function Muppeteer({
             state.page.extensions = generateAPI();
 
             // default viewport
-            await state.page.setViewport({width: 900, height: 900, deviceScaleFactor: 1});
+            await state.page.setViewport({
+                width: 900,
+                height: 900,
+                deviceScaleFactor: 1
+            });
             await state.page.goto(state.url);
 
             if (state.onLoad && state.onLoad.fn) {
@@ -105,4 +118,3 @@ module.exports = function Muppeteer({
         }
     };
 };
-

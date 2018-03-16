@@ -1,4 +1,9 @@
-.idea/
-node_modules/
-example/example-tests/report/
-example/todomvc-react/
+.idea
+.vscode
+.DS_Store
+.npm
+.env
+npm-debug.log
+node_modules
+example/example-tests/report
+example/todomvc-react

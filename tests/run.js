@@ -1,14 +1,14 @@
 const server = require('./server.js');
 const { PORT } = require('../tests/network');
+const getLauncher = require('./config');
+const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 
-const {onlyInit, webSocketUri} = require('minimist')(process.argv.slice(2));
-
-(async() => {
+(async () => {
     let serverInstance = null;
 
-    const launcher = require('./config')(() => {
+    const launcher = getLauncher(() => {
         // tell parent process that the onFinish handler has executed
-        process.send({tag: 'STDOUT_HOOK_ONFINISH'});
+        process.send({ tag: 'STDOUT_HOOK_ONFINISH' });
         server.stop(serverInstance);
     });
 
@@ -16,12 +16,12 @@ const {onlyInit, webSocketUri} = require('minimist')(process.argv.slice(2));
         serverInstance = await server.start(PORT);
 
         // log mocha test config object to STDOUT for later use in framework test config assertions
-        const {config} = launcher;
-        process.send({tag: 'STDOUT_HOOK_CONFIG', value: config});
+        const { config } = launcher;
+        process.send({ tag: 'STDOUT_HOOK_CONFIG', value: config });
         await launcher.runTests();
 
         // tell parent process that mocha tests have complete
-        process.send({tag: 'STDOUT_HOOK_DONE'});
+        process.send({ tag: 'STDOUT_HOOK_DONE' });
     }
 
     if (onlyInit) {

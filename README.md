@@ -1,4 +1,5 @@
 # Muppeteer
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a9ea3ccb8704d32b860d22a0e03bfaf)](https://app.codacy.com/app/Huddleoss/Muppeteer?utm_source=github.com&utm_medium=referral&utm_content=HuddleEng/Muppeteer&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
 Muppeteer is a visual regression testing framework for running UI tests in Chrome. It's composed of a number of modules:

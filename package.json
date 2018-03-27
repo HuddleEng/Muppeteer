@@ -9,7 +9,8 @@
     "postinstall": "node example/setup.js",
     "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
     "prettier": "prettier --write --single-quote --tab-width=4 */**.js",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "update-docker-chrome": "./update-docker-chrome.sh"
   },
   "lint-staged": {
     "*.js": [

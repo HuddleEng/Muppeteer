@@ -9,6 +9,7 @@ function getLauncher(onFinish) {
         componentTestUrlFactory: () => `http://${IP}:${PORT}`,
         visualThreshold: 0.05,
         useDocker: true,
+        dockerChromeVersion: '65.0.3325.181',
         onFinish
     });
 }

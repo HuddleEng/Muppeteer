@@ -81,6 +81,7 @@ ConfigureLauncher({
 - `visualThreshold (--v)`: A value between 0 and 1 to present the threshold at which a visual test may pass or fail
 - `onFinish`: A function that can be used to do some extra work after Muppeteer is teared down
 - `useDocker (--d)`: The option for telling Muppeteer to run Chrome in Docker to better deal with environmental inconsistencies (default)
+- `dockerChromeVersion (--c)`: The version of Chrome to use in the Docker container. This **should** be set explicitly to avoid different environments having different versions of Chrome. By default, the latest version is pulled from the hub, which is **not** recommended.
 - `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head  (not applicable with `useDocker`)
 - `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md) (not applicable with `useDocker`)
 - `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version (not applicable with `useDocker`)

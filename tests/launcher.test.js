@@ -48,7 +48,7 @@ beforeAll(async () => {
     await launchMochaTests();
 });
 
-test('Substring filtering works', () => {
+test('Test filtering works', () => {
     expect(config.mocha.files.length).toBe(1);
 
     const path = isWindows

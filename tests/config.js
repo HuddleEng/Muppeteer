@@ -3,8 +3,7 @@ const ConfigureLauncher = require('../lib/test-launcher');
 
 function getLauncher(onFinish) {
     return ConfigureLauncher({
-        testDir: 'example/example-tests',
-        testFilter: 'test.js',
+        testPathPattern: 'example/example-tests/*.test.js',
         reportDir: 'example/example-tests/report',
         componentTestUrlFactory: () => `http://${IP}:${PORT}`,
         visualThreshold: 0.05,

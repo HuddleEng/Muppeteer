@@ -4,7 +4,10 @@ const getLauncher = require('../tests/config');
 
 (async () => {
     const serverInstance = await server.start(PORT);
-    await getLauncher(() => {
+
+    const launcher = await getLauncher(() => {
         server.stop(serverInstance);
-    }).launch();
+    });
+
+    await launcher.launch();
 })();

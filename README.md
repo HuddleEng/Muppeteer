@@ -2,6 +2,11 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a9ea3ccb8704d32b860d22a0e03bfaf)](https://app.codacy.com/app/Huddleoss/Muppeteer?utm_source=github.com&utm_medium=referral&utm_content=HuddleEng/Muppeteer&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
+<p>
+    <img src="https://i.imgur.com/oDiQ0ms.png" width="150px" height="150px" alt="Muppeteer" />
+    <p><i>Logo by: <a href="https://twitter.com/hsincyeh">Hsin-chieh Yeh</a></i></p>
+</p>
+
 Muppeteer is a visual regression testing framework for running UI tests in Chrome. It's composed of a number of modules:
 
 - [Mocha](https://mochajs.org/) - a test runner framework
@@ -41,7 +46,7 @@ The CLI script can be referenced at
  #### Example
 ```javascript
  "scripts": {
-    "test": "node node_modules/muppeteer/lib/test-launcher-cli --t tests --f test.js --r tests/report"
+    "test": "node node_modules/muppeteer/lib/test-launcher-cli --p tests/*.test.js --r tests/report"
   }
 ```
 
@@ -49,31 +54,33 @@ See [Options](#options)
   
 ## Configuration function
 The configuration can be referenced at 
- [`src/test-launcher`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/src/test-launcher.js).
+ [`lib/test-launcher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/test-launcher.js).
  
  ### Example
 ```javascript
-const ConfigureLauncher = require('../src/test-launcher');
+const ConfigureLauncher = require('../lib/test-launcher');
 const path = require('path');
-const testsPath = path.join(__dirname, 'tests');
 
-ConfigureLauncher({
-        testDir: testsPath,
-        testFilter: 'test.js',
-        reportDir: `${testsPath}/report`,
+const launcher = await ConfigureLauncher({
+        testPathPattern: `${__dirname}/tests/*.test.js`
+        reportDir: `${__dirname}/tests/report`,
         visualThreshold: 0.05,
         useDocker: true,
+        dockerChromeVersion: '67.0.3396.79',
         onFinish: () => {
             // do something after the tests have complete
         }
     }
-).launch();
+);
+
+await launcher.launch();
 ```
 ## Options
 **Note:** Only options with `--` can be run with the proceeding flag in the CLI interface.
 
-- `testDir (--t)`: The directory for Mocha to look for the test files
-- `testFilter (--f)`: Allows you to pass in some text to filter the test file name, it's just a substring match, nothing fancy
+- `testPathPattern (--p)`: A glob match for test files. This is the new and recommended way.
+- `testDir (--t)`: The directory for Mocha to look for the test files. This is the old way of matching tests.
+- `testFilter (--f)`: Allows you to pass in some text to filter the test file name. This is the old way of matching tests.
 - `shouldRebaseVisuals (--b)`: A flag to tell the visual regression engine to replace the existing baseline visuals
 - `reportDir (--r)`: The directory for the Mocha reporter to dump the report files
 - `componentTestUrlFactory`: A function that returns the url for the component test to run
@@ -145,6 +152,11 @@ describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
 ## Docker and test fixtures
 Muppeteer uses Docker by default to run tests. This helps to avoid environmental differences that could affect the 
 rendering of content on the page. You can opt out by configuring the `useDocker (--d)` option accordingly.
+
+You can specify the version of Chrome to use by configuring with the `dockerChromeVersion` option. When you use this option,
+the test launcher will automatically pull the correct Docker image from a repository and build the container for you. If you
+don't specify this, the `latest` version will be used. This can result in unexpected behaviour, so it's advised to
+pin the version.
 
 If you are hosting your test fixtures on a local web server, you'd typically set the URL in the test to
 something like http://localhost:3000. When using Docker, the `localhost` will refer to the container,

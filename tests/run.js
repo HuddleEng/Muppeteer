@@ -6,7 +6,7 @@ const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 (async () => {
     let serverInstance = null;
 
-    const launcher = getLauncher(() => {
+    const launcher = await getLauncher(() => {
         // tell parent process that the onFinish handler has executed
         process.send({ tag: 'STDOUT_HOOK_ONFINISH' });
         server.stop(serverInstance);

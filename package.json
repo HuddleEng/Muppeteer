@@ -39,7 +39,7 @@
     "mochawesome": "^3.0.2",
     "pixelmatch": "^4.0.2",
     "pngjs": "^3.3.2",
-    "puppeteer": "^1.0.0",
+    "puppeteer": "1.2.0",
     "puppeteer-extensions": "^1.0.0",
     "recursive-readdir-sync": "^1.0.6",
     "request": "^2.83.0",

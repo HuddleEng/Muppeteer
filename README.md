@@ -22,8 +22,6 @@ In addition, it provides the following core features:
 
 Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code needed to write tests with Puppeteer, and provide a convenient API for testing UI functionality. It was inspired by the [PhantomCSS](https://github.com/HuddleEng/PhantomCSS) and [CasperJS](http://casperjs.org/) libraries.
 
-**This framework is in beta pre-release currently. It is subject to some breaking changes until the API is finalised. There is also little test coverage as of yet, but it is in the works. Use with caution.**
-
 - ## [Configuration](#configuration-1)
     - ### [CLI](#cli-1)
     - ### [Configuration function](#configuration-function-1)

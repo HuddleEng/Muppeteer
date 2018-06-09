@@ -6,9 +6,9 @@
 npm-debug.log
 node_modules
 examples/unit/report
-examples/unit/screenshots/**/*-diff.png
-examples/unit/screenshots/**/*-current.png
+examples/unit/tests/screenshots/**/*-diff.png
+examples/unit/tests/screenshots/**/*-current.png
 examples/e2e/todomvc-react
 examples/e2e/report
-example/e2e/screenshots/**/*-diff.png
-example/e2e/screenshots/**/*-current.png
+examples/e2e/tests/screenshots/**/*-diff.png
+examples/e2e/tests/screenshots/**/*-current.png

@@ -1,6 +1,6 @@
 {
   "name": "muppeteer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Visual regression testing framework for running UI tests in Chrome",
   "main": "lib/test-launcher.js",
   "scripts": {

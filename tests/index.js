@@ -15,7 +15,11 @@ initTests.on('message', message => {
 
         const runTests = fork(
             'node_modules/jest/bin/jest.js',
-            ['/tests/', '--color'],
+            [
+                '--testMatch=**/tests/**/*test.js',
+                '--testPathIgnorePatterns=(/node_modules/|/examples/)',
+                '--color'
+            ],
             {
                 env: { WEBSOCKET_URI: ws },
                 silent: true

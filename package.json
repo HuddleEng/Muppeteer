@@ -5,8 +5,9 @@
   "main": "lib/test-launcher.js",
   "scripts": {
     "test": "node tests/index.js",
-    "example-tests": "node example/run-tests.js",
-    "postinstall": "node example/setup.js",
+    "example-unit-tests": "node examples/run-tests.js -u",
+    "example-e2e-tests": "node examples/run-tests.js -e",
+    "postinstall": "node examples/setup.js",
     "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
     "prettier": "prettier --write --single-quote --tab-width=4 */**.js",
     "precommit": "lint-staged",
@@ -31,6 +32,7 @@
   "dependencies": {
     "chai": "^4.1.2",
     "colors": "^1.1.2",
+    "commander": "^2.15.1",
     "extract-zip": "^1.6.6",
     "glob-promise": "^3.4.0",
     "mkdirp": "^0.5.1",

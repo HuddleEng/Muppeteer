@@ -98,51 +98,41 @@ You can access the [Puppeteer Extensions API](https://github.com/HuddleEng/puppe
 ## Example test case
 
 ```javascript
-const container = '.todoapp';
-const input = 'header input';
-const listItem = '.todo-list li';
-const firstItem = listItem + ':nth-of-type(1)';
-const firstItemToggle = firstItem + ' .toggle';
-const firstItemRemoveButton = firstItem + ' button';
-const secondItem = listItem + ':nth-of-type(2)';
-const todoCount = '.todo-count';
+describeComponent({ name: 'Panel' }, () => {
+    describe('Simple mode', async () => {
+        const panelContainer = '.first-usage .panel';
+        const panelTitle = '.first-usage .panel-title';
+        const panelBody = '.first-usage .panel-body';
 
-describeComponent({name: 'todomvc', url: 'http://localhost:3000'}, () => {
-    describe('Add a todo item', async () => {
-        it('typing text and hitting enter key adds new item', async () => {
-            await page.waitForSelector(input);
-            await page.type(input, 'My first item');
-            await page.keyboard.press('Enter');
-            await page.waitForSelector(firstItem);
-            assert.equal(await page.extensions.getText(firstItem), 'My first item');
-            await assert.visual(container);
-        });
-        it('clicking checkbox marks item as complete', async () => {
-            await page.waitForSelector(firstItemToggle);
-            await page.click(firstItemToggle);
+        it('title and body exist', async () => {
+            await page.waitForSelector(panelTitle);
+            const titleText = await page.extensions.getText(panelTitle);
+            assert.equal(titleText, 'My title');
 
-            // something to break the tests
-            // await page.addStyleTag({ content: '.header { padding-top: 50px; }'});
+            await page.waitForSelector(panelBody);
+            const bodyText = await page.extensions.getText(panelBody);
+            assert.equal(bodyText, 'This is some test data');
+        });
+        it('title and body appear correctly', async () => {
+            await assert.visual(panelContainer);
+        });
+    });
+    describe('Icon mode', async () => {
+        const panelContainer = '.second-usage .panel';
+        const panelTitle = '.second-usage .panel-title';
+        const panelBody = '.second-usage .panel-body';
 
-            await page.extensions.waitForNthSelectorAttributeValue(listItem, 1, 'class', 'completed');
-            await assert.visual(container);
+        it('title, body and icon exist', async () => {
+            await page.waitForSelector(panelTitle);
+            const titleText = await page.extensions.getText(panelTitle);
+            assert.equal(titleText, 'My title');
+
+            await page.waitForSelector(panelBody);
+            const bodyText = await page.extensions.getText(panelBody);
+            assert.equal(bodyText, 'This is a little bit more test data');
         });
-        it('typing more text and hitting enter adds a second item', async () => {
-            await page.type(input, 'My second item');
-            await page.keyboard.press('Enter');
-            await page.waitForSelector(secondItem);
-            assert.equal(await page.extensions.getText(secondItem), 'My second item');
-            await assert.visual(container);
-        });
-        it('hovering over first item shows x button', async () => {
-            await page.hover(firstItem);
-            await assert.visual(container);
-        });
-        it('clicking on first item x button removes it from the list', async () => {
-            await page.click(firstItemRemoveButton);
-            await page.extensions.waitForElementCount(listItem, 1);
-            assert.equal(await page.extensions.getText(todoCount), '1 item left');
-            await assert.visual(container);
+        it('title, body and icon appear correctly', async () => {
+            await assert.visual(panelContainer);
         });
     });
 });
@@ -156,7 +146,7 @@ rendering of content on the page. You can opt out by configuring the `useDocker 
 You can specify the version of Chrome to use by configuring with the `dockerChromeVersion` option. When you use this option,
 the test launcher will automatically pull the correct Docker image from a repository and build the container for you. If you
 don't specify this, the `latest` version will be used. This can result in unexpected behaviour, so it's advised to
-pin the version.
+pin the version with this property.
 
 If you are hosting your test fixtures on a local web server, you'd typically set the URL in the test to
 something like http://localhost:3000. When using Docker, the `localhost` will refer to the container,
@@ -166,7 +156,7 @@ http://192.168.0.4:3000.
 However, this breaks down when you are running on a device you don't know how to address, e.g. a cloud CI agent.
 To solve this problem, you can use the `componentTestUrlFactory` function in launch configuration to generate the URL. 
 You can lookup the IP address of the current host and pass that through. This is used to run the example tests in this repo. 
-See [run-tests](https://github.com/HuddleEng/Muppeteer/blob/master/example/run-tests.js) for an example.
+See [network](https://github.com/HuddleEng/Muppeteer/blob/master/tests/network.js) for an example.
 
 ```javascript
 ...
@@ -175,27 +165,32 @@ componentTestUrlFactory: () => `http://${IP}:${PORT}`
 ```
 
 ### Passing test output
-![Passing tests](https://i.imgur.com/EOA3rJ6.png "Passing tests")
+![Passing tests](https://i.imgur.com/3Y0i03o.png "Passing tests")
 
 ### Failing test output
-![Failing tests tests](https://i.imgur.com/rPY6Bjq.png "Failing tests")
+![Failing tests tests](https://i.imgur.com/bMfsY1M.png "Failing tests")
 
 ### Understanding visual failures
 
 #### Baseline image ####
 This is the visual that is versioned in your app repo. It is the source of truth.
 
-![Baseline image](https://i.imgur.com/8dlSqyT.png "Baseline")
+![Baseline image](https://i.imgur.com/vUtfI0m.png "Baseline")
 
 #### Current image ####
-This is the screenshot taken during the test. In this example, we can see that some padding has 
-pushed the text input field down.
+This is the screenshot taken during the test. In this example, we can see that some extra space on the left has 
+pushed the title to the right
 
-![Current image](https://i.imgur.com/DVV3jvZ.png "Current")
+![Current image](https://i.imgur.com/kHwikgE.png "Current")
 
 #### Difference image ####
-This is an image showing where the differences are. Each difference is layered on top of one another. Here we can see 
-that the "What needs to be done?" placeholder has moved down, and so it's sitting on top of where "My first item" 
-previously was. 
+This is an image showing where the differences are. Each difference is layered on top of one another.
 
-![Difference image](https://i.imgur.com/C1wpxc5.png "Difference")
+![Difference image](https://i.imgur.com/L21lqog.png "Difference")
+
+## Running example tests in this project
+This project ships with an example unit and e2e test suite.
+
+`npm run example-unit-tests`
+
+`npm run example-e2e-tests`

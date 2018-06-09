@@ -3,17 +3,19 @@ const { PORT } = require('../tests/network');
 const getLauncher = require('./config');
 const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 
+const testType = 'unit';
+
 (async () => {
     let serverInstance = null;
 
-    const launcher = await getLauncher(() => {
+    const launcher = await getLauncher(testType, () => {
         // tell parent process that the onFinish handler has executed
         process.send({ tag: 'STDOUT_HOOK_ONFINISH' });
         server.stop(serverInstance);
     });
 
     async function setupServerAndRunTests() {
-        serverInstance = await server.start(PORT);
+        serverInstance = await server.start({ port: PORT, testType });
 
         // log mocha test config object to STDOUT for later use in framework test config assertions
         const { config } = launcher;

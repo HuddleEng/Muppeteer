@@ -5,5 +5,10 @@
 .env
 npm-debug.log
 node_modules
-example/example-tests/report
-example/todomvc-react
+examples/unit/report
+examples/unit/screenshots/**/*-diff.png
+examples/unit/screenshots/**/*-current.png
+examples/e2e/todomvc-react
+examples/e2e/report
+example/e2e/screenshots/**/*-diff.png
+example/e2e/screenshots/**/*-current.png

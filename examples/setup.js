@@ -5,11 +5,12 @@ const { CONSOLE_PREFIX } = require('../src/console-helpers');
 const { checkDependencies } = require('../src/check-dependencies');
 
 const file = 'todomvc-react.zip';
-const source = path.join(__dirname, file);
+const targetDir = path.join(__dirname, 'e2e');
+const source = path.join(targetDir, file);
 
 (async () => {
     console.log(`${CONSOLE_PREFIX} Running post-setup script...`.green);
-    const extractErrors = await extract(source, { dir: __dirname });
+    const extractErrors = await extract(source, { dir: targetDir });
 
     if (!extractErrors) {
         checkDependencies();

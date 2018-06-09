@@ -1,10 +1,13 @@
 const { IP, PORT } = require('./network');
 const ConfigureLauncher = require('../lib/test-launcher');
 
-function getLauncher(onFinish) {
+function getLauncher(testType, onFinish) {
     return ConfigureLauncher({
-        testPathPattern: 'example/example-tests/*.test.js',
-        reportDir: 'example/example-tests/report',
+        testPathPattern:
+            testType === 'unit'
+                ? 'examples/unit/**/*.test.js'
+                : 'examples/e2e/**/*.test.js',
+        reportDir: `examples/${testType}/report`,
         componentTestUrlFactory: () => `http://${IP}:${PORT}`,
         visualThreshold: 0.05,
         useDocker: true,

@@ -54,7 +54,7 @@ test('Test filtering works', () => {
     const path = isWindows
         ? config.mocha.files[0].replace(/\\/g, '/')
         : config.mocha.files[0];
-    expect(path).toBe('example/example-tests/todomvc.test.js');
+    expect(path).toBe('examples/unit/tests/panel.test.js');
 });
 
 test('Test interface is set', () => {
@@ -65,11 +65,11 @@ test('Report directory is set', () => {
     expect(
         config.mocha.options.reporterOptions.mochawesomeReporterOptions
             .reportDir
-    ).toBe('example/example-tests/report');
+    ).toBe('examples/unit/report');
     expect(
         config.mocha.options.reporterOptions.mochaJunitReporterReporterOptions
             .mochaFile
-    ).toBe('example/example-tests/report/junit-custom.xml');
+    ).toBe('examples/unit/report/junit-custom.xml');
 });
 
 test('Test onFinish hook executes after running tests', async () => {

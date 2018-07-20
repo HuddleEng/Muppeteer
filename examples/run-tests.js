@@ -17,9 +17,9 @@ const testType = program.unit ? 'unit' : 'e2e';
         testType
     });
 
-    const launcher = await getLauncher(testType, () => {
+    const launcher = getLauncher(testType, () => {
         server.stop(serverInstance);
     });
 
-    await launcher.launch();
+    await launcher.run();
 })();

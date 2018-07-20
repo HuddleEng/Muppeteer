@@ -41,15 +41,15 @@ You can configure Muppeteer via the CLI or a configuration function
 ### CLI
 
 The CLI script can be referenced at
-[`lib/testLauncherCli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/testLauncherCli.js).
+[`lib/launcherCli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/launcherCli.js).
 
-It is run like `node <<path-to-muppeteer>>/lib/testLauncherCli <<args>>`
+It is run like `node <<path-to-muppeteer>>/lib/launcherCli <<args>>`
 
 #### Example
 
 ```javascript
  "scripts": {
-    "test": "node node_modules/muppeteer/lib/testLauncherCli --p tests/*.test.js --r tests/report"
+    "test": "node node_modules/muppeteer/lib/launcherCli --p tests/*.test.js --r tests/report"
   }
 ```
 
@@ -58,15 +58,15 @@ See [Options](#options)
 ## Configuration function
 
 The configuration can be referenced at
-[`lib/configureLauncher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/configureLauncher.js).
+[`lib/Launcher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/Launcher.js).
 
 ### Example
 
 ```javascript
-const configureLauncher = require('../lib/configureLauncher');
+const Launcher = require('../lib/Launcher');
 const path = require('path');
 
-const launcher = await configureLauncher({
+const launcher = new Launcher({
         testPathPattern: `${__dirname}/tests/*.test.js`
         reportDir: `${__dirname}/tests/report`,
         visualThreshold: 0.05,
@@ -78,7 +78,7 @@ const launcher = await configureLauncher({
     }
 );
 
-await launcher.launch();
+await launcher.run();
 ```
 
 ## Options

@@ -7,7 +7,7 @@
 
 const addContext = require('mochawesome/addContext');
 const { assert } = require('chai');
-const { browserInstance } = require('../lib/testController');
+const { browserInstance } = require('./testController');
 const puppeteerExtensions = require('puppeteer-extensions');
 const visualRegression = require('./visualRegression');
 

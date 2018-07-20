@@ -93,7 +93,7 @@ module.exports = (
 
             // Create an instance of Muppeteer for tests run and configure it accordingly
 
-            s.beforeAll(async () => {
+            s.beforeAll(() => {
                 context.TestInterface = new TestInterface({
                     componentName,
                     url: componentTestUrlFactory(component),

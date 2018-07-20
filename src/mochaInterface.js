@@ -42,7 +42,7 @@ module.exports = (
         context.afterEach = common.afterEach;
         context.run = mocha.options.delay && common.runWithSuite(suite);
         context.Muppeteer = null;
-        context.testInterface = null;
+        context.TestInterface = null;
 
         context.describe = context.context = (title, fn) => {
             const s = common.suite.create({
@@ -61,10 +61,10 @@ module.exports = (
 
             s.beforeAll(async () => {
                 // Initialize the Muppeteer instance and get the API
-                const muppeteer = await context.testInterface.initialize();
-                context.Muppeteer = muppeteer;
-                context.page = muppeteer.page;
-                context.assert = muppeteer.assert;
+                await context.TestInterface.initialize();
+                context.Muppeteer = context.TestInterface;
+                context.page = context.Muppeteer.page;
+                context.assert = context.Muppeteer.assert;
             });
 
             // This pushes the new handlers to the beginning of the array
@@ -94,7 +94,7 @@ module.exports = (
             // Create an instance of Muppeteer for tests run and configure it accordingly
 
             s.beforeAll(async () => {
-                context.testInterface = TestInterface({
+                context.TestInterface = new TestInterface({
                     componentName,
                     url: componentTestUrlFactory(component),
                     visualPath: componentTestVisualPathFactory(component, file),

@@ -1,4 +1,4 @@
-const { globMatch, legacyMatch } = require('./test-filtering');
+const { globMatch, legacyMatch } = require('./test-matching');
 
 test('Glob matching works', async () => {
     const testPathPattern = 'examples/unit/**/*.test.js';

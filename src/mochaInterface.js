@@ -22,7 +22,7 @@
  * */
 
 const Test = require('mocha/lib/test');
-const Muppeteer = require('../src/muppeteer');
+const TestInterface = require('./TestInterface');
 const commonInterface = require('mocha/lib/interfaces/common');
 
 module.exports = (
@@ -42,7 +42,7 @@ module.exports = (
         context.afterEach = common.afterEach;
         context.run = mocha.options.delay && common.runWithSuite(suite);
         context.Muppeteer = null;
-        context._muppeteerInstance = null;
+        context.testInterface = null;
 
         context.describe = context.context = (title, fn) => {
             const s = common.suite.create({
@@ -61,7 +61,7 @@ module.exports = (
 
             s.beforeAll(async () => {
                 // Initialize the Muppeteer instance and get the API
-                const muppeteer = await context._muppeteerInstance.initialize();
+                const muppeteer = await context.testInterface.initialize();
                 context.Muppeteer = muppeteer;
                 context.page = muppeteer.page;
                 context.assert = muppeteer.assert;
@@ -94,7 +94,7 @@ module.exports = (
             // Create an instance of Muppeteer for tests run and configure it accordingly
 
             s.beforeAll(async () => {
-                context._muppeteerInstance = Muppeteer({
+                context.testInterface = TestInterface({
                     componentName,
                     url: componentTestUrlFactory(component),
                     visualPath: componentTestVisualPathFactory(component, file),

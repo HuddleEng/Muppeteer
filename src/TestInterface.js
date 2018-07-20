@@ -6,7 +6,7 @@
  *
  * Example usage:
  *
- *  Muppeteer({
+ *  TestInterface({
  *              componentName,
  *              url: componentTestUrlFactory(component),
  *              visualPath: componentTestVisualPathFactory(component),
@@ -32,7 +32,7 @@ const VisualRegression = require('./visualRegression');
 
 const TIMEOUT_MS = 5000;
 
-module.exports = function Muppeteer({
+module.exports = function TestInterface({
     componentName = 'unnamed-component',
     testId,
     url,

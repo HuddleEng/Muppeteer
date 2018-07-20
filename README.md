@@ -58,12 +58,12 @@ See [Options](#options)
 ## Configuration function
 
 The configuration can be referenced at
-[`lib/testLauncher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/testLauncher.js).
+[`lib/configureLauncher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/configureLauncher.js).
 
 ### Example
 
 ```javascript
-const configureLauncher = require('../lib/testLauncher');
+const configureLauncher = require('../lib/configureLauncher');
 const path = require('path');
 
 const launcher = await configureLauncher({

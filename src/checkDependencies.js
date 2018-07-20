@@ -6,7 +6,7 @@
  * */
 
 const shell = require('shelljs');
-const { CONSOLE_PREFIX } = require('./console-helpers');
+const { CONSOLE_PREFIX } = require('./consoleHelpers');
 require('colors');
 
 const dependencyList = [

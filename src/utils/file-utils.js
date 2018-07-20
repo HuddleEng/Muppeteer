@@ -16,7 +16,7 @@ module.exports = {
         return promisify(fs.writeFile)(path, buffer);
     },
     async mkdirIfRequired(path) {
-        if (!await existsp(path)) {
+        if (!(await existsp(path))) {
             await mkdirp(path);
         }
         return path;

@@ -9,7 +9,7 @@
 
 const { Buffer } = require('buffer');
 const stream = require('stream');
-const fsutils = require('./fs-utils');
+const fsutils = require('./utils/file-utils');
 const pixelmatch = require('pixelmatch');
 const { PNG } = require('pngjs');
 
@@ -57,9 +57,9 @@ const compare = (file1, buffer, output, threshold) =>
                             'base64'
                         )}`;
                         const misMatchPercentage = (
-                            noOfDiffPixels /
-                            (Math.max(img1.height, img2.height) *
-                                Math.max(img1.width, img2.width)) *
+                            (noOfDiffPixels /
+                                (Math.max(img1.height, img2.height) *
+                                    Math.max(img1.width, img2.width))) *
                             100
                         ).toFixed(2);
 
@@ -113,7 +113,8 @@ module.exports = function VisualRegression({
                 await fsutils.unlinkIfExists(diffImage);
 
                 const newBaseline =
-                    shouldRebaseVisuals || !await fsutils.exists(baselineImage);
+                    shouldRebaseVisuals ||
+                    !(await fsutils.exists(baselineImage));
 
                 if (newBaseline) {
                     await fsutils.writeFile(baselineImage, buffer);

@@ -26,9 +26,9 @@
 
 const addContext = require('mochawesome/addContext');
 const { assert } = require('chai');
-const { browserInstance } = require('../lib/test-controller');
+const { browserInstance } = require('../lib/testController');
 const puppeteerExtensions = require('puppeteer-extensions');
-const VisualRegression = require('./visual-regression');
+const VisualRegression = require('./visualRegression');
 
 const TIMEOUT_MS = 5000;
 

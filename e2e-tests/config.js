@@ -1,5 +1,5 @@
 const { IP, PORT } = require('./network');
-const configureLauncher = require('../lib/test-launcher');
+const configureLauncher = require('../lib/testLauncher');
 
 function getLauncher(testType, onFinish) {
     return configureLauncher({

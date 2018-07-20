@@ -2,7 +2,7 @@
     "name": "muppeteer",
     "version": "1.2.2",
     "description": "Visual regression testing framework for running UI tests in Chrome",
-    "main": "lib/test-launcher.js",
+    "main": "lib/testLauncher.js",
     "scripts": {
         "test": "npm run unit-tests; npm run e2e-tests",
         "unit-tests": "jest --testPathPattern=\"^((?!e2e-tests|examples).)*$\"",

@@ -41,15 +41,15 @@ You can configure Muppeteer via the CLI or a configuration function
 ### CLI
 
 The CLI script can be referenced at
-[`lib/test-launcher-cli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/test-launcher-cli.js).
+[`lib/testLauncherCli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/testLauncherCli.js).
 
-It is run like `node <<path-to-muppeteer>>/lib/test-launcher-cli <<args>>`
+It is run like `node <<path-to-muppeteer>>/lib/testLauncherCli <<args>>`
 
 #### Example
 
 ```javascript
  "scripts": {
-    "test": "node node_modules/muppeteer/lib/test-launcher-cli --p tests/*.test.js --r tests/report"
+    "test": "node node_modules/muppeteer/lib/testLauncherCli --p tests/*.test.js --r tests/report"
   }
 ```
 
@@ -58,12 +58,12 @@ See [Options](#options)
 ## Configuration function
 
 The configuration can be referenced at
-[`lib/test-launcher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/test-launcher.js).
+[`lib/testLauncher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/testLauncher.js).
 
 ### Example
 
 ```javascript
-const configureLauncher = require('../lib/test-launcher');
+const configureLauncher = require('../lib/testLauncher');
 const path = require('path');
 
 const launcher = await configureLauncher({

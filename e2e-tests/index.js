@@ -1,7 +1,7 @@
 const { fork } = require('child_process');
 
 // init the docker container in preparation for the test
-const initTests = fork('tests/run.js', ['--onlyInit', '--color'], {
+const initTests = fork('e2e-tests/run.js', ['--onlyInit', '--color'], {
     silent: true
 });
 
@@ -16,7 +16,7 @@ initTests.on('message', message => {
         const runTests = fork(
             'node_modules/jest/bin/jest.js',
             [
-                '--testMatch=**/tests/**/*test.js',
+                '--testMatch=**/e2e-tests/**/*test.js',
                 '--testPathIgnorePatterns=(/node_modules/|/examples/)',
                 '--color'
             ],

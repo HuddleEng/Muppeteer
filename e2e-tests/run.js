@@ -1,5 +1,5 @@
 const server = require('./server.js');
-const { PORT } = require('../tests/network');
+const { PORT } = require('../e2e-tests/network');
 const getLauncher = require('./config');
 const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 

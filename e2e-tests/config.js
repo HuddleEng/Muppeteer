@@ -1,8 +1,8 @@
 const { IP, PORT } = require('./network');
-const ConfigureLauncher = require('../lib/test-launcher');
+const configureLauncher = require('../lib/test-launcher');
 
 function getLauncher(testType, onFinish) {
-    return ConfigureLauncher({
+    return configureLauncher({
         testPathPattern:
             testType === 'unit'
                 ? 'examples/unit/**/*.test.js'

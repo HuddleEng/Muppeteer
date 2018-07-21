@@ -528,7 +528,7 @@ object-assign
     function(e, t, n) {
         (e.exports = n(4)(!1)).push([
             e.i,
-            '.panel {\n    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;\n    background-color: #fff;\n    border-style: solid;\n    border-width: 1px;\n    border-radius: 4px;\n    margin-bottom: 16px;\n}\n\n.panel-heading {\n    color: #fff;\n    background-color: #437bad;\n    padding: 10px;\n    border-bottom: 1px solid transparent;\n}\n\n.panel-heading:after {\n    content: "";\n    display: table;\n    clear: both;\n}\n\n.panel-icon {\n    float: left;\n    margin-left: 2px;\n    margin-top: 4px;\n}\n\n.panel-heading svg {\n    height: 20px;\n    width: 20px;\n}\n\n.panel-body {\n    font-size: 14px;\n    padding: 10px;\n}\n\n.panel-title {\n    float: left;\n    margin: 2px 0 0 16px;\n    font-size: 18px;\n}',
+            '.panel {\n    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;\n    box-sizing: border-box;\n    background-color: #fff;\n    border-style: solid;\n    border-width: 1px;\n    border-radius: 4px;\n    margin-bottom: 16px;\n}\n\n.panel-heading {\n    display: flex;\n    align-items: center;\n    color: #fff;\n    background-color: #437bad;\n    padding: 10px;\n    border-bottom: 1px solid transparent;\n}\n\n.panel-heading:after {\n    content: "";\n    display: table;\n    clear: both;\n}\n\n.panel-icon {\n    position: relative;\n    top: 2px;\n}\n\n.panel-heading svg {\n    height: 20px;\n    width: 20px;\n}\n\n.panel-body {\n    font-size: 14px;\n    padding: 10px;\n}\n\n.panel-title {\n    margin: 0 0 0 16px;\n    font-size: 18px;\n}\n',
             ''
         ]);
     },

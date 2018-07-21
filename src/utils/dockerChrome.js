@@ -2,8 +2,8 @@ const path = require('path');
 const request = require('request-promise-native');
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
-const { CONSOLE_PREFIX } = require('../consoleHelpers');
-const { checkDependency } = require('../checkDependencies');
+const { CONSOLE_PREFIX } = require('./consoleHelpers');
+const { checkDependency } = require('./checkDependencies');
 
 require('colors');
 

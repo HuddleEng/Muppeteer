@@ -1,8 +1,5 @@
 {
-    "extends": [
-        "airbnb-base",
-        "plugin:prettier/recommended"
-    ],
+    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
     "rules": {
         "prettier/prettier": [
             "error",
@@ -14,6 +11,11 @@
         "no-console": "off"
     },
     "env": {
-        "jest": true
+        "node": true,
+        "jest": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 8
     }
 }

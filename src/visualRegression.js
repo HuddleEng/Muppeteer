@@ -7,141 +7,73 @@
  *
  * */
 
-const { Buffer } = require('buffer');
-const stream = require('stream');
-const fsutils = require('./utils/file-utils');
-const pixelmatch = require('pixelmatch');
-const { PNG } = require('pngjs');
+const {
+    writeFile,
+    createDirectoryIfRequired,
+    removeFileIfExists,
+    fileExists,
+    findDifferencesInImages
+} = require('./utils/fileUtils');
 
-const compare = (file1, buffer, output, threshold) =>
-    new Promise((resolve, reject) => {
+module.exports = class VisualRegression {
+    constructor({
+        path = '.',
+        visualThreshold = 0.05,
+        shouldRebaseVisuals = false
+    } = {}) {
+        this.path = path;
+        this.visualThreshold = visualThreshold;
+        this.shouldRebaseVisuals = shouldRebaseVisuals;
+    }
+
+    async compareVisual(buffer, testName) {
+        if (!testName) {
+            throw Error(
+                'Test name is required otherwise visual cannot be named.'
+            );
+        }
+
         try {
-            // push buffer to a stream for comparison with the baseline image
-            const bufferStream = new stream.PassThrough();
-            bufferStream.end(buffer);
+            const defaultResult = { passOrFail: 'pass' };
+            const currentImage = `${this.path}/${testName}-current.png`;
+            const diffImage = `${this.path}/${testName}-diff.png`;
+            const baselineImage = `${this.path}/${testName}-base.png`;
 
-            let filesRead = 0;
-            let img1;
-            let img2;
+            // ensure the visual path exists
+            await createDirectoryIfRequired(this.path);
 
-            const doneReading = () => {
-                filesRead += 1;
-                if (filesRead < 2) return;
-                const diff = new PNG({
-                    width: img1.width,
-                    height: img1.height
-                });
-                const noOfDiffPixels = pixelmatch(
-                    img1.data,
-                    img2.data,
-                    diff.data,
-                    img1.width,
-                    img1.height,
-                    { threshold }
+            // clean any non baseline visuals from previous tests
+            await removeFileIfExists(currentImage);
+            await removeFileIfExists(diffImage);
+
+            const newBaseline =
+                this.shouldRebaseVisuals || !(await fileExists(baselineImage));
+
+            if (newBaseline) {
+                await writeFile(baselineImage, buffer);
+            } else {
+                // a baseline exists so do comparison with the buffered visual
+                const result = await findDifferencesInImages(
+                    baselineImage,
+                    buffer,
+                    diffImage,
+                    this.visualThreshold
                 );
 
-                if (noOfDiffPixels > 0) {
-                    const chunks = [];
-
-                    diff.pack();
-
-                    diff.on('data', chunk => {
-                        chunks.push(chunk);
-                    });
-
-                    diff.on('end', async () => {
-                        const result = Buffer.concat(chunks);
-                        await fsutils.writeFile(output, result);
-
-                        const dataUrl = `data:image/jpg;base64, ${result.toString(
-                            'base64'
-                        )}`;
-                        const misMatchPercentage = (
-                            (noOfDiffPixels /
-                                (Math.max(img1.height, img2.height) *
-                                    Math.max(img1.width, img2.width))) *
-                            100
-                        ).toFixed(2);
-
-                        resolve({
-                            passOrFail: 'fail',
-                            misMatchPercentage,
-                            diffScreenshot: dataUrl
-                        });
-                    });
+                // write the current sreenshot if failed so it's easy to view difference manually
+                if (result.passOrFail === 'fail') {
+                    await writeFile(currentImage, buffer);
                 } else {
-                    resolve({
-                        passOrFail: 'pass'
-                    });
+                    // clean up diff visual if generated for minor mismatch
+                    await removeFileIfExists(diffImage);
                 }
-            };
 
-            img1 = fsutils
-                .createReadStream(file1)
-                .pipe(new PNG())
-                .on('parsed', doneReading);
-            img2 = bufferStream.pipe(new PNG()).on('parsed', doneReading);
+                return result;
+            }
+
+            return defaultResult;
         } catch (e) {
-            reject(e);
+            throw Error(`There was an error comparing visuals, ${e}`);
         }
-    });
-
-module.exports = function VisualRegression({
-    path = '.',
-    visualThreshold = 0.05,
-    shouldRebaseVisuals = false
-} = {}) {
-    return {
-        async compareVisual(buffer, testName) {
-            if (!testName) {
-                throw Error(
-                    'Test name is required otherwise visual cannot be named.'
-                );
-            }
-
-            try {
-                const defaultResult = { passOrFail: 'pass' };
-                const currentImage = `${path}/${testName}-current.png`;
-                const diffImage = `${path}/${testName}-diff.png`;
-                const baselineImage = `${path}/${testName}-base.png`;
-
-                // ensure the visual path exists
-                await fsutils.mkdirIfRequired(path);
-
-                // clean any non baseline visuals from previous tests
-                await fsutils.unlinkIfExists(currentImage);
-                await fsutils.unlinkIfExists(diffImage);
-
-                const newBaseline =
-                    shouldRebaseVisuals ||
-                    !(await fsutils.exists(baselineImage));
-
-                if (newBaseline) {
-                    await fsutils.writeFile(baselineImage, buffer);
-                } else {
-                    // a baseline exists so do comparison with the buffered visual
-                    const result = await compare(
-                        baselineImage,
-                        buffer,
-                        diffImage,
-                        visualThreshold
-                    );
-
-                    // write the current sreenshot if failed so it's easy to view difference manually
-                    if (result.passOrFail === 'fail') {
-                        await fsutils.writeFile(currentImage, buffer);
-                    } else {
-                        // clean up diff visual if generated for minor mismatch
-                        await fsutils.unlinkIfExists(diffImage);
-                    }
-
-                    return result;
-                }
-
-                return defaultResult;
-            } catch (e) {
-                throw Error(`There was an error comparing visuals, ${e}`);
-            }
-        }
-    };
+    }
 };

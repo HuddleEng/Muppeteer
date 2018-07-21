@@ -9,7 +9,7 @@ const addContext = require('mochawesome/addContext');
 const { assert } = require('chai');
 const { browserInstance } = require('./testController');
 const puppeteerExtensions = require('puppeteer-extensions');
-const visualRegression = require('./visualRegression');
+const VisualRegression = require('./VisualRegression');
 
 const TIMEOUT_MS = 5000;
 
@@ -83,7 +83,7 @@ module.exports = class TestInterface {
             await this.page.extensions.evaluate(this.onLoad.fn, ...args);
         }
 
-        this.visualRegression = visualRegression({
+        this.visualRegression = new VisualRegression({
             page: this.page,
             extensions: this.page.extensions,
             path: this.visualPath,

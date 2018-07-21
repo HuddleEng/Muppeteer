@@ -7,7 +7,7 @@
 
 const addContext = require('mochawesome/addContext');
 const { assert } = require('chai');
-const { browserInstance } = require('./testController');
+const TestController = require('./TestController');
 const puppeteerExtensions = require('puppeteer-extensions');
 const VisualRegression = require('./VisualRegression');
 
@@ -32,10 +32,11 @@ module.exports = class TestInterface {
         this.shouldRebaseVisuals = shouldRebaseVisuals;
         this.page = null;
         this.assert = assert;
+        this.testController = new TestController();
     }
 
     async initialize() {
-        const browser = browserInstance.get();
+        const browser = this.testController.getBrowser();
 
         const generateAPI = () => {
             /**

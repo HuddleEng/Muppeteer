@@ -11,62 +11,72 @@ const {
     dockerShutdownChrome
 } = require('./utils/dockerChrome');
 
-let browser = null;
-let isUsingDocker = false;
+let instance;
+module.exports = class TestController {
+    constructor() {
+        if (!instance) {
+            this.browser = null;
+            this.isUsingDocker = false;
+            instance = this;
+        }
 
-module.exports = {
-    browserInstance: {
-        get() {
-            return browser;
-        },
-        async launch({
-            headless = true,
-            existingWebSocketUri,
-            disableSandbox = false,
-            executablePath = null,
-            useDocker = true
-        } = {}) {
-            if (existingWebSocketUri) {
-                isUsingDocker = useDocker;
-                browser = await puppeteer.connect({
-                    browserWSEndpoint: existingWebSocketUri
-                });
-                return browser;
+        return instance;
+    }
+
+    getBrowser() {
+        return this.browser;
+    }
+
+    async launchBrowser({
+        headless = true,
+        existingWebSocketUri,
+        disableSandbox = false,
+        executablePath = null,
+        useDocker = true
+    } = {}) {
+        if (existingWebSocketUri) {
+            this.isUsingDocker = useDocker;
+
+            this.browser = await puppeteer.connect({
+                browserWSEndpoint: existingWebSocketUri
+            });
+
+            return this.browser;
+        }
+
+        if (useDocker) {
+            const webSocketUri = await dockerRunChrome();
+
+            this.browser = await puppeteer.connect({
+                browserWSEndpoint: webSocketUri
+            });
+
+            this.isUsingDocker = useDocker;
+        } else {
+            const launchConfig = {
+                headless,
+                args: disableSandbox
+                    ? ['--no-sandbox', '--disable-setuid-sandbox']
+                    : []
+            };
+
+            if (executablePath) {
+                launchConfig.executablePath = executablePath;
             }
 
-            if (useDocker) {
-                const webSocketUri = await dockerRunChrome();
+            this.browser = await puppeteer.launch(launchConfig);
+        }
 
-                browser = await puppeteer.connect({
-                    browserWSEndpoint: webSocketUri
-                });
+        return this.browser;
+    }
 
-                isUsingDocker = useDocker;
-            } else {
-                const launchConfig = {
-                    headless,
-                    args: disableSandbox
-                        ? ['--no-sandbox', '--disable-setuid-sandbox']
-                        : []
-                };
+    async closeBrowser() {
+        if (this.browser) {
+            await this.browser.close();
+        }
 
-                if (executablePath) {
-                    launchConfig.executablePath = executablePath;
-                }
-
-                browser = await puppeteer.launch(launchConfig);
-            }
-
-            return browser;
-        },
-        async close() {
-            if (browser) {
-                await browser.close();
-            }
-
-            if (isUsingDocker) {
-                await dockerShutdownChrome();
-            }
+        if (this.isUsingDocker) {
+            await dockerShutdownChrome();
         }
     }
 };

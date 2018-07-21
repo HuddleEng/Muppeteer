@@ -11,9 +11,10 @@ const {
     writeFile,
     createDirectoryIfRequired,
     removeFileIfExists,
-    fileExists,
-    findDifferencesInImages
+    fileExists
 } = require('./utils/fileUtils');
+
+const imageComparison = require('./utils/imageComparison');
 
 module.exports = class VisualRegression {
     constructor({
@@ -53,7 +54,7 @@ module.exports = class VisualRegression {
                 await writeFile(baselineImage, buffer);
             } else {
                 // a baseline exists so do comparison with the buffered visual
-                const result = await findDifferencesInImages(
+                const result = await imageComparison(
                     baselineImage,
                     buffer,
                     diffImage,

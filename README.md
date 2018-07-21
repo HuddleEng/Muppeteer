@@ -1,6 +1,5 @@
 # Muppeteer
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a9ea3ccb8704d32b860d22a0e03bfaf)](https://app.codacy.com/app/Huddleoss/Muppeteer?utm_source=github.com&utm_medium=referral&utm_content=HuddleEng/Muppeteer&utm_campaign=badger)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd0f4e89b90a48f19bf2115374479e99)](https://www.codacy.com/app/gidztech/Muppeteer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HuddleEng/Muppeteer&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
 <p>

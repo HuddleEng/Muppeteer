@@ -1,22 +1,15 @@
-/**
- *
- * This file represents the test controller. It allows the test runner to re-use the same instance of the browser
- * instead of launching a fresh one for each test. This works so long as there is no parallelization of tests.
- *
- * */
-
-const puppeteer = require('puppeteer');
-const request = require('request-promise-native');
 const path = require('path');
+const request = require('request-promise-native');
+const syncRequest = require('sync-request');
 const { promisify } = require('util');
+const { readFileSync, writeFileSync } = require('./fileUtils');
 const exec = promisify(require('child_process').exec);
-const { checkDependency } = require('../src/check-dependencies');
-const { CONSOLE_PREFIX } = require('../src/console-helpers');
+const { CONSOLE_PREFIX } = require('./consoleHelpers');
+const { checkDependency } = require('./checkDependencies');
+
 require('colors');
 
-const composePath = path.join(__dirname, '../docker-compose.yml');
-let browser = null;
-let isUsingDocker = false;
+const composePath = path.join(__dirname, '../../docker-compose.yml');
 
 const runCommand = async (command, args) => {
     try {
@@ -117,84 +110,72 @@ const contactChrome = async ({ config, maxAttempts }) => {
     return tryRequest();
 };
 
-module.exports = {
-    browserInstance: {
-        get() {
-            return browser;
-        },
-        async launch({
-            headless = true,
-            existingWebSocketUri,
-            disableSandbox = false,
-            executablePath = null,
-            useDocker = true
-        } = {}) {
-            if (existingWebSocketUri) {
-                isUsingDocker = useDocker;
-                browser = await puppeteer.connect({
-                    browserWSEndpoint: existingWebSocketUri
-                });
-                return browser;
-            }
+const dockerUpdateChrome = version => {
+    const dockerFilePath = './chrome/Dockerfile';
+    let latestTag = '';
 
-            if (useDocker) {
-                if (!checkDependency('docker', true)) {
-                    process.exit(1);
-                }
-                await dockerBuild();
-                await dockerUp();
+    if (version) {
+        latestTag = `ver-${version}`;
+    } else {
+        const res = syncRequest(
+            'GET',
+            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-stable/tags/'
+        );
 
-                const res = await contactChrome({
-                    config: {
-                        uri: `http://localhost:9222/json/version`,
-                        json: true,
-                        resolveWithFullResponse: true
-                    },
-                    maxAttempts: 5
-                });
+        const body = JSON.parse(res.getBody('utf8'));
 
-                const webSocketUri = res.body.webSocketDebuggerUrl;
-                console.log(
-                    `${CONSOLE_PREFIX} Connected to WebSocket URL: ${webSocketUri}`
-                        .green
-                );
+        if (body && body.results && body.results.length) {
+            const { name } = body.results[0];
 
-                if (process.send) {
-                    process.send({
-                        tag: 'STDOUT_HOOK_WS',
-                        value: webSocketUri
-                    });
-                }
-
-                browser = await puppeteer.connect({
-                    browserWSEndpoint: webSocketUri
-                });
-                isUsingDocker = useDocker;
+            // sometimes 'latest' tag appears before or after the actual tag so deal with either case
+            if (name !== 'latest') {
+                latestTag = name;
             } else {
-                const launchConfig = {
-                    headless,
-                    args: disableSandbox
-                        ? ['--no-sandbox', '--disable-setuid-sandbox']
-                        : []
-                };
-
-                if (executablePath) {
-                    launchConfig.executablePath = executablePath;
-                }
-
-                browser = await puppeteer.launch(launchConfig);
-            }
-
-            return browser;
-        },
-        async close() {
-            if (browser) {
-                await browser.close();
-            }
-
-            if (isUsingDocker) {
-                await dockerDown();
+                latestTag = body.results[1] && body.results[1].name;
             }
         }
     }
+
+    const data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
+    const previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
+    const newData = data.replace(previousTag, latestTag);
+    writeFileSync(dockerFilePath, newData, { encoding: 'utf-8' });
+};
+
+const dockerRun = async () => {
+    if (!checkDependency('docker', true)) {
+        process.exit(1);
+    }
+
+    await dockerBuild();
+    await dockerUp();
+
+    const res = await contactChrome({
+        config: {
+            uri: `http://localhost:9222/json/version`,
+            json: true,
+            resolveWithFullResponse: true
+        },
+        maxAttempts: 5
+    });
+
+    const webSocketUri = res.body.webSocketDebuggerUrl;
+    console.log(
+        `${CONSOLE_PREFIX} Connected to WebSocket URL: ${webSocketUri}`.green
+    );
+
+    if (process.send) {
+        process.send({
+            tag: 'STDOUT_HOOK_WS',
+            value: webSocketUri
+        });
+    }
+
+    return webSocketUri;
+};
+
+module.exports = {
+    dockerShutdownChrome: dockerDown,
+    dockerRunChrome: dockerRun,
+    dockerUpdateChrome
 };

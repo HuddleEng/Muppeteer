@@ -2,7 +2,7 @@
     "name": "muppeteer",
     "version": "1.2.2",
     "description": "Visual regression testing framework for running UI tests in Chrome",
-    "main": "lib/test-launcher.js",
+    "main": "lib/Launcher.js",
     "scripts": {
         "test": "npm run unit-tests; npm run e2e-tests",
         "unit-tests": "jest --testPathPattern=\"^((?!e2e-tests|examples).)*$\"",
@@ -12,8 +12,7 @@
         "postinstall": "node examples/setup.js",
         "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
         "prettier": "prettier --write --single-quote --tab-width=4 */**.js",
-        "precommit": "lint-staged",
-        "update-docker-chrome": "./update-docker-chrome.sh"
+        "precommit": "lint-staged"
     },
     "lint-staged": {
         "*.js": [
@@ -36,7 +35,7 @@
         "colors": "^1.1.2",
         "commander": "^2.15.1",
         "extract-zip": "^1.6.6",
-        "glob-promise": "^3.4.0",
+        "glob": "^7.1.2",
         "mkdirp": "^0.5.1",
         "mocha": "^5.0.0",
         "mocha-junit-reporter": "^1.17.0",
@@ -50,6 +49,7 @@
         "request": "^2.83.0",
         "request-promise-native": "^1.0.5",
         "shelljs": "^0.8.1",
+        "sync-request": "^6.0.0",
         "yargs": "^11.0.0"
     },
     "devDependencies": {

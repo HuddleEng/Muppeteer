@@ -1,8 +1,8 @@
 const { promisify } = require('util');
 const extract = promisify(require('extract-zip'));
 const path = require('path');
-const { CONSOLE_PREFIX } = require('../src/console-helpers');
-const { checkDependencies } = require('../src/check-dependencies');
+const { CONSOLE_PREFIX } = require('../src/utils/consoleHelpers');
+const { checkDependencies } = require('../src/utils/checkDependencies');
 
 const file = 'todomvc-react.zip';
 const targetDir = path.join(__dirname, 'e2e');

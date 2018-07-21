@@ -8,7 +8,7 @@ const testType = 'unit';
 (async () => {
     let serverInstance = null;
 
-    const launcher = await getLauncher(testType, () => {
+    const launcher = getLauncher(testType, () => {
         // tell parent process that the onFinish handler has executed
         process.send({ tag: 'STDOUT_HOOK_ONFINISH' });
         server.stop(serverInstance);

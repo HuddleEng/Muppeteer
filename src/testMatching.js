@@ -1,12 +1,12 @@
 const path = require('path');
-const glob = require('glob-promise');
+const glob = require('glob');
 const recursiveReadSync = require('recursive-readdir-sync');
 
 module.exports = {
     // new fancy way of file path matching
-    globMatch: async testPathPattern => {
+    globMatch: testPathPattern => {
         try {
-            return glob(testPathPattern, {});
+            return glob.sync(testPathPattern, {});
         } catch (err) {
             throw Error(err);
         }

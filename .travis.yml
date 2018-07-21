@@ -7,5 +7,5 @@ services:
 env:
   - DISABLE_SANDBOX=true
 script:
-  - npm unit
-  - npm e2e
+  - npm run unit
+  - npm run e2e

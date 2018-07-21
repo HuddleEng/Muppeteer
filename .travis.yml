@@ -6,3 +6,6 @@ services:
   - docker
 env:
   - DISABLE_SANDBOX=true
+script:
+  - npm unit
+  - npm e2e

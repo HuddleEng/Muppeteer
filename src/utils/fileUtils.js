@@ -18,8 +18,8 @@ const existsp = promisify(fs.exists);
 
 const writeFile = async (path, buffer) => promisify(fs.writeFile)(path, buffer);
 
-const writeFileSync = async (path, data, options) =>
-    fs.writeFile(path, data, options);
+const writeFileSync = (path, data, options) =>
+    fs.writeFileSync(path, data, options);
 
 const readFileSync = (path, options) => fs.readFileSync(path, options);
 

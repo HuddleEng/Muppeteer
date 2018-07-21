@@ -4,9 +4,10 @@
     "description": "Visual regression testing framework for running UI tests in Chrome",
     "main": "lib/Launcher.js",
     "scripts": {
-        "test": "npm run unit-tests; npm run e2e-tests",
-        "unit-tests": "jest --testPathPattern=\"^((?!e2e-tests|examples).)*$\"",
-        "e2e-tests": "node e2e-tests/index.js",
+        "test": "npm run unit; npm run e2e",
+        "unit": "jest --testPathPattern=\"^((?!e2e-tests|examples).)*$\"",
+        "e2e": "node e2e-tests/index.js",
+        "e2e-debug": "node --trace-warnings e2e-tests/index.js",
         "example-unit-tests": "node examples/run-tests.js -u",
         "example-e2e-tests": "node examples/run-tests.js -e",
         "postinstall": "node examples/setup.js",

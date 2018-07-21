@@ -18,6 +18,11 @@ const existsp = promisify(fs.exists);
 
 const writeFile = async (path, buffer) => promisify(fs.writeFile)(path, buffer);
 
+const writeFileSync = async (path, data, options) =>
+    fs.writeFile(path, data, options);
+
+const readFileSync = (path, options) => fs.readFileSync(path, options);
+
 const createDirectoryIfRequired = async path => {
     if (!(await existsp(path))) {
         await makeDir(path);
@@ -110,6 +115,8 @@ const findDifferencesInImages = (file1, buffer, output, threshold) =>
 
 module.exports = {
     writeFile,
+    writeFileSync,
+    readFileSync,
     createDirectoryIfRequired,
     removeFileIfExists,
     fileExists,

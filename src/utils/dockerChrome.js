@@ -1,6 +1,8 @@
 const path = require('path');
 const request = require('request-promise-native');
+const syncRequest = require('sync-request');
 const { promisify } = require('util');
+const { readFileSync, writeFileSync } = require('./fileUtils');
 const exec = promisify(require('child_process').exec);
 const { CONSOLE_PREFIX } = require('./consoleHelpers');
 const { checkDependency } = require('./checkDependencies');
@@ -108,6 +110,38 @@ const contactChrome = async ({ config, maxAttempts }) => {
     return tryRequest();
 };
 
+const dockerUpdateChrome = version => {
+    const dockerFilePath = './chrome/Dockerfile';
+    let latestTag = '';
+
+    if (version) {
+        latestTag = `ver-${version}`;
+    } else {
+        const res = syncRequest(
+            'GET',
+            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-stable/tags/'
+        );
+
+        const body = JSON.parse(res.getBody('utf8'));
+
+        if (body && body.results && body.results.length) {
+            const { name } = body.results[0];
+
+            // sometimes 'latest' tag appears before or after the actual tag so deal with either case
+            if (name !== 'latest') {
+                latestTag = name;
+            } else {
+                latestTag = body.results[1] && body.results[1].name;
+            }
+        }
+    }
+
+    const data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
+    const previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
+    const newData = data.replace(previousTag, latestTag);
+    writeFileSync(dockerFilePath, newData, { encoding: 'utf-8' });
+};
+
 const dockerRun = async () => {
     if (!checkDependency('docker', true)) {
         process.exit(1);
@@ -142,5 +176,6 @@ const dockerRun = async () => {
 
 module.exports = {
     dockerShutdownChrome: dockerDown,
-    dockerRunChrome: dockerRun
+    dockerRunChrome: dockerRun,
+    dockerUpdateChrome
 };

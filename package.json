@@ -12,8 +12,7 @@
         "postinstall": "node examples/setup.js",
         "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
         "prettier": "prettier --write --single-quote --tab-width=4 */**.js",
-        "precommit": "lint-staged",
-        "update-docker-chrome": "./update-docker-chrome.sh"
+        "precommit": "lint-staged"
     },
     "lint-staged": {
         "*.js": [
@@ -50,6 +49,7 @@
         "request": "^2.83.0",
         "request-promise-native": "^1.0.5",
         "shelljs": "^0.8.1",
+        "sync-request": "^6.0.0",
         "yargs": "^11.0.0"
     },
     "devDependencies": {

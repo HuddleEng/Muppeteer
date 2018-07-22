@@ -5,6 +5,7 @@
 .env
 npm-debug.log
 node_modules
+coverage
 examples/unit/report
 examples/unit/tests/screenshots/**/*-diff.png
 examples/unit/tests/screenshots/**/*-current.png

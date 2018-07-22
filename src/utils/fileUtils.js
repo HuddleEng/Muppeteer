@@ -11,6 +11,7 @@ const { promisify } = require('util');
 
 const makeDir = promisify(mkdirp);
 const existsp = promisify(fs.exists);
+const renamep = promisify(fs.rename);
 
 const writeFile = async (path, buffer) => promisify(fs.writeFile)(path, buffer);
 
@@ -39,6 +40,10 @@ const removeFileIfExists = async buffer => {
 
 const fileExists = async buffer => existsp(buffer);
 
+const renameFile = async (from, to) => {
+    return renamep(from, to);
+};
+
 module.exports = {
     writeFile,
     writeFileSync,
@@ -47,5 +52,6 @@ module.exports = {
     createReadStream,
     createDirectoryIfRequired,
     removeFileIfExists,
-    fileExists
+    fileExists,
+    renameFile
 };

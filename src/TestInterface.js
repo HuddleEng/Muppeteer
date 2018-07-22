@@ -85,8 +85,6 @@ module.exports = class TestInterface {
         }
 
         this.visualRegression = new VisualRegression({
-            page: this.page,
-            extensions: this.page.extensions,
             path: this.visualPath,
             visualThreshold: this.visualThreshold,
             shouldRebaseVisuals: this.shouldRebaseVisuals

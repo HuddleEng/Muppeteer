@@ -9,6 +9,10 @@ initTests.stdout.on('data', data => {
     process.stdout.write(data.toString());
 });
 
+initTests.stderr.on('data', data => {
+    process.stdout.write(data.toString());
+});
+
 initTests.on('message', message => {
     if (message.tag === 'STDOUT_HOOK_WS') {
         const ws = message.value;

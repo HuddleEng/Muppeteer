@@ -1,5 +1,6 @@
 # Muppeteer
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd0f4e89b90a48f19bf2115374479e99)](https://www.codacy.com/app/gidztech/Muppeteer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HuddleEng/Muppeteer&amp;utm_campaign=Badge_Grade)
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd0f4e89b90a48f19bf2115374479e99)](https://www.codacy.com/app/gidztech/Muppeteer?utm_source=github.com&utm_medium=referral&utm_content=HuddleEng/Muppeteer&utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
 <p>
@@ -178,7 +179,7 @@ componentTestUrlFactory: () => `http://${IP}:${PORT}`
 
 ### Failing test output
 
-![Failing tests tests](https://i.imgur.com/bMfsY1M.png "Failing tests")
+![Failing tests tests](https://i.imgur.com/bAWAyIy.png "Failing tests")
 
 ### Understanding visual failures
 
@@ -186,20 +187,20 @@ componentTestUrlFactory: () => `http://${IP}:${PORT}`
 
 This is the visual that is versioned in your app repo. It is the source of truth.
 
-![Baseline image](https://i.imgur.com/vUtfI0m.png "Baseline")
+![Baseline image](https://i.imgur.com/TNOV730.png "Baseline")
 
 #### Current image
 
 This is the screenshot taken during the test. In this example, we can see that some extra space on the left has
 pushed the title to the right
 
-![Current image](https://i.imgur.com/kHwikgE.png "Current")
+![Current image](https://i.imgur.com/S1GyQ04.png "Current")
 
 #### Difference image
 
 This is an image showing where the differences are. Each difference is layered on top of one another.
 
-![Difference image](https://i.imgur.com/L21lqog.png "Difference")
+![Difference image](https://i.imgur.com/gIbus9X.png "Difference")
 
 ## Running example tests in this project
 

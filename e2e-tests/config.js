@@ -1,4 +1,4 @@
-const { IP, PORT } = require('./network');
+const { HOST, PORT } = require('./network');
 const Launcher = require('../lib/Launcher');
 
 function getLauncher(testType, onFinish) {
@@ -8,7 +8,7 @@ function getLauncher(testType, onFinish) {
                 ? 'examples/unit/**/*.test.js'
                 : 'examples/e2e/**/*.test.js',
         reportDir: `examples/${testType}/report`,
-        componentTestUrlFactory: () => `http://${IP}:${PORT}`,
+        componentTestUrlFactory: () => `http://${HOST}:${PORT}`,
         visualThreshold: 0.05,
         useDocker: true,
         dockerChromeVersion: '67.0.3396.79',

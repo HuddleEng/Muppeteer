@@ -1,15 +1,16 @@
-const { networkInterfaces } = require('os');
+let HOST;
 
-// Source: https://gist.github.com/szalishchuk/9054346
-
-const IP = []
-    .concat(...Object.values(networkInterfaces()))
-    .filter(details => details.family === 'IPv4' && !details.internal)
-    .pop().address;
+if (process.platform === 'win32') {
+    HOST = 'docker.for.win.host.internal'; // Windows
+} else if (process.platform === 'darwin') {
+    HOST = 'docker.for.mac.host.internal'; // Mac
+} else {
+    HOST = 'host.docker.internal'; // Linux (after patching hosts file, see chrome/docker-entrypoint.sh)
+}
 
 const PORT = 3000;
 
 module.exports = {
-    IP,
+    HOST,
     PORT
 };

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ip -4 route list match 0/0 | awk '{print $$3" host.docker.internal"}' >> /etc/hosts && httpd-foreground 
+
 # Source: https://dev.to/bufferings/access-host-from-a-docker-container-4099
 # HOST_DOMAIN="host.docker.internal"
 # ping -q -c1 $HOST_DOMAIN > /dev/null 2>&1
@@ -10,9 +12,9 @@
 
 # RUN ip -4 route list match 0/0 | awk '{print $3 "host.docker.internal"}' >> /etc/hosts
 
- if grep "docker.host.internal" /etc/hosts; \
-    then \
-    echo -e "\n it already exists" ;\
-    else \
-    echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" >> /etc/hosts ;\
-    fi
+#  if grep "docker.host.internal" /etc/hosts; \
+#     then \
+#     echo -e "\n it already exists" ;\
+#     else \
+#     echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" >> /etc/hosts ;\
+#     fi

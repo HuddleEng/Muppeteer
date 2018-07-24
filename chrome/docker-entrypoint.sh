@@ -8,4 +8,11 @@
 #   echo -e "$HOST_IP\t$HOST_DOMAIN" >> /etc/hosts
 # fi
 
-RUN ip -4 route list match 0/0 | awk '{print $3 "host.docker.internal"}' >> /etc/hosts
+# RUN ip -4 route list match 0/0 | awk '{print $3 "host.docker.internal"}' >> /etc/hosts
+
+ if grep "docker.host.internal" /etc/hosts; \
+    then \
+    echo -e "\n it already exists" ;\
+    else \
+    echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" >> /etc/hosts ;\
+    fi

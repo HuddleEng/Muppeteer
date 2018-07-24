@@ -1,20 +1,12 @@
 #!/bin/bash
 
-ip -4 route list match 0/0 | awk '{print $$3" host.docker.internal"}' >> /etc/hosts && httpd-foreground 
+HOST_DOMAIN="host.docker.internal"
+ping -q -c1 $HOST_DOMAIN > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+  echo -e "$HOST_IP\t$HOST_DOMAIN" >> /etc/hosts
+fi
 
-# Source: https://dev.to/bufferings/access-host-from-a-docker-container-4099
-# HOST_DOMAIN="host.docker.internal"
-# ping -q -c1 $HOST_DOMAIN > /dev/null 2>&1
-# if [ $? -ne 0 ]; then
-#   HOST_IP=$(ip route | awk 'NR==1 {print $3}')
-#   echo -e "$HOST_IP\t$HOST_DOMAIN" >> /etc/hosts
-# fi
-
-# RUN ip -4 route list match 0/0 | awk '{print $3 "host.docker.internal"}' >> /etc/hosts
-
-#  if grep "docker.host.internal" /etc/hosts; \
-#     then \
-#     echo -e "\n it already exists" ;\
-#     else \
-#     echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" >> /etc/hosts ;\
-#     fi
+# Here is the original entry point.
+curl -sS host.docker.internal:3000
+cat /etc/hosts

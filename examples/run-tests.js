@@ -1,6 +1,6 @@
-const server = require('../tests/server.js');
-const { PORT } = require('../tests/network');
-const getLauncher = require('../tests/config');
+const server = require('../e2e-tests/server');
+const { PORT } = require('../e2e-tests/network');
+const getLauncher = require('../e2e-tests/config');
 const program = require('commander');
 
 program

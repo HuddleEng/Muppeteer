@@ -6,7 +6,7 @@
     "scripts": {
         "test": "npm run unit; npm run e2e",
         "unit": "jest --testPathPattern=\"^((?!e2e-tests|examples).)*$\" --coverage --collectCoverageFrom='(src|lib)/**.{js,jsx}' && cat ./coverage/lcov.info | codacy-coverage",
-        "e2e": "node e2e-tests/index.js",
+        "e2e": "npm run example-e2e-tests; node e2e-tests/index.js",
         "e2e-debug": "node --trace-warnings e2e-tests/index.js",
         "example-unit-tests": "node examples/run-tests.js -u",
         "example-e2e-tests": "node examples/run-tests.js -e",

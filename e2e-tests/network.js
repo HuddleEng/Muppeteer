@@ -5,7 +5,7 @@ if (process.platform === 'win32') {
 } else if (process.platform === 'darwin') {
     HOST = 'docker.for.mac.host.internal'; // Mac
 } else {
-    HOST = 'host.docker.internal'; // Linux (after patching hosts file, see chrome/docker-entrypoint.sh)
+    HOST = 'host.docker.internal.localhost'; // Linux (after patching hosts file, see chrome/docker-entrypoint.sh)
 }
 
 const PORT = 3000;

@@ -111,7 +111,7 @@ const contactChrome = async ({ config, maxAttempts }) => {
 };
 
 const dockerUpdateChrome = version => {
-    const dockerFilePath = './chrome/Dockerfile';
+    const dockerFilePath = path.join(__dirname, '../../chrome/Dockerfile');
     let latestTag = '';
 
     if (version) {

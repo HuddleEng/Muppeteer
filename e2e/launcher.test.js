@@ -8,7 +8,7 @@ let config = null;
 const launchMochaTests = () =>
     new Promise(resolve => {
         const runTests = fork(
-            'e2e-tests/run.js',
+            'e2e/run.js',
             [`--webSocketUri=${process.env.WEBSOCKET_URI}`, '--color'],
             { silent: true }
         );

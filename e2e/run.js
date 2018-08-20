@@ -1,6 +1,6 @@
-const server = require('./server.js');
-const { PORT } = require('../e2e-tests/network');
-const getLauncher = require('./config');
+const server = require('../test-config/server');
+const { PORT } = require('../test-config/network');
+const createLauncher = require('../test-config/createLauncher');
 const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 
 const testType = 'unit';
@@ -8,7 +8,7 @@ const testType = 'unit';
 (async () => {
     let serverInstance = null;
 
-    const launcher = getLauncher(testType, () => {
+    const launcher = createLauncher(testType, () => {
         // tell parent process that the onFinish handler has executed
         process.send({ tag: 'STDOUT_HOOK_ONFINISH' });
         server.stop(serverInstance);

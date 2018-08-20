@@ -1,7 +1,7 @@
 const { IP, PORT } = require('./network');
 const Launcher = require('../lib/Launcher');
 
-function getLauncher(testType, onFinish) {
+function createLauncher(testType, onFinish) {
     return new Launcher({
         testPathPattern:
             testType === 'unit'
@@ -16,4 +16,4 @@ function getLauncher(testType, onFinish) {
     });
 }
 
-module.exports = getLauncher;
+module.exports = createLauncher;

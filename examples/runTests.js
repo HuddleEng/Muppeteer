@@ -1,6 +1,6 @@
-const server = require('../tests/server.js');
-const { PORT } = require('../tests/network');
-const getLauncher = require('../tests/config');
+const server = require('../test-config/server.js');
+const { PORT } = require('../test-config/network');
+const createLauncher = require('../test-config/createLauncher');
 const program = require('commander');
 
 program
@@ -17,7 +17,7 @@ const testType = program.unit ? 'unit' : 'e2e';
         testType
     });
 
-    const launcher = getLauncher(testType, () => {
+    const launcher = createLauncher(testType, () => {
         server.stop(serverInstance);
     });
 

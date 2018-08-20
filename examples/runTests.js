@@ -21,5 +21,5 @@ const testType = program.unit ? 'unit' : 'e2e';
         server.stop(serverInstance);
     });
 
-    await launcher.run();
+    launcher.run();
 })();

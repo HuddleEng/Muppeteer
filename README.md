@@ -78,7 +78,7 @@ const launcher = new Launcher({
     }
 );
 
-await launcher.run();
+launcher.run();
 ```
 
 ## Options

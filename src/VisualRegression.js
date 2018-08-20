@@ -7,6 +7,7 @@
  *
  * */
 
+const sanitize = require('sanitize-filename');
 const {
     writeFile,
     createDirectoryIfRequired,
@@ -35,10 +36,12 @@ module.exports = class VisualRegression {
         }
 
         try {
+            // sanitize the filename because the test name is written to disk and may contain invalid characters like `:` or `/`
+            const sanitizedTestName = sanitize(testName);
             const defaultResult = { passOrFail: 'pass' };
-            const currentImage = `${this.path}/${testName}-current.png`;
-            const diffImage = `${this.path}/${testName}-diff.png`;
-            const baselineImage = `${this.path}/${testName}-base.png`;
+            const currentImage = `${this.path}/${sanitizedTestName}-current.png`;
+            const diffImage = `${this.path}/${sanitizedTestName}-diff.png`;
+            const baselineImage = `${this.path}/${sanitizedTestName}-base.png`;
 
             // ensure the visual path exists
             await createDirectoryIfRequired(this.path);

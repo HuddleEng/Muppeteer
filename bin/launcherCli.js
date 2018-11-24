@@ -8,7 +8,7 @@
  *
  * */
 
-const Launcher = require('./Launcher');
+const Launcher = require('../lib/Launcher');
 
 const { argv } = require('yargs')
     .usage('Usage: $0 <command> [options]')

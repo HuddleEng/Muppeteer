@@ -1,8 +1,6 @@
 const path = require('path');
 const request = require('request-promise-native');
 const syncRequest = require('sync-request');
-const { promisify } = require('util');
-const exec = promisify(require('child_process').exec);
 const { readFileSync, writeFileSync } = require('fs');
 const { runCommand } = require('./runCommand');
 const { checkDependency } = require('./checkDependencies');

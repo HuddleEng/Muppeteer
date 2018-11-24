@@ -1,4 +1,7 @@
-modukle.exports = {
+const { promisify } = require('util');
+const exec = promisify(require('child_process').exec);
+
+module.exports = {
     runCommand: async (command, args) => {
         try {
             const { stdout, stderr } = await exec(

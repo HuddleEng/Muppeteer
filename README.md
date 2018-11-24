@@ -8,7 +8,9 @@
     <p><i>Logo by: <a href="https://twitter.com/hsincyeh">Hsin-chieh Yeh</a></i></p>
 </p>
 
-Muppeteer is a visual regression testing framework for running UI tests in Chromium. It's composed of a number of modules:
+**I recently released [`jest-puppeteer-docker`](https://github.com/gidztech/jest-puppeteer-docker), a Jest preset plugin that allows you to run your Jest tests against a Chromium instance running in Docker. I highly recommend this library over Muppeteer if you are using Jest.**
+
+Muppeteer is a visual regression testing framework for running UI tests in Chromium. It's uses a number of modules:
 
 -   [Mocha](https://mochajs.org/) - a test runner framework
 -   [Chai](http://chaijs.com/) - an assertion library
@@ -18,21 +20,11 @@ Muppeteer is a visual regression testing framework for running UI tests in Chrom
 
 In addition, it provides the following core features:
 
--   **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API. Read on for more discussion on this.
+-   **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API.
 -   **Test Interface** - a modification of Mocha's BDD interface with built-in browser setup steps and other user configurable hooks
 -   **Test Launcher** - a CLI and configuration function for launching test suites
 
 Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code needed to write tests with Puppeteer, and provide a convenient API for testing UI functionality. It was inspired by the [PhantomCSS](https://github.com/HuddleEng/PhantomCSS) and [CasperJS](http://casperjs.org/) libraries.
-
--   ## [Configuration](#configuration-1)
-    -   ### [CLI](#cli-1)
-    -   ### [Configuration function](#configuration-function-1)
--   ## [Puppeteer API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
--   ## [Puppeteer Extensions](#puppeteer-extensions-1)
--   ## [Example test case](#example-test-case-1)
-    -   ### [Passing test output](#passing-test-output-1)
-    -   ### [Failing test output](#failing-test-output-1)
-    -   ### [Understanding visual failures](#understanding-visual-failures-1)
 
 ## Configuration
 
@@ -41,15 +33,14 @@ You can configure Muppeteer via the CLI or a configuration function
 ### CLI
 
 The CLI script can be referenced at
-[`lib/launcherCli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/launcherCli.js).
+[`node_modules/.bin/muppeteer`](https://github.com/HuddleEng/Muppeteer/blob/master/bin/launcherCli.js).
 
-It is run like `node <<path-to-muppeteer>>/lib/launcherCli <<args>>`
 
 #### Example
 
 ```javascript
  "scripts": {
-    "test": "node node_modules/muppeteer/lib/launcherCli --p tests/*.test.js --r tests/report"
+    "test": "./node_modules/.bin/muppeteer --p tests/*.test.js --r tests/report"
   }
 ```
 
@@ -57,13 +48,10 @@ See [Options](#options)
 
 ## Configuration function
 
-The configuration can be referenced at
-[`lib/Launcher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/Launcher.js).
-
 ### Example
 
 ```javascript
-const Launcher = require('../lib/Launcher');
+const Launcher = require('muppeteer');
 const path = require('path');
 
 const launcher = new Launcher({

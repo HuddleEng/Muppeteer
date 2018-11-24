@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 
 module.exports = {
-    start: ({ port = 3000, testType = 'unit' } = {}) => {
+    start: ({ testType = 'unit' } = {}) => {
         const app = express();
 
         const directory =
@@ -17,8 +17,8 @@ module.exports = {
         });
 
         return new Promise(resolve => {
-            const server = app.listen(port, () => {
-                console.log(`Test server started on port ${port}`);
+            const server = app.listen(3000, () => {
+                console.log(`Test server started on port 3000`);
                 resolve(server);
             });
         });

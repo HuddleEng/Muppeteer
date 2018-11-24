@@ -1,5 +1,4 @@
 const server = require('../test-config/server.js');
-const { PORT } = require('../test-config/network');
 const createLauncher = require('../test-config/createLauncher');
 const program = require('commander');
 
@@ -13,7 +12,6 @@ const testType = program.unit ? 'unit' : 'e2e';
 
 (async () => {
     const serverInstance = await server.start({
-        port: PORT,
         testType
     });
 

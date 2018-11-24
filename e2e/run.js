@@ -1,5 +1,4 @@
 const server = require('../test-config/server');
-const { PORT } = require('../test-config/network');
 const createLauncher = require('../test-config/createLauncher');
 const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 
@@ -15,7 +14,7 @@ const testType = 'unit';
     });
 
     async function setupServerAndRunTests() {
-        serverInstance = await server.start({ port: PORT, testType });
+        serverInstance = await server.start({ testType });
 
         // log mocha test config object to STDOUT for later use in framework test config assertions
         const { config } = launcher;

@@ -2,11 +2,13 @@ const express = require('express');
 const path = require('path');
 
 module.exports = {
-    start: ({ testType = 'unit' } = {}) => {
+    start: ({ testType = 'component' } = {}) => {
         const app = express();
 
         const directory =
-            testType === 'unit' ? 'unit/panel-app' : 'e2e/todomvc-react';
+            testType === 'component'
+                ? 'component/panel-app'
+                : 'e2e/todomvc-react';
 
         app.use(
             express.static(path.join(__dirname, '../examples/', directory))

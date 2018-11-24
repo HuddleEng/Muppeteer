@@ -4,11 +4,11 @@ const program = require('commander');
 
 program
     .version('0.0.1')
-    .option('-u, --unit', 'Run unit tests')
+    .option('-u, --component', 'Run component tests')
     .option('-e, --e2e', 'Run e2e tests')
     .parse(process.argv);
 
-const testType = program.unit ? 'unit' : 'e2e';
+const testType = program.component ? 'component' : 'e2e';
 
 (async () => {
     const serverInstance = await server.start({

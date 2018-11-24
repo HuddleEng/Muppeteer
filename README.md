@@ -179,8 +179,8 @@ This is an image showing where the differences are. Each difference is layered o
 
 ## Running example tests in this project
 
-This project ships with an example unit and e2e test suite.
+This project ships with an example component and e2e test suite.
 
-`npm run example-unit-tests`
+`npm run example-component-tests`
 
 `npm run example-e2e-tests`

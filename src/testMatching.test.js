@@ -1,7 +1,7 @@
 const { globMatch, legacyMatch } = require('./testMatching');
 
-const testDir = 'examples/unit';
-const expectedFiles = ['examples/unit/tests/panel.test.js'];
+const testDir = 'examples/component';
+const expectedFiles = ['examples/component/tests/panel.test.js'];
 
 const legacyTestFilter = testFitler => {
     const actualFile = legacyMatch(testDir, testFitler);
@@ -9,7 +9,7 @@ const legacyTestFilter = testFitler => {
 };
 
 test('Glob matching works', async () => {
-    const testPathPattern = 'examples/unit/**/*.test.js';
+    const testPathPattern = 'examples/component/**/*.test.js';
     const actualFile = await globMatch(testPathPattern);
     expect(JSON.stringify(actualFile)).toBe(JSON.stringify(expectedFiles));
 });

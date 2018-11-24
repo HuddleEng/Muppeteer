@@ -3,8 +3,8 @@ const Launcher = require('../lib/Launcher');
 function createLauncher(testType, onFinish) {
     return new Launcher({
         testPathPattern:
-            testType === 'unit'
-                ? 'examples/unit/**/*.test.js'
+            testType === 'component'
+                ? 'examples/component/**/*.test.js'
                 : 'examples/e2e/**/*.test.js',
         reportDir: `examples/${testType}/report`,
         componentTestUrlFactory: () => `http://host.docker.internal:3000`,

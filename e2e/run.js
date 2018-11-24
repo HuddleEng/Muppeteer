@@ -2,7 +2,7 @@ const server = require('../test-config/server');
 const createLauncher = require('../test-config/createLauncher');
 const { onlyInit, webSocketUri } = require('minimist')(process.argv.slice(2));
 
-const testType = 'unit';
+const testType = 'component';
 
 (async () => {
     let serverInstance = null;

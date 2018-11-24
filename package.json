@@ -2,7 +2,7 @@
     "name": "muppeteer",
     "version": "1.3.0",
     "description": "Visual regression testing framework for running UI tests in Chrome",
-    "main": "lib/Launcher.js",
+    "main": "lib/index.js",
     "scripts": {
         "test": "npm run unit; npm run e2e",
         "unit": "jest --testPathPattern=\"^((?!e2e|examples).)*$\" --coverage --collectCoverageFrom='(src|lib)/**.{js,jsx}' && cat ./coverage/lcov.info | codacy-coverage",

@@ -4,26 +4,13 @@ const syncRequest = require('sync-request');
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { readFileSync, writeFileSync } = require('fs');
+const { runCommand } = require('./runCommand');
 const { checkDependency } = require('./checkDependencies');
 const { CONSOLE_PREFIX } = require('./consoleHelpers');
 
 require('colors');
 
 const composePath = path.join(__dirname, '../../docker-compose.yml');
-
-const runCommand = async (command, args) => {
-    try {
-        const { stdout, stderr } = await exec(`${command} ${args.join(' ')}`);
-
-        console.log(stdout);
-        console.log(stderr);
-
-        return stdout;
-    } catch (e) {
-        console.error(e);
-        return e;
-    }
-};
 
 const dockerBuild = async () => {
     try {

@@ -1,7 +1,7 @@
 FROM alpeware/chrome-headless-trunk:rev-599821
 EXPOSE 9222
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     dumb-init \
     iputils-ping \
     iproute2 \

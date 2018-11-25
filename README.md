@@ -8,31 +8,23 @@
     <p><i>Logo by: <a href="https://twitter.com/hsincyeh">Hsin-chieh Yeh</a></i></p>
 </p>
 
-Muppeteer is a visual regression testing framework for running UI tests in Chrome. It's composed of a number of modules:
+**I recently released [`jest-puppeteer-docker`](https://github.com/gidztech/jest-puppeteer-docker), a Jest preset plugin that allows you to run your Jest tests against a Chromium instance running in Docker. I highly recommend this library over Muppeteer if you are using Jest.**
+
+Muppeteer is a visual regression testing framework for running UI tests in Chromium. It's uses a number of modules:
 
 -   [Mocha](https://mochajs.org/) - a test runner framework
 -   [Chai](http://chaijs.com/) - an assertion library
--   [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a library for interacting with Chrome and web pages
+-   [Puppeteer](https://github.com/GoogleChrome/puppeteer) - a library for interacting with Chromium and web pages
 -   [Puppeteer Extensions](https://github.com/HuddleEng/puppeteer-extensions) - an extension library for Puppeteer with convenience functions
 -   [Pixelmatch](https://github.com/mapbox/pixelmatch) - a pixel-level image comparison library
 
 In addition, it provides the following core features:
 
--   **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API. Read on for more discussion on this.
+-   **Visual Regression Testing** - a screenshot-based image comparison module that hooks onto the assertion API.
 -   **Test Interface** - a modification of Mocha's BDD interface with built-in browser setup steps and other user configurable hooks
 -   **Test Launcher** - a CLI and configuration function for launching test suites
 
 Muppeteer's main goal is to abstract the, often, tedious boilerplate setup code needed to write tests with Puppeteer, and provide a convenient API for testing UI functionality. It was inspired by the [PhantomCSS](https://github.com/HuddleEng/PhantomCSS) and [CasperJS](http://casperjs.org/) libraries.
-
--   ## [Configuration](#configuration-1)
-    -   ### [CLI](#cli-1)
-    -   ### [Configuration function](#configuration-function-1)
--   ## [Puppeteer API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md)
--   ## [Puppeteer Extensions](#puppeteer-extensions-1)
--   ## [Example test case](#example-test-case-1)
-    -   ### [Passing test output](#passing-test-output-1)
-    -   ### [Failing test output](#failing-test-output-1)
-    -   ### [Understanding visual failures](#understanding-visual-failures-1)
 
 ## Configuration
 
@@ -41,15 +33,14 @@ You can configure Muppeteer via the CLI or a configuration function
 ### CLI
 
 The CLI script can be referenced at
-[`lib/launcherCli`](https://github.com/HuddleEng/Muppeteer/blob/local-test-server/lib/launcherCli.js).
+[`node_modules/.bin/muppeteer`](https://github.com/HuddleEng/Muppeteer/blob/master/bin/launcherCli.js).
 
-It is run like `node <<path-to-muppeteer>>/lib/launcherCli <<args>>`
 
 #### Example
 
 ```javascript
  "scripts": {
-    "test": "node node_modules/muppeteer/lib/launcherCli --p tests/*.test.js --r tests/report"
+    "test": "./node_modules/.bin/muppeteer --p tests/*.test.js --r tests/report"
   }
 ```
 
@@ -57,13 +48,10 @@ See [Options](#options)
 
 ## Configuration function
 
-The configuration can be referenced at
-[`lib/Launcher`](https://github.com/HuddleEng/Muppeteer/blob/master/lib/Launcher.js).
-
 ### Example
 
 ```javascript
-const Launcher = require('../lib/Launcher');
+const Launcher = require('muppeteer');
 const path = require('path');
 
 const launcher = new Launcher({
@@ -71,7 +59,6 @@ const launcher = new Launcher({
         reportDir: `${__dirname}/tests/report`,
         visualThreshold: 0.05,
         useDocker: true,
-        dockerChromeVersion: '67.0.3396.79',
         onFinish: () => {
             // do something after the tests have complete
         }
@@ -94,11 +81,10 @@ launcher.run();
 -   `componentTestVisualPathFactory`: A function that returns the path for visual tests to run in
 -   `visualThreshold (--v)`: A value between 0 and 1 to present the threshold at which a visual test may pass or fail
 -   `onFinish`: A function that can be used to do some extra work after Muppeteer is teared down
--   `useDocker (--d)`: The option for telling Muppeteer to run Chrome in Docker to better deal with environmental inconsistencies (default)
--   `dockerChromeVersion (--c)`: The version of Chrome to use in the Docker container. This **should** be set explicitly to avoid different environments having different versions of Chrome. By default, the latest version is pulled from the hub, which is **not** recommended.
--   `headless (--h)`: Determines whether Chrome will be launched in a headless mode (without GUI) or with a head (not applicable with `useDocker`)
+-   `useDocker (--d)`: The option for telling Muppeteer to run Chromium in Docker to better deal with environmental inconsistencies (default)
+-   `headless (--h)`: Determines whether Chromium will be launched in a headless mode (without GUI) or with a head (not applicable with `useDocker`)
 -   `disableSandbox (--s)`: Used to disable the sandbox checks if not using [SUID sandbox](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md) (not applicable with `useDocker`)
--   `executablePath (--e)`: The option to set the version of Chrome to use duning the tests. By default, it uses the bundled version (not applicable with `useDocker`)
+-   `executablePath (--e)`: The option to set the version of Chromium to use duning the tests. By default, it uses the bundled version (not applicable with `useDocker`)
 
 ## Puppeteer Extensions
 
@@ -149,28 +135,17 @@ describeComponent({ name: "Panel" }, () => {
 
 ## Docker and test fixtures
 
-Muppeteer uses Docker by default to run tests. This helps to avoid environmental differences that could affect the
+By default, Docker is used to host the Chromium browser. This helps to avoid environmental differences that could affect the
 rendering of content on the page. You can opt out by configuring the `useDocker (--d)` option accordingly.
 
-You can specify the version of Chrome to use by configuring with the `dockerChromeVersion` option. When you use this option,
-the test launcher will automatically pull the correct Docker image from a repository and build the container for you. If you
-don't specify this, the `latest` version will be used. This can result in unexpected behaviour, so it's advised to
-pin the version with this property.
+Muppeteer will pull down a Docker image with Chromium installed with the version matching the one associated with the Puppeteer dependency in your project.
 
-If you are hosting your test fixtures on a local web server, you'd typically set the URL in the test to
-something like http://localhost:3000. When using Docker, the `localhost` will refer to the container,
-not the host machine. The simplest solution would be to reference the local IP in the test instead. For example,
-http://192.168.0.4:3000.
+If you are running a web server on your host environment, you should be able to access it from the browser in the container at `host.docker.internal`.
 
-However, this breaks down when you are running on a device you don't know how to address, e.g. a cloud CI agent.
-To solve this problem, you can use the `componentTestUrlFactory` function in launch configuration to generate the URL.
-You can lookup the IP address of the current host and pass that through. This is used to run the example tests in this repo.
-See [network](https://github.com/HuddleEng/Muppeteer/blob/master/tests/network.js) for an example.
+For example, if you have a server running at http://localhost:3000, you can do the following in your test:
 
-```javascript
-...
-componentTestUrlFactory: () => `http://${IP}:${PORT}`
-...
+```
+http://host.docker.internal:3000/my-component
 ```
 
 ### Passing test output
@@ -204,8 +179,8 @@ This is an image showing where the differences are. Each difference is layered o
 
 ## Running example tests in this project
 
-This project ships with an example unit and e2e test suite.
+This project ships with an example component and e2e test suite.
 
-`npm run example-unit-tests`
+`npm run example-component-tests`
 
 `npm run example-e2e-tests`

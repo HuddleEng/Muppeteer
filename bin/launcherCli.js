@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 
 /**
  *
@@ -7,7 +8,7 @@
  *
  * */
 
-const Launcher = require('./Launcher');
+const Launcher = require('../lib/Launcher');
 
 const { argv } = require('yargs')
     .usage('Usage: $0 <command> [options]')
@@ -64,13 +65,7 @@ const { argv } = require('yargs')
         alias: 'd',
         type: 'boolean',
         default: true
-    })
-    .option('dockerChromeVersion', {
-        alias: 'c',
-        default: null
-    });
-
-(() => {
+    })(() => {
     const launcher = new Launcher({
         testPathPattern: argv.p,
         testDir: argv.t,
@@ -81,8 +76,7 @@ const { argv } = require('yargs')
         headless: argv.h,
         disableSandbox: argv.s,
         executablePath: argv.e,
-        useDocker: argv.d,
-        dockerChromeVersion: argv.c
+        useDocker: argv.d
     });
 
     launcher.run();

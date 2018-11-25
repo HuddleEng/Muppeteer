@@ -95,8 +95,7 @@
                         t.replace(/%s/g, function() {
                             return s[f++];
                         })
-                    )).name =
-                        'Invariant Violation';
+                    )).name = 'Invariant Violation';
                 }
                 throw ((c.framesToPop = 1), c);
             }
@@ -518,8 +517,8 @@ object-assign
                               0 === a.indexOf('//')
                                   ? a
                                   : 0 === a.indexOf('/')
-                                      ? n + a
-                                      : r + a.replace(/^\.\//, '')),
+                                  ? n + a
+                                  : r + a.replace(/^\.\//, '')),
                           'url(' + JSON.stringify(o) + ')');
                 }
             );
@@ -600,8 +599,8 @@ object-assign
                     'red' === (t = e.color)
                         ? '#ad4343'
                         : 'green' === t
-                            ? '#58ad43'
-                            : '#437bad';
+                        ? '#58ad43'
+                        : '#437bad';
             return r.default.createElement(
                 'div',
                 { className: 'panel', style: { borderColor: n } },
@@ -671,9 +670,9 @@ object-assign
                         (r(n)
                             ? e(t, n.parentNode)
                             : 'contains' in t
-                                ? t.contains(n)
-                                : !!t.compareDocumentPosition &&
-                                  !!(16 & t.compareDocumentPosition(n)))))
+                            ? t.contains(n)
+                            : !!t.compareDocumentPosition &&
+                              !!(16 & t.compareDocumentPosition(n)))))
             );
         };
     },
@@ -905,12 +904,12 @@ object-assign
                 null == e
                     ? t
                     : Array.isArray(e)
-                        ? Array.isArray(t)
-                            ? (e.push.apply(e, t), e)
-                            : (e.push(t), e)
-                        : Array.isArray(t)
-                            ? [e].concat(t)
-                            : [e, t]
+                    ? Array.isArray(t)
+                        ? (e.push.apply(e, t), e)
+                        : (e.push(t), e)
+                    : Array.isArray(t)
+                    ? [e].concat(t)
+                    : [e, t]
             );
         }
         function O(e, t, n) {
@@ -1207,8 +1206,8 @@ object-assign
                     ((t = e[o])
                         ? (this[o] = t(n))
                         : 'target' === o
-                            ? (this.target = r)
-                            : (this[o] = n[o]));
+                        ? (this.target = r)
+                        : (this[o] = n[o]));
             return (
                 (this.isDefaultPrevented = (null != n.defaultPrevented
                   ? n.defaultPrevented
@@ -1643,8 +1642,8 @@ object-assign
             return null === e || void 0 === e
                 ? null
                 : 'function' == typeof (e = (gt && e[gt]) || e['@@iterator'])
-                    ? e
-                    : null;
+                ? e
+                : null;
         }
         function bt(e) {
             var t = e.type;
@@ -1702,8 +1701,8 @@ object-assign
                                       n.lineNumber +
                                       ')'
                                     : a
-                                        ? ' (created by ' + a + ')'
-                                        : ''));
+                                    ? ' (created by ' + a + ')'
+                                    : ''));
                         break e;
                     default:
                         o = '';
@@ -1834,19 +1833,18 @@ object-assign
                           ? e.removeAttribute(t)
                           : e.setAttribute(t, '' + n))
                     : o.mustUseProperty
-                        ? (e[o.propertyName] =
-                              null === n ? 3 !== o.type && '' : n)
-                        : ((t = o.attributeName),
-                          (r = o.attributeNamespace),
-                          null === n
-                              ? e.removeAttribute(t)
-                              : ((n =
-                                    3 === (o = o.type) || (4 === o && !0 === n)
-                                        ? ''
-                                        : '' + n),
-                                r
-                                    ? e.setAttributeNS(r, t, n)
-                                    : e.setAttribute(t, n))));
+                    ? (e[o.propertyName] = null === n ? 3 !== o.type && '' : n)
+                    : ((t = o.attributeName),
+                      (r = o.attributeNamespace),
+                      null === n
+                          ? e.removeAttribute(t)
+                          : ((n =
+                                3 === (o = o.type) || (4 === o && !0 === n)
+                                    ? ''
+                                    : '' + n),
+                            r
+                                ? e.setAttributeNS(r, t, n)
+                                : e.setAttribute(t, n))));
         }
         function Nt(e, t) {
             var n = t.checked;
@@ -2010,14 +2008,13 @@ object-assign
                         ('select' === l || ('input' === l && 'file' === o.type)
                             ? (a = Vt)
                             : Ze(o)
-                                ? Wt
-                                    ? (a = Gt)
-                                    : ((a = Kt), (i = Qt))
-                                : (l = o.nodeName) &&
-                                  'input' === l.toLowerCase() &&
-                                  ('checkbox' === o.type ||
-                                      'radio' === o.type) &&
-                                  (a = qt),
+                            ? Wt
+                                ? (a = Gt)
+                                : ((a = Kt), (i = Qt))
+                            : (l = o.nodeName) &&
+                              'input' === l.toLowerCase() &&
+                              ('checkbox' === o.type || 'radio' === o.type) &&
+                              (a = qt),
                         a && (a = a(e, t)))
                     )
                         return Dt(a, n, r);
@@ -2109,8 +2106,8 @@ object-assign
                             r.window === r
                                 ? r
                                 : (o = r.ownerDocument)
-                                    ? o.defaultView || o.parentWindow
-                                    : window),
+                                ? o.defaultView || o.parentWindow
+                                : window),
                         a
                             ? ((a = t),
                               (t = (t = n.relatedTarget || n.toElement)
@@ -2311,8 +2308,8 @@ object-assign
                             ? 'Enter'
                             : String.fromCharCode(e)
                         : 'keydown' === e.type || 'keyup' === e.type
-                            ? hn[e.keyCode] || 'Unidentified'
-                            : '';
+                        ? hn[e.keyCode] || 'Unidentified'
+                        : '';
                 },
                 location: null,
                 ctrlKey: null,
@@ -2334,8 +2331,8 @@ object-assign
                     return 'keypress' === e.type
                         ? pn(e)
                         : 'keydown' === e.type || 'keyup' === e.type
-                            ? e.keyCode
-                            : 0;
+                        ? e.keyCode
+                        : 0;
                 }
             }),
             gn = tn.extend({ dataTransfer: null }),
@@ -2359,17 +2356,17 @@ object-assign
                     return 'deltaX' in e
                         ? e.deltaX
                         : 'wheelDeltaX' in e
-                            ? -e.wheelDeltaX
-                            : 0;
+                        ? -e.wheelDeltaX
+                        : 0;
                 },
                 deltaY: function(e) {
                     return 'deltaY' in e
                         ? e.deltaY
                         : 'wheelDeltaY' in e
-                            ? -e.wheelDeltaY
-                            : 'wheelDelta' in e
-                                ? -e.wheelDelta
-                                : 0;
+                        ? -e.wheelDeltaY
+                        : 'wheelDelta' in e
+                        ? -e.wheelDelta
+                        : 0;
                 },
                 deltaZ: null,
                 deltaMode: null
@@ -2705,14 +2702,13 @@ object-assign
                 'selectionStart' in n && Vn(n)
                     ? (n = { start: n.selectionStart, end: n.selectionEnd })
                     : window.getSelection
-                        ? (n = {
-                              anchorNode: (n = window.getSelection())
-                                  .anchorNode,
-                              anchorOffset: n.anchorOffset,
-                              focusNode: n.focusNode,
-                              focusOffset: n.focusOffset
-                          })
-                        : (n = void 0),
+                    ? (n = {
+                          anchorNode: (n = window.getSelection()).anchorNode,
+                          anchorOffset: n.anchorOffset,
+                          focusNode: n.focusNode,
+                          focusOffset: n.focusOffset
+                      })
+                    : (n = void 0),
                 Kn && c(Kn, n)
                     ? null
                     : ((Kn = n),
@@ -2730,8 +2726,8 @@ object-assign
                         r.window === r
                             ? r.document
                             : 9 === r.nodeType
-                                ? r
-                                : r.ownerDocument;
+                            ? r
+                            : r.ownerDocument;
                 if (!(o = !a)) {
                     e: {
                         (a = An(a)), (o = k.onSelect);
@@ -3008,8 +3004,8 @@ object-assign
             return null == e || 'http://www.w3.org/1999/xhtml' === e
                 ? Er(t)
                 : 'http://www.w3.org/2000/svg' === e && 'foreignObject' === t
-                    ? 'http://www.w3.org/1999/xhtml'
-                    : e;
+                ? 'http://www.w3.org/1999/xhtml'
+                : e;
         }
         var _r,
             Tr = void 0,
@@ -3100,8 +3096,8 @@ object-assign
                               'number' != typeof a ||
                               0 === a ||
                               (Nr.hasOwnProperty(o) && Nr[o])
-                                ? ('' + a).trim()
-                                : a + 'px'),
+                            ? ('' + a).trim()
+                            : a + 'px'),
                         'float' === n && (n = 'cssFloat'),
                         r ? e.setProperty(n, o) : (e[n] = o);
                 }
@@ -3276,17 +3272,17 @@ object-assign
                     'style' === u
                         ? Rr(e, s)
                         : 'dangerouslySetInnerHTML' === u
-                            ? null != (s = s ? s.__html : void 0) && Sr(e, s)
-                            : 'children' === u
-                                ? 'string' == typeof s
-                                    ? ('textarea' !== t || '' !== s) && Pr(e, s)
-                                    : 'number' == typeof s && Pr(e, '' + s)
-                                : 'suppressContentEditableWarning' !== u &&
-                                  'suppressHydrationWarning' !== u &&
-                                  'autoFocus' !== u &&
-                                  (w.hasOwnProperty(u)
-                                      ? null != s && Lr(r, u)
-                                      : null != s && Pt(e, u, s, o));
+                        ? null != (s = s ? s.__html : void 0) && Sr(e, s)
+                        : 'children' === u
+                        ? 'string' == typeof s
+                            ? ('textarea' !== t || '' !== s) && Pr(e, s)
+                            : 'number' == typeof s && Pr(e, '' + s)
+                        : 'suppressContentEditableWarning' !== u &&
+                          'suppressHydrationWarning' !== u &&
+                          'autoFocus' !== u &&
+                          (w.hasOwnProperty(u)
+                              ? null != s && Lr(r, u)
+                              : null != s && Pt(e, u, s, o));
                 }
             switch (t) {
                 case 'input':
@@ -3373,16 +3369,15 @@ object-assign
                                   c !== s &&
                                   (a = a || []).push(e, '' + s))
                             : 'children' === e
-                                ? c === s ||
-                                  ('string' != typeof s &&
-                                      'number' != typeof s) ||
-                                  (a = a || []).push(e, '' + s)
-                                : 'suppressContentEditableWarning' !== e &&
-                                  'suppressHydrationWarning' !== e &&
-                                  (w.hasOwnProperty(e)
-                                      ? (null != s && Lr(o, e),
-                                        a || c === s || (a = []))
-                                      : (a = a || []).push(e, s));
+                            ? c === s ||
+                              ('string' != typeof s && 'number' != typeof s) ||
+                              (a = a || []).push(e, '' + s)
+                            : 'suppressContentEditableWarning' !== e &&
+                              'suppressHydrationWarning' !== e &&
+                              (w.hasOwnProperty(e)
+                                  ? (null != s && Lr(o, e),
+                                    a || c === s || (a = []))
+                                  : (a = a || []).push(e, s));
             }
             return u && (a = a || []).push('style', u), a;
         }
@@ -3396,10 +3391,10 @@ object-assign
                 'style' === i
                     ? Rr(e, l)
                     : 'dangerouslySetInnerHTML' === i
-                        ? Sr(e, l)
-                        : 'children' === i
-                            ? Pr(e, l)
-                            : Pt(e, i, l, r);
+                    ? Sr(e, l)
+                    : 'children' === i
+                    ? Pr(e, l)
+                    : Pt(e, i, l, r);
             }
             switch (n) {
                 case 'input':
@@ -3860,8 +3855,8 @@ object-assign
             null === a || o === a
                 ? Mo(o, t, n)
                 : null === o.lastUpdate || null === a.lastUpdate
-                    ? (Mo(o, t, n), Mo(a, t, n))
-                    : (Mo(o, t, n), (a.lastUpdate = t));
+                ? (Mo(o, t, n), Mo(a, t, n))
+                : (Mo(o, t, n), (a.lastUpdate = t));
         }
         function Lo(e, t, n) {
             var r = e.updateQueue;
@@ -5692,14 +5687,14 @@ object-assign
                     0 !== Ya
                         ? Ya
                         : Xa
-                            ? oi
-                                ? 1
-                                : ei
-                            : 1 & t.mode
-                                ? Ui
-                                    ? 2 + 10 * (1 + (((e - 2 + 15) / 10) | 0))
-                                    : 2 + 25 * (1 + (((e - 2 + 500) / 25) | 0))
-                                : 1),
+                        ? oi
+                            ? 1
+                            : ei
+                        : 1 & t.mode
+                        ? Ui
+                            ? 2 + 10 * (1 + (((e - 2 + 15) / 10) | 0))
+                            : 2 + 25 * (1 + (((e - 2 + 500) / 25) | 0))
+                        : 1),
                 Ui && (0 === _i || e > _i) && (_i = e),
                 e
             );
@@ -5786,8 +5781,8 @@ object-assign
                 (Oi
                     ? Ri && ((Ei = e), (Ci = 1), $i(e, 1, !1))
                     : 1 === t
-                        ? Bi()
-                        : Di(t));
+                    ? Bi()
+                    : Di(t));
         }
         function Ai() {
             var e = 0,
@@ -5883,9 +5878,9 @@ object-assign
                           null !== (n = si(e, t, !0)) &&
                               (Ki() ? (e.finishedWork = n) : Qi(e, n, t)))
                     : null !== (n = e.finishedWork)
-                        ? Qi(e, n, t)
-                        : ((e.finishedWork = null),
-                          null !== (n = si(e, t, !1)) && Qi(e, n, t)),
+                    ? Qi(e, n, t)
+                    : ((e.finishedWork = null),
+                      null !== (n = si(e, t, !1)) && Qi(e, n, t)),
                 (xi = !1);
         }
         function Qi(e, t, n) {
@@ -6819,8 +6814,8 @@ object-assign
                         '31',
                         '[object Object]' === (n = '' + e)
                             ? 'object with keys {' +
-                              Object.keys(e).join(', ') +
-                              '}'
+                                  Object.keys(e).join(', ') +
+                                  '}'
                             : n,
                         ''
                     );

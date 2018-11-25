@@ -7,8 +7,8 @@
 
 const puppeteer = require('puppeteer');
 const {
-    dockerRunChrome,
-    dockerShutdownChrome
+    dockerRunChromium,
+    dockerShutdownChromium
 } = require('./utils/dockerChrome');
 
 let instance;
@@ -45,7 +45,7 @@ module.exports = class TestController {
         }
 
         if (useDocker) {
-            const webSocketUri = await dockerRunChrome();
+            const webSocketUri = await dockerRunChromium();
 
             this.browser = await puppeteer.connect({
                 browserWSEndpoint: webSocketUri
@@ -76,7 +76,7 @@ module.exports = class TestController {
         }
 
         if (this.isUsingDocker) {
-            await dockerShutdownChrome();
+            await dockerShutdownChromium();
         }
     }
 };

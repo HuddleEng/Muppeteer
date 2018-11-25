@@ -1,29 +1,14 @@
 const path = require('path');
 const request = require('request-promise-native');
 const syncRequest = require('sync-request');
-const { promisify } = require('util');
-const { readFileSync, writeFileSync } = require('./fileUtils');
-const exec = promisify(require('child_process').exec);
-const { CONSOLE_PREFIX } = require('./consoleHelpers');
+const { readFileSync, writeFileSync } = require('fs');
+const { runCommand } = require('./runCommand');
 const { checkDependency } = require('./checkDependencies');
+const { CONSOLE_PREFIX } = require('./consoleHelpers');
 
 require('colors');
 
 const composePath = path.join(__dirname, '../../docker-compose.yml');
-
-const runCommand = async (command, args) => {
-    try {
-        const { stdout, stderr } = await exec(`${command} ${args.join(' ')}`);
-
-        console.log(stdout);
-        console.log(stderr);
-
-        return stdout;
-    } catch (e) {
-        console.error(e);
-        return e;
-    }
-};
 
 const dockerBuild = async () => {
     try {
@@ -80,9 +65,9 @@ const dockerDown = async () => {
     }
 };
 
-const contactChrome = async ({ config, maxAttempts }) => {
+const contactChromium = async ({ config, maxAttempts }) => {
     let count = 1;
-    console.log(`${CONSOLE_PREFIX} Contacting Chrome in container...`.green);
+    console.log(`${CONSOLE_PREFIX} Contacting Chromium in container...`.green);
 
     async function tryRequest() {
         try {
@@ -110,16 +95,17 @@ const contactChrome = async ({ config, maxAttempts }) => {
     return tryRequest();
 };
 
-const dockerUpdateChrome = version => {
-    const dockerFilePath = path.join(__dirname, '../../chrome/Dockerfile');
+const dockerUpdateChromium = revision => {
+    const dockerFilePath = path.join(__dirname, '../../chromium/Dockerfile');
+
     let latestTag = '';
 
-    if (version) {
-        latestTag = `ver-${version}`;
+    if (revision) {
+        latestTag = `rev-${revision}`;
     } else {
         const res = syncRequest(
             'GET',
-            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-stable/tags/'
+            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-trunk/tags/'
         );
 
         const body = JSON.parse(res.getBody('utf8'));
@@ -150,7 +136,7 @@ const dockerRun = async () => {
     await dockerBuild();
     await dockerUp();
 
-    const res = await contactChrome({
+    const res = await contactChromium({
         config: {
             uri: `http://localhost:9222/json/version`,
             json: true,
@@ -175,7 +161,7 @@ const dockerRun = async () => {
 };
 
 module.exports = {
-    dockerShutdownChrome: dockerDown,
-    dockerRunChrome: dockerRun,
-    dockerUpdateChrome
+    dockerShutdownChromium: dockerDown,
+    dockerRunChromium: dockerRun,
+    dockerUpdateChromium
 };

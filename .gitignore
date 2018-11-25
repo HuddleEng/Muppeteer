@@ -6,9 +6,9 @@
 npm-debug.log
 node_modules
 coverage
-examples/unit/report
-examples/unit/tests/screenshots/**/*-diff.png
-examples/unit/tests/screenshots/**/*-current.png
+examples/component/report
+examples/component/tests/screenshots/**/*-diff.png
+examples/component/tests/screenshots/**/*-current.png
 examples/e2e/todomvc-react
 examples/e2e/report
 examples/e2e/tests/screenshots/**/*-diff.png

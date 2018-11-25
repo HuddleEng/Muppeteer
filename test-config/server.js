@@ -2,11 +2,13 @@ const express = require('express');
 const path = require('path');
 
 module.exports = {
-    start: ({ port = 3000, testType = 'unit' } = {}) => {
+    start: ({ testType = 'component' } = {}) => {
         const app = express();
 
         const directory =
-            testType === 'unit' ? 'unit/panel-app' : 'e2e/todomvc-react';
+            testType === 'component'
+                ? 'component/panel-app'
+                : 'e2e/todomvc-react';
 
         app.use(
             express.static(path.join(__dirname, '../examples/', directory))
@@ -17,8 +19,8 @@ module.exports = {
         });
 
         return new Promise(resolve => {
-            const server = app.listen(port, () => {
-                console.log(`Test server started on port ${port}`);
+            const server = app.listen(3000, () => {
+                console.log(`Test server started on port 3000`);
                 resolve(server);
             });
         });

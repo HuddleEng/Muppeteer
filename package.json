@@ -2,13 +2,13 @@
     "name": "muppeteer",
     "version": "1.3.0",
     "description": "Visual regression testing framework for running UI tests in Chrome",
-    "main": "lib/Launcher.js",
+    "main": "lib/index.js",
     "scripts": {
-        "test": "npm run unit; npm run e2e",
-        "unit": "jest --testPathPattern=\"^((?!e2e|examples).)*$\" --coverage --collectCoverageFrom='(src|lib)/**.{js,jsx}' && cat ./coverage/lcov.info | codacy-coverage",
+        "test": "npm run component; npm run e2e",
+        "component": "jest --testPathPattern=\"^((?!e2e|examples).)*$\" --coverage --collectCoverageFrom='(src|lib)/**.{js,jsx}' && cat ./coverage/lcov.info | codacy-coverage",
         "e2e": "node e2e/index.js",
         "e2e-debug": "node --trace-warnings e2e/index.js",
-        "example-unit-tests": "node examples/runTests.js -u",
+        "example-component-tests": "node examples/runTests.js -u",
         "example-e2e-tests": "node examples/runTests.js -e",
         "postinstall": "node examples/setup.js",
         "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
@@ -31,6 +31,9 @@
         "url": "https://github.com/HuddleEng/Muppeteer/issues"
     },
     "homepage": "https://github.com/HuddleEng/Muppeteer#readme",
+    "bin": {
+        "muppeteer": "bin/launcherCli.js"
+    },
     "dependencies": {
         "chai": "^4.1.2",
         "codacy-coverage": "^3.0.0",
@@ -45,7 +48,7 @@
         "mochawesome": "^3.0.2",
         "pixelmatch": "^4.0.2",
         "pngjs": "^3.3.2",
-        "puppeteer": "1.2.0",
+        "puppeteer": "^1.10.0",
         "puppeteer-extensions": "^1.0.0",
         "recursive-readdir-sync": "^1.0.6",
         "request": "^2.83.0",
@@ -53,17 +56,18 @@
         "sanitize-filename": "^1.6.1",
         "shelljs": "^0.8.1",
         "sync-request": "^6.0.0",
-        "yargs": "^11.0.0"
+        "yargs": "^12.0.5"
     },
     "devDependencies": {
-        "eslint": "^4.18.2",
-        "eslint-config-airbnb-base": "^12.1.0",
-        "eslint-config-prettier": "^2.9.0",
-        "eslint-plugin-prettier": "^2.6.0",
+        "eslint": "^5.9.0",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-config-prettier": "^3.3.0",
+        "eslint-plugin-prettier": "^3.0.0",
         "express": "^4.16.2",
-        "husky": "^0.14.3",
-        "jest": "^22.4.2",
-        "lint-staged": "^7.0.0",
+        "find-node-modules": "^1.0.4",
+        "husky": "^1.2.0",
+        "jest": "^23.6.0",
+        "lint-staged": "^8.1.0",
         "minimist": "^1.2.0",
         "prettier": "^1.11.1"
     }

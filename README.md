@@ -1,5 +1,7 @@
 # Muppeteer
 
+This library is no longer maintained.
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd0f4e89b90a48f19bf2115374479e99)](https://www.codacy.com/app/gidztech/Muppeteer?utm_source=github.com&utm_medium=referral&utm_content=HuddleEng/Muppeteer&utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/HuddleEng/Muppeteer.svg?branch=master)](https://travis-ci.org/HuddleEng/Muppeteer)
 
